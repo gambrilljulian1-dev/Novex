@@ -37,8 +37,6 @@
       min-height: 100vh;
     }
 
-    /* SIDEBAR */
-
     .sidebar {
       position: fixed;
       left: 0;
@@ -103,8 +101,6 @@
       border: 1px solid rgba(110,130,255,.2);
     }
 
-    /* MAIN */
-
     .main {
       margin-left: 245px;
       padding: 32px;
@@ -148,8 +144,6 @@
       border: 1px solid rgba(255,255,255,.08);
     }
 
-    /* HERO */
-
     .hero {
       padding: 31px;
       margin-bottom: 23px;
@@ -174,8 +168,6 @@
       line-height: 1.6;
       max-width: 720px;
     }
-
-    /* CARDS */
 
     .grid {
       display: grid;
@@ -211,8 +203,6 @@
       transform: translateY(-2px);
       border-color: rgba(105,128,255,.25);
     }
-
-    /* BUTTONS */
 
     .primary-btn,
     .secondary-btn,
@@ -259,8 +249,6 @@
       gap: 9px;
     }
 
-    /* FORMS */
-
     .form-group {
       margin-bottom: 14px;
     }
@@ -299,8 +287,6 @@
       background: #101522;
     }
 
-    /* STATS */
-
     .stats {
       display: grid;
       grid-template-columns: repeat(3,1fr);
@@ -325,8 +311,6 @@
       font-size: 27px;
       margin-top: 7px;
     }
-
-    /* ASSIGNMENTS */
 
     .assignment-list {
       display: flex;
@@ -386,8 +370,6 @@
       color: #f1d88c;
     }
 
-    /* QUESTIONS */
-
     .question-builder {
       display: flex;
       flex-direction: column;
@@ -415,8 +397,6 @@
       gap: 8px;
       margin-top: 8px;
     }
-
-    /* GRADEBOOK */
 
     .grade-section {
       margin-bottom: 26px;
@@ -455,8 +435,6 @@
       font-weight: 750;
     }
 
-    /* REVIEW */
-
     .review-question {
       background: rgba(255,255,255,.025);
       border: 1px solid rgba(255,255,255,.07);
@@ -475,7 +453,31 @@
       margin-top: 9px;
     }
 
-    /* MODAL */
+    .choice-review {
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-top: 7px;
+      border: 1px solid rgba(255,255,255,.06);
+      background: rgba(255,255,255,.025);
+      font-size: 13px;
+    }
+
+    .choice-review.correct-choice {
+      border-color: rgba(70,210,125,.3);
+      background: rgba(60,190,110,.08);
+      color: #9ce8b7;
+    }
+
+    .choice-review.student-choice {
+      border-color: rgba(110,130,255,.3);
+      background: rgba(73,103,255,.09);
+      color: #c1cbff;
+    }
+
+    .choice-review.correct-choice.student-choice {
+      border-color: rgba(70,210,125,.35);
+      background: rgba(60,190,110,.1);
+    }
 
     .modal {
       position: fixed;
@@ -520,8 +522,6 @@
       flex-shrink: 0;
     }
 
-    /* USERS */
-
     .user-result {
       display: flex;
       justify-content: space-between;
@@ -533,8 +533,6 @@
       border-radius: 13px;
     }
 
-    /* EMPTY */
-
     .empty {
       text-align: center;
       padding: 40px 20px;
@@ -542,8 +540,6 @@
       border: 1px dashed rgba(255,255,255,.08);
       border-radius: 17px;
     }
-
-    /* MOBILE */
 
     @media (max-width: 800px) {
 
@@ -629,22 +625,13 @@
       <p>Your school. Your work. Your progress.</p>
     </div>
 
-    <nav
-      class="nav"
-      id="nav"
-    ></nav>
+    <nav class="nav" id="nav"></nav>
 
   </aside>
 
-
   <main class="main">
 
-    <!-- HOME -->
-
-    <section
-      class="page active"
-      id="page-home"
-    >
+    <section class="page active" id="page-home">
 
       <div class="topbar">
 
@@ -656,10 +643,7 @@
           </p>
         </div>
 
-        <div
-          class="user-pill"
-          id="user-pill"
-        ></div>
+        <div class="user-pill" id="user-pill"></div>
 
       </div>
 
@@ -668,25 +652,16 @@
     </section>
 
 
-    <!-- UNFINISHED -->
-
-    <section
-      class="page"
-      id="page-unfinished"
-    >
+    <section class="page" id="page-unfinished">
 
       <div class="topbar">
 
         <div>
-
-          <h2>
-            Unfinished Assignments
-          </h2>
+          <h2>Unfinished Assignments</h2>
 
           <p>
             Assignments you still need to complete.
           </p>
-
         </div>
 
       </div>
@@ -696,12 +671,7 @@
     </section>
 
 
-    <!-- SENT -->
-
-    <section
-      class="page"
-      id="page-sent"
-    >
+    <section class="page" id="page-sent">
 
       <div class="topbar">
 
@@ -724,12 +694,7 @@
     </section>
 
 
-    <!-- GRADE BOOK -->
-
-    <section
-      class="page"
-      id="page-gradebook"
-    >
+    <section class="page" id="page-gradebook">
 
       <div class="topbar">
 
@@ -750,20 +715,13 @@
     </section>
 
 
-    <!-- COURSES -->
-
-    <section
-      class="page"
-      id="page-courses"
-    >
+    <section class="page" id="page-courses">
 
       <div class="topbar">
 
         <div>
 
-          <h2>
-            Courses
-          </h2>
+          <h2>Courses</h2>
 
           <p>
             Keep your Novex work organized.
@@ -778,20 +736,13 @@
     </section>
 
 
-    <!-- ACCOUNT -->
-
-    <section
-      class="page"
-      id="page-account"
-    >
+    <section class="page" id="page-account">
 
       <div class="topbar">
 
         <div>
 
-          <h2>
-            Account
-          </h2>
+          <h2>Account</h2>
 
           <p>
             Your Novex account information.
@@ -812,10 +763,7 @@
 
 <!-- QUIZ MODAL -->
 
-<div
-  class="modal"
-  id="quiz-modal"
->
+<div class="modal" id="quiz-modal">
 
   <div class="modal-content">
 
@@ -827,10 +775,7 @@
           Assignment
         </h2>
 
-        <p
-          id="quiz-modal-meta"
-          class="card-description"
-        ></p>
+        <p id="quiz-modal-meta" class="card-description"></p>
 
       </div>
 
@@ -852,10 +797,7 @@
 
 <!-- REVIEW MODAL -->
 
-<div
-  class="modal"
-  id="review-modal"
->
+<div class="modal" id="review-modal">
 
   <div class="modal-content">
 
@@ -867,10 +809,7 @@
           Review
         </h2>
 
-        <p
-          id="review-modal-meta"
-          class="card-description"
-        ></p>
+        <p id="review-modal-meta" class="card-description"></p>
 
       </div>
 
@@ -1687,7 +1626,7 @@ function renderStaffHome(container) {
 
         <p class="card-description">
           Review quizzes, recipients,
-          submissions, and grading.
+          and student submissions.
         </p>
 
         <button
@@ -1703,13 +1642,12 @@ function renderStaffHome(container) {
       <div class="card action-card">
 
         <h3>
-          Grade Management
+          Grade Book
         </h3>
 
         <p class="card-description">
-          Review student submissions and
-          edit percentages, question results,
-          and teacher feedback.
+          Edit percentages, letter grades,
+          teacher notes, and review student answers.
         </p>
 
         <button
@@ -2126,17 +2064,18 @@ function(select) {
 
     extra.innerHTML = `
 
-      <div class="form-group">
-
-        <label>
-          Grading guide
-        </label>
-
-        <textarea
-          class="answer-key"
-          placeholder="Optional grading guide for the teacher."
-        ></textarea>
-
+      <div
+        style="
+          color:#7f89a7;
+          font-size:12px;
+          padding:10px;
+          border-radius:10px;
+          background:rgba(255,255,255,.025);
+        "
+      >
+        Written responses are graded manually
+        in the Grade Book using a percentage,
+        letter grade, and teacher notes.
       </div>
 
     `;
@@ -2174,6 +2113,7 @@ function(select) {
     `;
 
     return;
+
   }
 
 
@@ -2472,15 +2412,7 @@ async function() {
 
           answerKeys[index] = {
 
-            type,
-
-            gradingGuide:
-              box
-                .querySelector(
-                  ".answer-key"
-                )
-                ?.value
-                .trim() || ""
+            type
 
           };
 
@@ -3129,6 +3061,9 @@ async function() {
         percentage:
           null,
 
+        letterGrade:
+          "",
+
         questionResults:
           [],
 
@@ -3394,6 +3329,103 @@ function renderStaffAssignmentCard(
       </div>
 
 
+      ${
+        related.length
+          ? `
+
+            <div
+              style="
+                margin-top:14px;
+                padding-top:14px;
+                border-top:1px solid rgba(255,255,255,.06);
+              "
+            >
+
+              <strong style="font-size:13px;">
+                Submission Status
+              </strong>
+
+              ${related.map(submission => `
+
+                <div
+                  style="
+                    margin-top:9px;
+                    padding:11px;
+                    border-radius:11px;
+                    background:rgba(255,255,255,.035);
+                  "
+                >
+
+                  <div
+                    style="
+                      display:flex;
+                      justify-content:space-between;
+                      align-items:center;
+                      gap:10px;
+                    "
+                  >
+
+                    <div>
+
+                      <strong style="font-size:12px;">
+                        ${escapeHTML(
+                          submission.studentName ||
+                          submission.studentEmail ||
+                          "Student"
+                        )}
+                      </strong>
+
+                      <div
+                        style="
+                          color:#7f89a7;
+                          font-size:11px;
+                          margin-top:3px;
+                        "
+                      >
+                        Submitted:
+                        ${formatDateTime(
+                          submission.submittedAt
+                        )}
+                      </div>
+
+                    </div>
+
+
+                    <span
+                      class="badge ${
+                        submission.percentage !== null &&
+                        submission.percentage !== undefined
+                          ? "green"
+                          : "yellow"
+                      }"
+                    >
+
+                      ${
+                        submission.percentage !== null &&
+                        submission.percentage !== undefined
+                          ? `${submission.percentage}%${
+                              submission.letterGrade
+                                ? ` • ${escapeHTML(submission.letterGrade)}`
+                                : ""
+                            }`
+                          : "Needs grading"
+                      }
+
+                    </span>
+
+                  </div>
+
+                </div>
+
+              `).join("")}
+
+            </div>
+
+          `
+          : ""
+      }
+
+
       <div
         class="button-row"
         style="margin-top:14px;"
@@ -3407,7 +3439,7 @@ function renderStaffAssignmentCard(
             )
           "
         >
-          Review Submissions
+          View Submissions
         </button>
 
       </div>
@@ -3420,7 +3452,8 @@ function renderStaffAssignmentCard(
 
 
 /* =====================================================
-   REVIEW ASSIGNMENT
+   VIEW ASSIGNMENT SUBMISSIONS
+   NO GRADING CONTROLS HERE
 ===================================================== */
 
 window.reviewAssignment =
@@ -3522,7 +3555,11 @@ function(assignmentId) {
                           ${
                             submission.percentage !== null &&
                             submission.percentage !== undefined
-                              ? `${submission.percentage}%`
+                              ? `${submission.percentage}%${
+                                  submission.letterGrade
+                                    ? ` • ${escapeHTML(submission.letterGrade)}`
+                                    : ""
+                                }`
                               : "Needs grading"
                           }
 
@@ -3531,30 +3568,22 @@ function(assignmentId) {
                       </div>
 
 
-                      <div
-                        class="button-row"
-                        style="margin-top:13px;"
+                      <p
+                        style="
+                          color:#7f89a7;
+                          font-size:12px;
+                          margin-top:11px;
+                        "
                       >
 
-                        <button
-                          class="primary-btn"
-                          onclick="
-                            openSubmissionReview(
-                              '${submission.id}'
-                            )
-                          "
-                        >
+                        ${
+                          submission.percentage !== null &&
+                          submission.percentage !== undefined
+                            ? "This submission has been graded. To edit the grade, use the Grade Book."
+                            : "This submission is waiting to be graded in the Grade Book."
+                        }
 
-                          ${
-                            submission.percentage !== null &&
-                            submission.percentage !== undefined
-                              ? "Edit Grade"
-                              : "Grade Submission"
-                          }
-
-                        </button>
-
-                      </div>
+                      </p>
 
                     </div>
 
@@ -3588,7 +3617,8 @@ function(assignmentId) {
 
 
 /* =====================================================
-   TEACHER / ADMIN / OWNER GRADING
+   STAFF GRADING
+   ONLY ACCESSIBLE THROUGH GRADE BOOK
 ===================================================== */
 
 window.openSubmissionReview =
@@ -3670,7 +3700,7 @@ async function(submissionId) {
       "review-modal-title"
     )
     .textContent =
-      "Grade Submission";
+      "Edit Grade";
 
 
   document
@@ -3689,6 +3719,54 @@ async function(submissionId) {
 
       <div>
 
+        <div
+          class="card"
+          style="margin-bottom:18px;"
+        >
+
+          <h3>
+            Student Submission
+          </h3>
+
+          <p class="card-description">
+            Review the student's answers below.
+            Grade changes are saved in the Grade Book.
+          </p>
+
+          <div
+            style="
+              display:flex;
+              flex-wrap:wrap;
+              gap:8px;
+            "
+          >
+
+            <span class="badge">
+              ${escapeHTML(
+                submission.studentName ||
+                submission.studentEmail
+              )}
+            </span>
+
+            <span class="badge">
+              ${escapeHTML(
+                submission.studentEmail ||
+                ""
+              )}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <h3
+          style="margin-bottom:12px;"
+        >
+          Answer Review
+        </h3>
+
+
         ${
           assignment.questions
             .map(
@@ -3705,6 +3783,11 @@ async function(submissionId) {
                   {};
 
 
+                const existing =
+                  existingResults[index] ||
+                  {};
+
+
                 let studentAnswer =
                   answer;
 
@@ -3714,10 +3797,13 @@ async function(submissionId) {
                   "math"
                 ) {
 
+                  const selectedIndex =
+                    Number(answer);
+
                   studentAnswer =
                     question
                       .choices?.[
-                        Number(answer)
+                        selectedIndex
                       ] ||
                     "No answer";
 
@@ -3739,13 +3825,8 @@ async function(submissionId) {
                 }
 
 
-                const existing =
-                  existingResults[index] ||
-                  {};
-
-
                 let correctAnswer =
-                  "Manual grading required.";
+                  null;
 
 
                 if (
@@ -3780,16 +3861,415 @@ async function(submissionId) {
 
 
                 if (
-                  key.type ===
-                  "written"
+                  question.type ===
+                  "math"
                 ) {
 
-                  correctAnswer =
-                    key.gradingGuide ||
-                    "Manual grading required.";
+                  const selectedIndex =
+                    Number(answer);
+
+
+                  return `
+
+                    <div
+                      class="review-question"
+                    >
+
+                      <div
+                        style="
+                          display:flex;
+                          justify-content:space-between;
+                          gap:10px;
+                          align-items:flex-start;
+                        "
+                      >
+
+                        <p>
+                          <strong>
+                            ${index + 1}.
+                          </strong>
+
+                          ${escapeHTML(
+                            question.text
+                          )}
+                        </p>
+
+                        <span
+                          class="badge ${
+                            existing.correct === true
+                              ? "green"
+                              : existing.correct === false
+                                ? "red"
+                                : ""
+                          }"
+                        >
+
+                          ${
+                            existing.correct === true
+                              ? "✓ Correct"
+                              : existing.correct === false
+                                ? "✕ Incorrect"
+                                : "Not graded"
+                          }
+
+                        </span>
+
+                      </div>
+
+
+                      <div
+                        style="margin-top:13px;"
+                      >
+
+                        <div
+                          style="
+                            color:#7f89a7;
+                            font-size:11px;
+                            margin-bottom:7px;
+                          "
+                        >
+                          ALL ANSWER CHOICES
+                        </div>
+
+
+                        ${
+                          question.choices
+                            .map(
+                              (choice,i) => {
+
+                                const isCorrect =
+                                  i ===
+                                  Number(
+                                    key.correctAnswer
+                                  );
+
+
+                                const isStudent =
+                                  i ===
+                                  selectedIndex;
+
+
+                                return `
+
+                                  <div
+                                    class="
+                                      choice-review
+                                      ${
+                                        isCorrect
+                                          ? "correct-choice"
+                                          : ""
+                                      }
+                                      ${
+                                        isStudent
+                                          ? "student-choice"
+                                          : ""
+                                      }
+                                    "
+                                  >
+
+                                    <strong>
+                                      Choice ${i + 1}
+                                    </strong>
+
+                                    —
+                                    ${escapeHTML(choice)}
+
+                                    ${
+                                      isCorrect
+                                        ? `
+                                          <span
+                                            style="
+                                              float:right;
+                                              font-size:11px;
+                                            "
+                                          >
+                                            ✓ Correct Answer
+                                          </span>
+                                        `
+                                        : ""
+                                    }
+
+                                    ${
+                                      isStudent
+                                        ? `
+                                          <span
+                                            style="
+                                              float:right;
+                                              font-size:11px;
+                                            "
+                                          >
+                                            ${
+                                              isCorrect
+                                                ? "✓ Student Selected"
+                                                : "Student Selected"
+                                            }
+                                          </span>
+                                        `
+                                        : ""
+                                    }
+
+                                  </div>
+
+                                `;
+
+                              }
+                            )
+                            .join("")
+                        }
+
+                      </div>
+
+
+                      <div class="answer-box">
+
+                        <strong>
+                          Student selected:
+                        </strong>
+
+                        <br>
+
+                        ${escapeHTML(
+                          studentAnswer
+                        )}
+
+                      </div>
+
+
+                      <div class="form-group">
+
+                        <label>
+                          Result
+                        </label>
+
+                        <select
+                          class="question-result"
+                          data-index="${index}"
+                        >
+
+                          <option
+                            value=""
+                            ${
+                              existing.correct === null ||
+                              existing.correct === undefined
+                                ? "selected"
+                                : ""
+                            }
+                          >
+                            Not graded
+                          </option>
+
+                          <option
+                            value="correct"
+                            ${
+                              existing.correct === true
+                                ? "selected"
+                                : ""
+                            }
+                          >
+                            ✓ Correct
+                          </option>
+
+                          <option
+                            value="incorrect"
+                            ${
+                              existing.correct === false
+                                ? "selected"
+                                : ""
+                            }
+                          >
+                            ✕ Incorrect
+                          </option>
+
+                        </select>
+
+                      </div>
+
+
+                      <div class="form-group">
+
+                        <label>
+                          Teacher's note
+                        </label>
+
+                        <textarea
+                          class="question-note"
+                          data-index="${index}"
+                          placeholder="Optional note about this answer..."
+                        >${escapeHTML(
+                          existing.note ||
+                          ""
+                        )}</textarea>
+
+                      </div>
+
+                    </div>
+
+                  `;
 
                 }
 
+
+                if (
+                  question.type ===
+                  "truefalse"
+                ) {
+
+                  return `
+
+                    <div
+                      class="review-question"
+                    >
+
+                      <div
+                        style="
+                          display:flex;
+                          justify-content:space-between;
+                          gap:10px;
+                        "
+                      >
+
+                        <p>
+
+                          <strong>
+                            ${index + 1}.
+                          </strong>
+
+                          ${escapeHTML(
+                            question.text
+                          )}
+
+                        </p>
+
+
+                        <span
+                          class="badge ${
+                            existing.correct === true
+                              ? "green"
+                              : existing.correct === false
+                                ? "red"
+                                : ""
+                          }"
+                        >
+
+                          ${
+                            existing.correct === true
+                              ? "✓ Correct"
+                              : existing.correct === false
+                                ? "✕ Incorrect"
+                                : "Not graded"
+                          }
+
+                        </span>
+
+                      </div>
+
+
+                      <div class="answer-box">
+
+                        <strong>
+                          Correct answer:
+                        </strong>
+
+                        <br>
+
+                        ${escapeHTML(
+                          correctAnswer ||
+                          "Unknown"
+                        )}
+
+                      </div>
+
+
+                      <div class="answer-box">
+
+                        <strong>
+                          Student selected:
+                        </strong>
+
+                        <br>
+
+                        ${escapeHTML(
+                          studentAnswer
+                        )}
+
+                      </div>
+
+
+                      <div class="form-group">
+
+                        <label>
+                          Result
+                        </label>
+
+                        <select
+                          class="question-result"
+                          data-index="${index}"
+                        >
+
+                          <option
+                            value=""
+                            ${
+                              existing.correct === null ||
+                              existing.correct === undefined
+                                ? "selected"
+                                : ""
+                            }
+                          >
+                            Not graded
+                          </option>
+
+                          <option
+                            value="correct"
+                            ${
+                              existing.correct === true
+                                ? "selected"
+                                : ""
+                            }
+                          >
+                            ✓ Correct
+                          </option>
+
+                          <option
+                            value="incorrect"
+                            ${
+                              existing.correct === false
+                                ? "selected"
+                                : ""
+                            }
+                          >
+                            ✕ Incorrect
+                          </option>
+
+                        </select>
+
+                      </div>
+
+
+                      <div class="form-group">
+
+                        <label>
+                          Teacher's note
+                        </label>
+
+                        <textarea
+                          class="question-note"
+                          data-index="${index}"
+                          placeholder="Optional note about this answer..."
+                        >${escapeHTML(
+                          existing.note ||
+                          ""
+                        )}</textarea>
+
+                      </div>
+
+                    </div>
+
+                  `;
+
+                }
+
+
+                /* WRITTEN RESPONSE */
 
                 return `
 
@@ -3797,30 +4277,29 @@ async function(submissionId) {
                     class="review-question"
                   >
 
-                    <p>
+                    <div
+                      style="
+                        display:flex;
+                        justify-content:space-between;
+                        gap:10px;
+                      "
+                    >
 
-                      <strong>
-                        ${index + 1}.
-                      </strong>
+                      <p>
 
-                      ${escapeHTML(
-                        question.text
-                      )}
+                        <strong>
+                          ${index + 1}.
+                        </strong>
 
-                    </p>
+                        ${escapeHTML(
+                          question.text
+                        )}
 
+                      </p>
 
-                    <div class="answer-box">
-
-                      <strong>
-                        Student answer:
-                      </strong>
-
-                      <br>
-
-                      ${escapeHTML(
-                        studentAnswer
-                      )}
+                      <span class="badge">
+                        Written Response
+                      </span>
 
                     </div>
 
@@ -3828,14 +4307,16 @@ async function(submissionId) {
                     <div class="answer-box">
 
                       <strong>
-                        Answer key / grading guide:
+                        Student response:
                       </strong>
 
-                      <br>
+                      <br><br>
 
-                      ${escapeHTML(
-                        correctAnswer
-                      )}
+                      ${
+                        answer
+                          ? escapeHTML(answer)
+                          : "No response"
+                      }
 
                     </div>
 
@@ -3854,8 +4335,8 @@ async function(submissionId) {
                         <option
                           value=""
                           ${
-                            existing.correct ===
-                            undefined
+                            existing.correct === null ||
+                            existing.correct === undefined
                               ? "selected"
                               : ""
                           }
@@ -3863,30 +4344,26 @@ async function(submissionId) {
                           Not graded
                         </option>
 
-
                         <option
                           value="correct"
                           ${
-                            existing.correct ===
-                            true
+                            existing.correct === true
                               ? "selected"
                               : ""
                           }
                         >
-                          ✓ Correct
+                          Correct
                         </option>
-
 
                         <option
                           value="incorrect"
                           ${
-                            existing.correct ===
-                            false
+                            existing.correct === false
                               ? "selected"
                               : ""
                           }
                         >
-                          ✕ Incorrect
+                          Incorrect
                         </option>
 
                       </select>
@@ -3897,13 +4374,13 @@ async function(submissionId) {
                     <div class="form-group">
 
                       <label>
-                        Teacher's note for this question
+                        Teacher's note
                       </label>
 
                       <textarea
                         class="question-note"
                         data-index="${index}"
-                        placeholder="Leave feedback about this question..."
+                        placeholder="Optional feedback..."
                       >${escapeHTML(
                         existing.note ||
                         ""
@@ -3927,13 +4404,13 @@ async function(submissionId) {
         >
 
           <h3>
-            Final Result
+            Final Grade
           </h3>
 
 
           <p class="card-description">
-            This percentage will appear directly
-            in the student's Grade Book.
+            Enter the student's final percentage,
+            letter grade, and overall teacher note.
           </p>
 
 
@@ -3960,6 +4437,26 @@ async function(submissionId) {
                     )
                   : ""
               }"
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Letter Grade
+            </label>
+
+            <input
+              id="letter-grade-input"
+              type="text"
+              maxlength="5"
+              placeholder="Example: B+"
+              value="${escapeHTML(
+                submission.letterGrade ||
+                ""
+              )}"
             >
 
           </div>
@@ -4005,6 +4502,13 @@ async function(submissionId) {
 
     `;
 
+
+  document
+    .getElementById(
+      "review-modal"
+    )
+    .classList.add("open");
+
 };
 
 
@@ -4037,6 +4541,12 @@ async function() {
     );
 
 
+  const letterGradeInput =
+    document.getElementById(
+      "letter-grade-input"
+    );
+
+
   const teacherNoteInput =
     document.getElementById(
       "teacher-note-input"
@@ -4053,10 +4563,26 @@ async function() {
     percentageInput.value.trim();
 
 
+  const letterGrade =
+    letterGradeInput.value
+      .trim()
+      .toUpperCase();
+
+
   if (!percentage) {
 
     message.textContent =
       "Enter a percentage first.";
+
+    return;
+
+  }
+
+
+  if (!letterGrade) {
+
+    message.textContent =
+      "Enter a letter grade.";
 
     return;
 
@@ -4145,6 +4671,10 @@ async function() {
         percentage:
           numericPercentage,
 
+        letterGrade:
+
+          letterGrade,
+
         grade:
           `${numericPercentage}%`,
 
@@ -4168,10 +4698,6 @@ async function() {
     await loadData();
 
 
-    message.textContent =
-      "Grade and feedback saved.";
-
-
     currentReviewSubmission =
       submissions.find(
         s =>
@@ -4180,8 +4706,11 @@ async function() {
       );
 
 
-    renderGradebook();
+    message.textContent =
+      "Grade and feedback saved.";
 
+
+    renderGradebook();
 
   } catch (error) {
 
@@ -4246,7 +4775,7 @@ function renderGradebook() {
 
 
   subtitle.textContent =
-    "Manage student grades and feedback.";
+    "Review submissions and edit student grades.";
 
 
   renderStaffGradebook(
@@ -4420,6 +4949,12 @@ function renderStudentGradebook(
                             "No percentage";
 
 
+                      const letter =
+                        item.submission
+                          .letterGrade ||
+                        "";
+
+
                       const results =
                         item.submission
                           .questionResults ||
@@ -4505,6 +5040,23 @@ function renderStudentGradebook(
 
 
                               ${
+                                letter
+                                  ? `
+
+                                    <span
+                                      class="badge"
+                                    >
+                                      ${escapeHTML(
+                                        letter
+                                      )}
+                                    </span>
+
+                                  `
+                                  : ""
+                              }
+
+
+                              ${
                                 results.length
                                   ? `
 
@@ -4541,6 +5093,23 @@ function renderStudentGradebook(
                               ${escapeHTML(
                                 percentage
                               )}
+
+                              ${
+                                letter
+                                  ? `
+                                    <span
+                                      style="
+                                        font-size:14px;
+                                        color:#9ba5c1;
+                                      "
+                                    >
+                                      •
+                                      ${escapeHTML(letter)}
+                                    </span>
+                                  `
+                                  : ""
+                              }
+
                             </div>
 
 
@@ -4642,6 +5211,11 @@ function(submissionId) {
         "Not provided";
 
 
+  const letter =
+    submission.letterGrade ||
+    "Not provided";
+
+
   const teacherNote =
     submission.teacherNote ||
     "No overall teacher note was provided.";
@@ -4671,8 +5245,6 @@ function(submissionId) {
 
       <div>
 
-        <!-- PERCENTAGE -->
-
         <div
           class="card"
           style="
@@ -4688,7 +5260,7 @@ function(submissionId) {
               margin-bottom:7px;
             "
           >
-            FINAL PERCENTAGE
+            FINAL GRADE
           </div>
 
 
@@ -4710,10 +5282,22 @@ function(submissionId) {
             )}
           </div>
 
+
+          <div
+            style="
+              margin-top:6px;
+              color:#aeb7d0;
+              font-size:18px;
+              font-weight:700;
+            "
+          >
+            ${escapeHTML(
+              letter
+            )}
+          </div>
+
         </div>
 
-
-        <!-- OVERALL NOTE -->
 
         <div
           class="card"
@@ -4741,8 +5325,6 @@ function(submissionId) {
         </div>
 
 
-        <!-- QUESTIONS -->
-
         <h3
           style="margin-bottom:12px;"
         >
@@ -4766,8 +5348,14 @@ function(submissionId) {
                   "";
 
 
-                let displayedAnswer =
-                  studentAnswer;
+                const correct =
+                  result.correct ===
+                  true;
+
+
+                const incorrect =
+                  result.correct ===
+                  false;
 
 
                 if (
@@ -4775,16 +5363,211 @@ function(submissionId) {
                   "math"
                 ) {
 
-                  displayedAnswer =
-                    question
-                      .choices?.[
-                        Number(
-                          studentAnswer
-                        )
-                      ] ||
-                    "No answer";
+                  const selectedIndex =
+                    Number(
+                      studentAnswer
+                    );
+
+
+                  return `
+
+                    <div
+                      class="review-question"
+                      style="
+                        border-left:
+                          4px solid
+                          ${
+                            correct
+                              ? "#55d68a"
+                              : incorrect
+                                ? "#ff6577"
+                                : "#7f89a7"
+                          };
+                      "
+                    >
+
+                      <div
+                        style="
+                          display:flex;
+                          justify-content:space-between;
+                          gap:10px;
+                          align-items:flex-start;
+                        "
+                      >
+
+                        <p>
+                          <strong>
+                            ${index + 1}.
+                          </strong>
+
+                          ${escapeHTML(
+                            question.text
+                          )}
+                        </p>
+
+
+                        <span
+                          class="badge ${
+                            correct
+                              ? "green"
+                              : incorrect
+                                ? "red"
+                                : ""
+                          }"
+                        >
+
+                          ${
+                            correct
+                              ? "✓ Correct"
+                              : incorrect
+                                ? "✕ Incorrect"
+                                : "Not graded"
+                          }
+
+                        </span>
+
+                      </div>
+
+
+                      <div
+                        style="
+                          margin-top:13px;
+                        "
+                      >
+
+                        <div
+                          style="
+                            color:#7f89a7;
+                            font-size:11px;
+                            margin-bottom:7px;
+                          "
+                        >
+                          ANSWER CHOICES
+                        </div>
+
+
+                        ${
+                          question.choices
+                            .map(
+                              (choice,i) => {
+
+                                const isCorrect =
+                                  i ===
+                                  Number(
+                                    result.correctAnswer
+                                  );
+
+
+                                const isStudent =
+                                  i ===
+                                  selectedIndex;
+
+
+                                return `
+
+                                  <div
+                                    class="
+                                      choice-review
+                                      ${
+                                        isCorrect
+                                          ? "correct-choice"
+                                          : ""
+                                      }
+                                      ${
+                                        isStudent
+                                          ? "student-choice"
+                                          : ""
+                                      }
+                                    "
+                                  >
+
+                                    <strong>
+                                      Choice ${i + 1}
+                                    </strong>
+
+                                    —
+                                    ${escapeHTML(
+                                      choice
+                                    )}
+
+                                    ${
+                                      isStudent
+                                        ? `
+                                          <span
+                                            style="
+                                              float:right;
+                                              font-size:11px;
+                                            "
+                                          >
+                                            Your Answer
+                                          </span>
+                                        `
+                                        : ""
+                                    }
+
+                                  </div>
+
+                                `;
+
+                              }
+                            )
+                            .join("")
+                        }
+
+                      </div>
+
+
+                      <div class="answer-box">
+
+                        <strong>
+                          Your answer:
+                        </strong>
+
+                        <br>
+
+                        ${escapeHTML(
+                          question.choices?.[
+                            selectedIndex
+                          ] ||
+                          "No answer"
+                        )}
+
+                      </div>
+
+
+                      ${
+                        result.note
+                          ? `
+
+                            <div
+                              class="answer-box"
+                            >
+
+                              <strong>
+                                Teacher's note:
+                              </strong>
+
+                              <br>
+
+                              ${escapeHTML(
+                                result.note
+                              )}
+
+                            </div>
+
+                          `
+                          : ""
+                      }
+
+                    </div>
+
+                  `;
 
                 }
+
+
+                let displayedAnswer =
+                  studentAnswer;
 
 
                 if (
@@ -4802,16 +5585,6 @@ function(submissionId) {
                         : "No answer";
 
                 }
-
-
-                const correct =
-                  result.correct ===
-                  true;
-
-
-                const incorrect =
-                  result.correct ===
-                  false;
 
 
                 return `
@@ -4841,6 +5614,7 @@ function(submissionId) {
                     >
 
                       <p>
+
                         <strong>
                           ${index + 1}.
                         </strong>
@@ -4848,6 +5622,7 @@ function(submissionId) {
                         ${escapeHTML(
                           question.text
                         )}
+
                       </p>
 
 
@@ -4888,6 +5663,32 @@ function(submissionId) {
                       )}
 
                     </div>
+
+
+                    ${
+                      question.type ===
+                      "truefalse"
+                        ? `
+
+                          <div class="answer-box">
+
+                            <strong>
+                              Correct answer:
+                            </strong>
+
+                            <br>
+
+                            ${
+                              result.correct === true
+                                ? escapeHTML(displayedAnswer)
+                                : "See teacher's grading"
+                            }
+
+                          </div>
+
+                        `
+                        : ""
+                    }
 
 
                     ${
@@ -5064,13 +5865,42 @@ function renderStaffGradebook(
 
                       ${
                         graded
-                          ? `${submission.percentage}%`
+                          ? `${submission.percentage}%${
+                              submission.letterGrade
+                                ? ` • ${escapeHTML(submission.letterGrade)}`
+                                : ""
+                            }`
                           : "Needs grading"
                       }
 
                     </span>
 
                   </div>
+
+
+                  ${
+                    graded && submission.teacherNote
+                      ? `
+
+                        <div
+                          style="
+                            margin-top:12px;
+                            color:#858faa;
+                            font-size:12px;
+                            line-height:1.5;
+                          "
+                        >
+
+                          Teacher note:
+                          ${escapeHTML(
+                            submission.teacherNote
+                          )}
+
+                        </div>
+
+                      `
+                      : ""
+                  }
 
 
                   <div
@@ -5090,7 +5920,7 @@ function renderStaffGradebook(
                       ${
                         graded
                           ? "Edit Grade"
-                          : "Grade"
+                          : "Grade Submission"
                       }
 
                     </button>
