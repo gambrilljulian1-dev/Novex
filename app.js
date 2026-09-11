@@ -60,15 +60,12 @@ mainButton.addEventListener("click", async () => {
   }
 
   try {
-
     if (creatingAccount) {
-
-      const userCredential =
-        await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
       const user = userCredential.user;
 
@@ -84,7 +81,6 @@ mainButton.addEventListener("click", async () => {
       window.location.href = "dashboard.html";
 
     } else {
-
       await signInWithEmailAndPassword(
         auth,
         email,
@@ -95,8 +91,7 @@ mainButton.addEventListener("click", async () => {
     }
 
   } catch (error) {
-
-    console.error(error);
+    console.error("Novex error:", error);
 
     if (error.code === "auth/email-already-in-use") {
       message.textContent = "That email is already registered.";
@@ -106,6 +101,8 @@ mainButton.addEventListener("click", async () => {
       message.textContent = "Password must be at least 6 characters.";
     } else if (error.code === "auth/invalid-credential") {
       message.textContent = "Incorrect email or password.";
+    } else if (error.code === "permission-denied") {
+      message.textContent = "Firestore permission denied.";
     } else {
       message.textContent = "Something went wrong. Try again.";
     }
