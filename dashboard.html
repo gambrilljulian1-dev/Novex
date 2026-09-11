@@ -11,596 +11,2394 @@
 
 <body>
 
-  <main class="dashboard">
+<main class="dashboard">
 
-    <header class="topbar">
-      <div>
-        <h1>Novex</h1>
-        <p id="welcome">Welcome!</p>
-      </div>
+  <header class="topbar">
+    <div>
+      <h1>Novex</h1>
+      <p id="welcome">Welcome!</p>
+    </div>
 
-      <button id="logout-button">Log out</button>
-    </header>
-
-
-    <section class="dashboard-card">
-
-      <h2>Your Assignments</h2>
-
-      <div id="assignments">
-        <p>No assignments yet.</p>
-      </div>
-
-    </section>
+    <button id="logout-button">Log out</button>
+  </header>
 
 
-    <section class="dashboard-card">
+  <!-- ACCOUNT -->
 
-      <h2>Account</h2>
+  <section class="dashboard-card">
 
-      <p>
-        <strong>Name:</strong>
-        <span id="user-name">Loading...</span>
-      </p>
+    <h2>Account</h2>
 
-      <p>
-        <strong>Email:</strong>
-        <span id="user-email">Loading...</span>
-      </p>
+    <p>
+      <strong>Name:</strong>
+      <span id="user-name">Loading...</span>
+    </p>
 
-      <p>
-        <strong>Role:</strong>
-        <span id="user-role">Loading...</span>
-      </p>
+    <p>
+      <strong>Email:</strong>
+      <span id="user-email">Loading...</span>
+    </p>
 
-    </section>
+    <p>
+      <strong>Role:</strong>
+      <span id="user-role">Loading...</span>
+    </p>
+
+  </section>
 
 
-    <!-- OWNER ONLY -->
+  <!-- STUDENT QUIZZES -->
 
-    <section
-      class="dashboard-card"
-      id="owner-panel"
-      style="display: none;"
-    >
+  <section
+    class="dashboard-card"
+    id="student-panel"
+    style="display:none;"
+  >
 
-      <h2>Owner Controls</h2>
+    <h2>Your Assignments</h2>
 
-      <p style="color: #6b7280; margin-bottom: 18px;">
-        Search for a Novex user by email and manage their role.
-      </p>
+    <div id="student-assignments">
+      <p>Loading assignments...</p>
+    </div>
+
+  </section>
+
+
+  <!-- TEACHER CONTROLS -->
+
+  <section
+    class="dashboard-card"
+    id="teacher-panel"
+    style="display:none;"
+  >
+
+    <h2>Teacher Controls</h2>
+
+    <p style="color:#6b7280;margin-bottom:20px;">
+      Create and assign quizzes to your students.
+    </p>
+
+
+    <div id="quiz-creator">
+
+      <h3 style="margin-bottom:15px;">
+        Create a Quiz
+      </h3>
 
       <input
-        id="user-search"
-        type="email"
-        placeholder="Search user email"
+        id="quiz-title"
+        type="text"
+        placeholder="Quiz title"
       >
 
-      <button id="search-user-button">
-        Search
+      <label style="display:block;margin-bottom:8px;">
+        Due date
+      </label>
+
+      <input
+        id="quiz-due-date"
+        type="datetime-local"
+      >
+
+
+      <div id="questions-container"></div>
+
+
+      <button
+        id="add-question-button"
+        style="margin-top:10px;"
+      >
+        Add Question
       </button>
 
+
+      <p
+        id="question-count"
+        style="margin-top:10px;color:#6b7280;"
+      >
+        0 / 5 questions
+      </p>
+
+
+      <hr style="
+        margin:25px 0;
+        border:none;
+        border-top:1px solid #e5e7eb;
+      ">
+
+
+      <h3 style="margin-bottom:15px;">
+        Assign To Student
+      </h3>
+
+
+      <input
+        id="student-email"
+        type="email"
+        placeholder="Student email"
+      >
+
+
+      <button id="find-student-button">
+        Find Student
+      </button>
+
+
       <div
-        id="user-result"
-        style="margin-top: 20px;"
+        id="student-search-result"
+        style="margin-top:15px;"
       ></div>
 
-    </section>
+
+      <button
+        id="create-quiz-button"
+        style="
+          margin-top:20px;
+          display:none;
+        "
+      >
+        Create & Assign Quiz
+      </button>
 
 
-  </main>
+      <p
+        id="quiz-message"
+        style="margin-top:15px;"
+      ></p>
+
+    </div>
+
+  </section>
 
 
-  <script type="module">
+  <!-- TEACHER SUBMISSIONS -->
 
-    import { auth, db } from "./firebase.js";
+  <section
+    class="dashboard-card"
+    id="submissions-panel"
+    style="display:none;"
+  >
 
-    import {
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+    <h2>Student Submissions</h2>
 
-    import {
-      doc,
-      getDoc,
-      getDocs,
-      updateDoc,
-      collection,
-      query,
-      where
-    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+    <div id="submissions-list">
+      <p>Loading submissions...</p>
+    </div>
+
+  </section>
 
 
-    const welcome = document.getElementById("welcome");
+  <!-- OWNER CONTROLS -->
 
-    const userName = document.getElementById("user-name");
-    const userEmail = document.getElementById("user-email");
-    const userRole = document.getElementById("user-role");
+  <section
+    class="dashboard-card"
+    id="owner-panel"
+    style="display:none;"
+  >
 
-    const logoutButton = document.getElementById("logout-button");
+    <h2>Owner Controls</h2>
 
-    const ownerPanel = document.getElementById("owner-panel");
+    <p style="color:#6b7280;margin-bottom:18px;">
+      Search for a Novex user and manage their role.
+    </p>
 
-    const userSearch = document.getElementById("user-search");
-    const searchUserButton =
-      document.getElementById("search-user-button");
+    <input
+      id="user-search"
+      type="email"
+      placeholder="Search user email"
+    >
 
-    const userResult = document.getElementById("user-result");
+    <button id="search-user-button">
+      Search
+    </button>
+
+    <div
+      id="user-result"
+      style="margin-top:20px;"
+    ></div>
+
+  </section>
 
 
-    const OWNER_EMAIL =
-      "gambrilljulian452@gmail.com";
+</main>
 
 
-    let currentUserIsOwner = false;
+<script type="module">
+
+import { auth, db } from "./firebase.js";
+
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+import {
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  collection,
+  query,
+  where,
+  orderBy,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 
-    /*
-      LOAD CURRENT USER
-    */
+const OWNER_EMAIL =
+  "gambrilljulian452@gmail.com";
 
-    onAuthStateChanged(auth, async (user) => {
 
-      if (!user) {
+const welcome =
+  document.getElementById("welcome");
 
-        window.location.href = "index.html";
+const userName =
+  document.getElementById("user-name");
+
+const userEmail =
+  document.getElementById("user-email");
+
+const userRole =
+  document.getElementById("user-role");
+
+const logoutButton =
+  document.getElementById("logout-button");
+
+const studentPanel =
+  document.getElementById("student-panel");
+
+const teacherPanel =
+  document.getElementById("teacher-panel");
+
+const submissionsPanel =
+  document.getElementById("submissions-panel");
+
+const ownerPanel =
+  document.getElementById("owner-panel");
+
+
+let currentUser = null;
+let currentUserData = null;
+
+let selectedStudent = null;
+let questionCount = 0;
+
+
+/* =========================
+   AUTH
+========================= */
+
+onAuthStateChanged(auth, async (user) => {
+
+  if (!user) {
+
+    window.location.href = "index.html";
+    return;
+
+  }
+
+  currentUser = user;
+
+  userEmail.textContent =
+    user.email || "No email";
+
+
+  try {
+
+    const snapshot =
+      await getDoc(
+        doc(db, "users", user.uid)
+      );
+
+
+    if (!snapshot.exists()) {
+
+      userName.textContent = "Student";
+      userRole.textContent = "student";
+
+      studentPanel.style.display = "block";
+
+      loadStudentAssignments();
+
+      return;
+
+    }
+
+
+    currentUserData =
+      snapshot.data();
+
+
+    const role =
+      currentUserData.role || "student";
+
+
+    userName.textContent =
+      currentUserData.name || "Student";
+
+    userRole.textContent =
+      role;
+
+
+    welcome.textContent =
+      `Welcome, ${currentUserData.name || "Student"}!`;
+
+
+    /* STUDENT */
+
+    if (role === "student") {
+
+      studentPanel.style.display =
+        "block";
+
+      await loadStudentAssignments();
+
+    }
+
+
+    /* TEACHER */
+
+    if (role === "teacher") {
+
+      teacherPanel.style.display =
+        "block";
+
+      submissionsPanel.style.display =
+        "block";
+
+      await loadTeacherSubmissions();
+
+    }
+
+
+    /* OWNER */
+
+    if (
+      user.email?.toLowerCase() ===
+      OWNER_EMAIL
+    ) {
+
+      ownerPanel.style.display =
+        "block";
+
+      teacherPanel.style.display =
+        "block";
+
+      submissionsPanel.style.display =
+        "block";
+
+      await loadTeacherSubmissions();
+
+    }
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    userName.textContent =
+      "Unable to load";
+
+    userRole.textContent =
+      "Unable to load";
+
+  }
+
+});
+
+
+/* =========================
+   QUESTION CREATOR
+========================= */
+
+document
+  .getElementById("add-question-button")
+  .addEventListener("click", () => {
+
+    if (questionCount >= 5) {
+
+      alert("You can only have up to 5 questions.");
+
+      return;
+
+    }
+
+
+    questionCount++;
+
+
+    const container =
+      document.getElementById(
+        "questions-container"
+      );
+
+
+    const question =
+      document.createElement("div");
+
+
+    question.className =
+      "dashboard-card";
+
+
+    question.style.marginTop =
+      "15px";
+
+
+    question.innerHTML = `
+
+      <h3>
+        Question ${questionCount}
+      </h3>
+
+      <select
+        class="question-type"
+        style="
+          width:100%;
+          padding:14px;
+          margin:12px 0;
+          border:1px solid #d1d5db;
+          border-radius:10px;
+          font-size:16px;
+        "
+      >
+
+        <option value="math">
+          Math
+        </option>
+
+        <option value="written">
+          Written Response
+        </option>
+
+        <option value="truefalse">
+          True or False
+        </option>
+
+      </select>
+
+
+      <input
+        class="question-text"
+        type="text"
+        placeholder="Question"
+      >
+
+
+      <div class="answers-area"></div>
+
+    `;
+
+
+    container.appendChild(question);
+
+
+    const typeSelect =
+      question.querySelector(
+        ".question-type"
+      );
+
+
+    const answersArea =
+      question.querySelector(
+        ".answers-area"
+      );
+
+
+    function renderAnswers() {
+
+      const type =
+        typeSelect.value;
+
+
+      if (type === "math") {
+
+        answersArea.innerHTML = `
+
+          <input
+            class="answer"
+            placeholder="Answer A"
+          >
+
+          <input
+            class="answer"
+            placeholder="Answer B"
+          >
+
+          <input
+            class="answer"
+            placeholder="Answer C"
+          >
+
+          <label>
+            Correct answer:
+          </label>
+
+          <select
+            class="correct-answer"
+            style="
+              width:100%;
+              padding:12px;
+              margin-top:8px;
+            "
+          >
+
+            <option value="0">A</option>
+            <option value="1">B</option>
+            <option value="2">C</option>
+
+          </select>
+
+        `;
+
+      }
+
+
+      if (type === "truefalse") {
+
+        answersArea.innerHTML = `
+
+          <p style="margin-top:10px;">
+            Answers:
+            <strong>True / False</strong>
+          </p>
+
+          <label>
+            Correct answer:
+          </label>
+
+          <select
+            class="correct-answer"
+            style="
+              width:100%;
+              padding:12px;
+              margin-top:8px;
+            "
+          >
+
+            <option value="true">
+              True
+            </option>
+
+            <option value="false">
+              False
+            </option>
+
+          </select>
+
+        `;
+
+      }
+
+
+      if (type === "written") {
+
+        answersArea.innerHTML = `
+
+          <p style="
+            margin-top:10px;
+            color:#6b7280;
+          ">
+            Students will type their answer.
+            The teacher will decide whether it
+            is correct after submission.
+          </p>
+
+        `;
+
+      }
+
+    }
+
+
+    typeSelect.addEventListener(
+      "change",
+      renderAnswers
+    );
+
+
+    renderAnswers();
+
+
+    document.getElementById(
+      "question-count"
+    ).textContent =
+      `${questionCount} / 5 questions`;
+
+  });
+
+
+/* =========================
+   FIND STUDENT
+========================= */
+
+document
+  .getElementById("find-student-button")
+  .addEventListener("click", async () => {
+
+    const email =
+      document
+        .getElementById("student-email")
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    const result =
+      document.getElementById(
+        "student-search-result"
+      );
+
+
+    const assignButton =
+      document.getElementById(
+        "create-quiz-button"
+      );
+
+
+    if (!email) {
+
+      result.innerHTML =
+        "<p>Please enter a student email.</p>";
+
+      return;
+
+    }
+
+
+    result.innerHTML =
+      "<p>Searching...</p>";
+
+
+    assignButton.style.display =
+      "none";
+
+
+    try {
+
+      const q =
+        query(
+          collection(db, "users"),
+          where("email", "==", email)
+        );
+
+
+      const snapshot =
+        await getDocs(q);
+
+
+      if (snapshot.empty) {
+
+        result.innerHTML =
+          "<p>No user found with that email.</p>";
+
         return;
 
       }
 
 
-      userEmail.textContent =
-        user.email || "No email";
+      const studentDoc =
+        snapshot.docs[0];
 
 
-      /*
-        OWNER CHECK
-
-        This is intentionally based on the
-        Firebase Authentication email.
-      */
-
-      currentUserIsOwner =
-        user.email?.toLowerCase() === OWNER_EMAIL;
+      const data =
+        studentDoc.data();
 
 
-      if (currentUserIsOwner) {
+      if (data.role !== "student") {
 
-        ownerPanel.style.display = "block";
+        result.innerHTML =
+          "<p>This email does not belong to a student account.</p>";
+
+        return;
+
+      }
+
+
+      selectedStudent = {
+        uid: studentDoc.id,
+        email: data.email,
+        name: data.name || "Student"
+      };
+
+
+      result.innerHTML = `
+
+        <div style="
+          padding:15px;
+          background:#f4f6f8;
+          border-radius:10px;
+        ">
+
+          <strong>
+            ${escapeHtml(selectedStudent.name)}
+          </strong>
+
+          <p>
+            ${escapeHtml(selectedStudent.email)}
+          </p>
+
+          <p>
+            Role: student
+          </p>
+
+        </div>
+
+      `;
+
+
+      assignButton.style.display =
+        "block";
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      result.innerHTML =
+        "<p>Could not search for student.</p>";
+
+    }
+
+  });
+
+
+/* =========================
+   CREATE QUIZ
+========================= */
+
+document
+  .getElementById("create-quiz-button")
+  .addEventListener("click", async () => {
+
+    const title =
+      document
+        .getElementById("quiz-title")
+        .value
+        .trim();
+
+
+    const dueDate =
+      document
+        .getElementById("quiz-due-date")
+        .value;
+
+
+    const message =
+      document.getElementById(
+        "quiz-message"
+      );
+
+
+    if (!title) {
+
+      message.textContent =
+        "Please enter a quiz title.";
+
+      return;
+
+    }
+
+
+    if (!dueDate) {
+
+      message.textContent =
+        "Please choose a due date.";
+
+      return;
+
+    }
+
+
+    if (!selectedStudent) {
+
+      message.textContent =
+        "Please find a student first.";
+
+      return;
+
+    }
+
+
+    if (questionCount < 1) {
+
+      message.textContent =
+        "Add at least one question.";
+
+      return;
+
+    }
+
+
+    const questionElements =
+      document.querySelectorAll(
+        "#questions-container > div"
+      );
+
+
+    const questions = [];
+    const answerKeys = [];
+
+
+    for (
+      let i = 0;
+      i < questionElements.length;
+      i++
+    ) {
+
+      const element =
+        questionElements[i];
+
+
+      const type =
+        element.querySelector(
+          ".question-type"
+        ).value;
+
+
+      const text =
+        element.querySelector(
+          ".question-text"
+        ).value.trim();
+
+
+      if (!text) {
+
+        message.textContent =
+          `Question ${i + 1} needs text.`;
+
+        return;
+
+      }
+
+
+      if (type === "math") {
+
+        const answers =
+          [...element.querySelectorAll(
+            ".answer"
+          )]
+          .map(input =>
+            input.value.trim()
+          );
+
+
+        if (
+          answers.some(
+            answer => !answer
+          )
+        ) {
+
+          message.textContent =
+            `Question ${i + 1} needs all 3 answers.`;
+
+          return;
+
+        }
+
+
+        const correct =
+          Number(
+            element.querySelector(
+              ".correct-answer"
+            ).value
+          );
+
+
+        questions.push({
+          number: i + 1,
+          type: "math",
+          text,
+          choices: answers
+        });
+
+
+        answerKeys.push({
+          number: i + 1,
+          correctChoice: correct
+        });
+
+      }
+
+
+      if (type === "truefalse") {
+
+        const correct =
+          element.querySelector(
+            ".correct-answer"
+          ).value === "true";
+
+
+        questions.push({
+          number: i + 1,
+          type: "truefalse",
+          text,
+          choices: [
+            "True",
+            "False"
+          ]
+        });
+
+
+        answerKeys.push({
+          number: i + 1,
+          correctChoice: correct
+        });
+
+      }
+
+
+      if (type === "written") {
+
+        questions.push({
+          number: i + 1,
+          type: "written",
+          text
+        });
+
+
+        answerKeys.push({
+          number: i + 1
+        });
+
+      }
+
+    }
+
+
+    try {
+
+      const assignmentRef =
+        doc(
+          collection(db, "assignments")
+        );
+
+
+      await setDoc(
+        assignmentRef,
+        {
+          title,
+          assignedTo: [
+            selectedStudent.uid
+          ],
+          assignedEmail:
+            selectedStudent.email,
+          assignedName:
+            selectedStudent.name,
+          teacherId:
+            currentUser.uid,
+          teacherEmail:
+            currentUser.email,
+          questions,
+          dueDate,
+          createdAt:
+            serverTimestamp(),
+          status: "assigned"
+        }
+      );
+
+
+      await setDoc(
+        doc(
+          db,
+          "answerKeys",
+          assignmentRef.id
+        ),
+        {
+          assignmentId:
+            assignmentRef.id,
+          teacherId:
+            currentUser.uid,
+          answers:
+            answerKeys
+        }
+      );
+
+
+      message.textContent =
+        "Quiz created and assigned successfully!";
+
+
+      document.getElementById(
+        "quiz-title"
+      ).value = "";
+
+
+      document.getElementById(
+        "quiz-due-date"
+      ).value = "";
+
+
+      document.getElementById(
+        "student-email"
+      ).value = "";
+
+
+      document.getElementById(
+        "questions-container"
+      ).innerHTML = "";
+
+
+      document.getElementById(
+        "student-search-result"
+      ).innerHTML = "";
+
+
+      document.getElementById(
+        "create-quiz-button"
+      ).style.display = "none";
+
+
+      questionCount = 0;
+      selectedStudent = null;
+
+
+      document.getElementById(
+        "question-count"
+      ).textContent =
+        "0 / 5 questions";
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      message.textContent =
+        "Could not create the quiz.";
+
+    }
+
+  });
+
+
+/* =========================
+   STUDENT ASSIGNMENTS
+========================= */
+
+async function loadStudentAssignments() {
+
+  const container =
+    document.getElementById(
+      "student-assignments"
+    );
+
+
+  try {
+
+    const q =
+      query(
+        collection(db, "assignments"),
+        where(
+          "assignedTo",
+          "array-contains",
+          currentUser.uid
+        )
+      );
+
+
+    const snapshot =
+      await getDocs(q);
+
+
+    if (snapshot.empty) {
+
+      container.innerHTML =
+        "<p>No assignments yet.</p>";
+
+      return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    for (const assignmentDoc of snapshot.docs) {
+
+      const assignment =
+        assignmentDoc.data();
+
+
+      const submission =
+        await getDoc(
+          doc(
+            db,
+            "submissions",
+            `${assignmentDoc.id}_${currentUser.uid}`
+          )
+        );
+
+
+      const card =
+        document.createElement("div");
+
+
+      card.style.cssText =
+        `
+          padding:18px;
+          margin-bottom:15px;
+          background:#f4f6f8;
+          border-radius:12px;
+        `;
+
+
+      if (submission.exists()) {
+
+        const data =
+          submission.data();
+
+
+        card.innerHTML = `
+
+          <h3>
+            ${escapeHtml(assignment.title)}
+          </h3>
+
+          <p>
+            Submitted
+          </p>
+
+          <p>
+            Grade:
+            <strong>
+              ${escapeHtml(data.grade || "Not graded yet")}
+            </strong>
+          </p>
+
+          <button>
+            View Results
+          </button>
+
+        `;
+
+
+        card
+          .querySelector("button")
+          .addEventListener(
+            "click",
+            () => {
+
+              showStudentResults(
+                assignment,
+                data
+              );
+
+            }
+          );
+
+
+      } else {
+
+        card.innerHTML = `
+
+          <h3>
+            ${escapeHtml(assignment.title)}
+          </h3>
+
+          <p>
+            Due:
+            ${formatDate(assignment.dueDate)}
+          </p>
+
+          <button>
+            Start Quiz
+          </button>
+
+        `;
+
+
+        card
+          .querySelector("button")
+          .addEventListener(
+            "click",
+            () => {
+
+              showQuiz(
+                assignmentDoc.id,
+                assignment
+              );
+
+            }
+          );
+
+      }
+
+
+      container.appendChild(card);
+
+    }
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    container.innerHTML =
+      "<p>Could not load assignments.</p>";
+
+  }
+
+}
+
+
+/* =========================
+   SHOW QUIZ
+========================= */
+
+function showQuiz(
+  assignmentId,
+  assignment
+) {
+
+  const container =
+    document.getElementById(
+      "student-assignments"
+    );
+
+
+  container.innerHTML = `
+
+    <div>
+
+      <h2>
+        ${escapeHtml(assignment.title)}
+      </h2>
+
+      <p style="margin-bottom:20px;">
+        Due:
+        ${formatDate(assignment.dueDate)}
+      </p>
+
+      <form id="quiz-form"></form>
+
+      <button
+        id="submit-quiz"
+        style="margin-top:20px;"
+      >
+        Submit Quiz
+      </button>
+
+      <p id="submit-message"></p>
+
+    </div>
+
+  `;
+
+
+  const form =
+    document.getElementById(
+      "quiz-form"
+    );
+
+
+  assignment.questions.forEach(
+    (question, index) => {
+
+      const div =
+        document.createElement("div");
+
+
+      div.style.cssText =
+        `
+          padding:18px;
+          margin-bottom:15px;
+          background:#f4f6f8;
+          border-radius:12px;
+        `;
+
+
+      if (
+        question.type === "written"
+      ) {
+
+        div.innerHTML = `
+
+          <h3>
+            ${index + 1}.
+            ${escapeHtml(question.text)}
+          </h3>
+
+          <textarea
+            name="q${index}"
+            rows="5"
+            placeholder="Type your answer..."
+            style="
+              width:100%;
+              margin-top:12px;
+              padding:12px;
+              border:1px solid #d1d5db;
+              border-radius:10px;
+              font-size:16px;
+              resize:vertical;
+            "
+          ></textarea>
+
+        `;
+
+      } else {
+
+        div.innerHTML = `
+
+          <h3>
+            ${index + 1}.
+            ${escapeHtml(question.text)}
+          </h3>
+
+        `;
+
+
+        question.choices.forEach(
+          (choice, choiceIndex) => {
+
+            div.innerHTML += `
+
+              <label style="
+                display:block;
+                padding:10px;
+                margin-top:8px;
+                background:white;
+                border-radius:8px;
+              ">
+
+                <input
+                  type="radio"
+                  name="q${index}"
+                  value="${choiceIndex}"
+                >
+
+                ${escapeHtml(choice)}
+
+              </label>
+
+            `;
+
+          }
+        );
+
+      }
+
+
+      form.appendChild(div);
+
+    }
+  );
+
+
+  document
+    .getElementById("submit-quiz")
+    .addEventListener(
+      "click",
+      async () => {
+
+        const answers = [];
+
+
+        assignment.questions.forEach(
+          (question, index) => {
+
+            const selected =
+              document.querySelector(
+                `[name="q${index}"]:checked`
+              );
+
+
+            if (
+              question.type === "written"
+            ) {
+
+              const textarea =
+                document.querySelector(
+                  `[name="q${index}"]`
+                );
+
+
+              answers.push({
+                number: index + 1,
+                answer:
+                  textarea.value
+              });
+
+
+            } else {
+
+              answers.push({
+                number: index + 1,
+                answer:
+                  selected
+                    ? selected.value
+                    : null
+              });
+
+            }
+
+          }
+        );
+
+
+        try {
+
+          await setDoc(
+            doc(
+              db,
+              "submissions",
+              `${assignmentId}_${currentUser.uid}`
+            ),
+            {
+              assignmentId,
+              studentId:
+                currentUser.uid,
+              studentEmail:
+                currentUser.email,
+              studentName:
+                currentUserData?.name ||
+                "Student",
+              answers,
+              submittedAt:
+                serverTimestamp(),
+              graded: false,
+              grade: null,
+              questionResults: []
+            }
+          );
+
+
+          document.getElementById(
+            "submit-message"
+          ).textContent =
+            "Quiz submitted! Your teacher will grade it.";
+
+
+          setTimeout(
+            loadStudentAssignments,
+            1000
+          );
+
+
+        } catch (error) {
+
+          console.error(error);
+
+          document.getElementById(
+            "submit-message"
+          ).textContent =
+            "Could not submit the quiz.";
+
+        }
+
+      }
+    );
+
+}
+
+
+/* =========================
+   TEACHER SUBMISSIONS
+========================= */
+
+async function loadTeacherSubmissions() {
+
+  const container =
+    document.getElementById(
+      "submissions-list"
+    );
+
+
+  try {
+
+    const q =
+      query(
+        collection(db, "submissions"),
+        where(
+          "graded",
+          "==",
+          false
+        )
+      );
+
+
+    const snapshot =
+      await getDocs(q);
+
+
+    if (snapshot.empty) {
+
+      container.innerHTML =
+        "<p>No ungraded submissions.</p>";
+
+      return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    for (
+      const submissionDoc
+      of snapshot.docs
+    ) {
+
+      const submission =
+        submissionDoc.data();
+
+
+      const assignmentSnapshot =
+        await getDoc(
+          doc(
+            db,
+            "assignments",
+            submission.assignmentId
+          )
+        );
+
+
+      if (!assignmentSnapshot.exists()) {
+        continue;
+      }
+
+
+      const assignment =
+        assignmentSnapshot.data();
+
+
+      if (
+        assignment.teacherId !==
+        currentUser.uid
+        &&
+        currentUser.email?.toLowerCase() !==
+        OWNER_EMAIL
+      ) {
+
+        continue;
+
+      }
+
+
+      const card =
+        document.createElement("div");
+
+
+      card.style.cssText =
+        `
+          padding:18px;
+          margin-bottom:15px;
+          background:#f4f6f8;
+          border-radius:12px;
+        `;
+
+
+      card.innerHTML = `
+
+        <h3>
+          ${escapeHtml(assignment.title)}
+        </h3>
+
+        <p>
+          Student:
+          <strong>
+            ${escapeHtml(
+              submission.studentName ||
+              submission.studentEmail
+            )}
+          </strong>
+        </p>
+
+        <p>
+          Submitted:
+          ${formatTimestamp(
+            submission.submittedAt
+          )}
+        </p>
+
+        <button>
+          Grade Submission
+        </button>
+
+      `;
+
+
+      card
+        .querySelector("button")
+        .addEventListener(
+          "click",
+          () => {
+
+            showGrading(
+              submissionDoc.id,
+              assignment,
+              submission
+            );
+
+          }
+        );
+
+
+      container.appendChild(card);
+
+    }
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    container.innerHTML =
+      "<p>Could not load submissions.</p>";
+
+  }
+
+}
+
+
+/* =========================
+   GRADING
+========================= */
+
+async function showGrading(
+  submissionId,
+  assignment,
+  submission
+) {
+
+  const container =
+    document.getElementById(
+      "submissions-list"
+    );
+
+
+  const answerKeySnapshot =
+    await getDoc(
+      doc(
+        db,
+        "answerKeys",
+        assignment.id ||
+        assignment.assignmentId ||
+        submission.assignmentId
+      )
+    );
+
+
+  const answerKey =
+    answerKeySnapshot.exists()
+      ? answerKeySnapshot.data().answers
+      : [];
+
+
+  container.innerHTML = `
+
+    <h2>
+      Grade:
+      ${escapeHtml(assignment.title)}
+    </h2>
+
+    <p style="margin-bottom:20px;">
+      Student:
+      <strong>
+        ${escapeHtml(
+          submission.studentName ||
+          submission.studentEmail
+        )}
+      </strong>
+    </p>
+
+    <div id="grading-questions"></div>
+
+    <label style="
+      display:block;
+      margin-top:20px;
+      margin-bottom:8px;
+    ">
+      Final Grade
+    </label>
+
+    <select
+      id="final-grade"
+      style="
+        width:100%;
+        padding:14px;
+        border:1px solid #d1d5db;
+        border-radius:10px;
+        font-size:16px;
+      "
+    >
+
+      <option value="">Choose grade</option>
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="C">C</option>
+      <option value="D">D</option>
+      <option value="F">F</option>
+
+    </select>
+
+
+    <button
+      id="save-grade"
+      style="margin-top:20px;"
+    >
+      Return Grade to Student
+    </button>
+
+
+    <p id="grade-message"></p>
+
+  `;
+
+
+  const questionsContainer =
+    document.getElementById(
+      "grading-questions"
+    );
+
+
+  const results = [];
+
+
+  assignment.questions.forEach(
+    (question, index) => {
+
+      const studentAnswer =
+        submission.answers[index]
+          ?.answer;
+
+
+      const key =
+        answerKey.find(
+          item =>
+            item.number ===
+            question.number
+        );
+
+
+      let answerText =
+        "No answer";
+
+
+      if (
+        question.type === "written"
+      ) {
+
+        answerText =
+          studentAnswer ||
+          "No answer";
+
+      } else if (
+        studentAnswer !== null &&
+        studentAnswer !== undefined
+      ) {
+
+        const choiceIndex =
+          Number(studentAnswer);
+
+
+        answerText =
+          question.choices[
+            choiceIndex
+          ] || "No answer";
+
+      }
+
+
+      const div =
+        document.createElement("div");
+
+
+      div.style.cssText =
+        `
+          padding:18px;
+          margin-bottom:15px;
+          background:#f4f6f8;
+          border-radius:12px;
+        `;
+
+
+      div.innerHTML = `
+
+        <h3>
+          ${index + 1}.
+          ${escapeHtml(question.text)}
+        </h3>
+
+        <p style="margin:10px 0;">
+          <strong>Student answer:</strong>
+          ${escapeHtml(answerText)}
+        </p>
+
+        <select
+          class="question-grade"
+          data-number="${question.number}"
+          style="
+            width:100%;
+            padding:12px;
+            border:1px solid #d1d5db;
+            border-radius:10px;
+          "
+        >
+
+          <option value="">
+            Choose result
+          </option>
+
+          <option value="correct">
+            Correct
+          </option>
+
+          <option value="wrong">
+            Wrong
+          </option>
+
+        </select>
+
+      `;
+
+
+      questionsContainer.appendChild(div);
+
+    }
+  );
+
+
+  document
+    .getElementById("save-grade")
+    .addEventListener(
+      "click",
+      async () => {
+
+        const grade =
+          document.getElementById(
+            "final-grade"
+          ).value;
+
+
+        const gradeMessage =
+          document.getElementById(
+            "grade-message"
+          );
+
+
+        if (!grade) {
+
+          gradeMessage.textContent =
+            "Choose a final grade.";
+
+          return;
+
+        }
+
+
+        const questionResults =
+          [...document.querySelectorAll(
+            ".question-grade"
+          )]
+          .map(select => ({
+            number:
+              Number(
+                select.dataset.number
+              ),
+            result:
+              select.value
+          }));
+
+
+        if (
+          questionResults.some(
+            result =>
+              !result.result
+          )
+        ) {
+
+          gradeMessage.textContent =
+            "Mark every question correct or wrong.";
+
+          return;
+
+        }
+
+
+        try {
+
+          await updateDoc(
+            doc(
+              db,
+              "submissions",
+              submissionId
+            ),
+            {
+              graded: true,
+              grade,
+              questionResults,
+              gradedAt:
+                serverTimestamp(),
+              gradedBy:
+                currentUser.uid
+            }
+          );
+
+
+          gradeMessage.textContent =
+            "Grade returned to student!";
+
+
+          setTimeout(
+            loadTeacherSubmissions,
+            1000
+          );
+
+
+        } catch (error) {
+
+          console.error(error);
+
+          gradeMessage.textContent =
+            "Could not save the grade.";
+
+        }
+
+      }
+    );
+
+}
+
+
+/* =========================
+   STUDENT RESULTS
+========================= */
+
+function showStudentResults(
+  assignment,
+  submission
+) {
+
+  const container =
+    document.getElementById(
+      "student-assignments"
+    );
+
+
+  container.innerHTML = `
+
+    <h2>
+      ${escapeHtml(assignment.title)}
+    </h2>
+
+    <h3 style="margin:15px 0;">
+      Grade:
+      ${escapeHtml(
+        submission.grade ||
+        "Not graded yet"
+      )}
+    </h3>
+
+    <div id="results"></div>
+
+  `;
+
+
+  const results =
+    document.getElementById(
+      "results"
+    );
+
+
+  assignment.questions.forEach(
+    (question, index) => {
+
+      const result =
+        submission.questionResults
+          ?.find(
+            item =>
+              item.number ===
+              question.number
+          );
+
+
+      const studentAnswer =
+        submission.answers[index]
+          ?.answer;
+
+
+      let answerText =
+        "No answer";
+
+
+      if (
+        question.type ===
+        "written"
+      ) {
+
+        answerText =
+          studentAnswer ||
+          "No answer";
+
+      } else if (
+        studentAnswer !== null &&
+        studentAnswer !== undefined
+      ) {
+
+        answerText =
+          question.choices[
+            Number(studentAnswer)
+          ] || "No answer";
+
+      }
+
+
+      const div =
+        document.createElement("div");
+
+
+      div.style.cssText =
+        `
+          padding:18px;
+          margin-bottom:15px;
+          background:#f4f6f8;
+          border-radius:12px;
+        `;
+
+
+      div.innerHTML = `
+
+        <h3>
+          ${index + 1}.
+          ${escapeHtml(question.text)}
+        </h3>
+
+        <p>
+          Your answer:
+          <strong>
+            ${escapeHtml(answerText)}
+          </strong>
+        </p>
+
+        <p style="margin-top:8px;">
+          Result:
+          <strong>
+            ${
+              result?.result === "correct"
+                ? "Correct"
+                : "Wrong"
+            }
+          </strong>
+        </p>
+
+      `;
+
+
+      results.appendChild(div);
+
+    }
+  );
+
+}
+
+
+/* =========================
+   OWNER CONTROLS
+========================= */
+
+document
+  .getElementById("search-user-button")
+  .addEventListener(
+    "click",
+    async () => {
+
+      if (
+        currentUser?.email
+          ?.toLowerCase() !==
+        OWNER_EMAIL
+      ) {
+        return;
+      }
+
+
+      const email =
+        document
+          .getElementById("user-search")
+          .value
+          .trim()
+          .toLowerCase();
+
+
+      const result =
+        document.getElementById(
+          "user-result"
+        );
+
+
+      if (!email) {
+
+        result.innerHTML =
+          "<p>Please enter an email.</p>";
+
+        return;
 
       }
 
 
       try {
 
-        const userRef =
-          doc(db, "users", user.uid);
-
-        const userSnapshot =
-          await getDoc(userRef);
-
-
-        if (userSnapshot.exists()) {
-
-          const data =
-            userSnapshot.data();
+        const q =
+          query(
+            collection(db, "users"),
+            where("email", "==", email)
+          );
 
 
-          userName.textContent =
-            data.name || "Student";
+        const snapshot =
+          await getDocs(q);
 
 
-          userRole.textContent =
-            data.role || "student";
+        if (snapshot.empty) {
 
+          result.innerHTML =
+            "<p>No Novex user found.</p>";
 
-          welcome.textContent =
-            `Welcome, ${data.name || "Student"}!`;
-
-
-        } else {
-
-          userName.textContent =
-            "Student";
-
-          userRole.textContent =
-            "student";
-
-          welcome.textContent =
-            "Welcome to Novex!";
+          return;
 
         }
+
+
+        const userDoc =
+          snapshot.docs[0];
+
+
+        const data =
+          userDoc.data();
+
+
+        const role =
+          data.role || "student";
+
+
+        result.innerHTML = `
+
+          <div style="
+            padding:18px;
+            background:#f4f6f8;
+            border-radius:12px;
+          ">
+
+            <h3>
+              ${escapeHtml(
+                data.name || "Unnamed"
+              )}
+            </h3>
+
+            <p>
+              ${escapeHtml(
+                data.email
+              )}
+            </p>
+
+            <p style="margin:10px 0;">
+              Current role:
+              <strong>
+                ${escapeHtml(role)}
+              </strong>
+            </p>
+
+            <div style="
+              display:flex;
+              gap:10px;
+              flex-wrap:wrap;
+            ">
+
+              <button
+                id="owner-add-teacher"
+                style="width:auto;"
+              >
+                Add Teacher
+              </button>
+
+              <button
+                id="owner-add-admin"
+                style="width:auto;"
+              >
+                Add Admin
+              </button>
+
+              <button
+                id="owner-remove-role"
+                style="
+                  width:auto;
+                  background:#dc2626;
+                "
+              >
+                Remove Role
+              </button>
+
+            </div>
+
+            <p
+              id="owner-role-message"
+              style="margin-top:12px;"
+            ></p>
+
+          </div>
+
+        `;
+
+
+        document
+          .getElementById(
+            "owner-add-teacher"
+          )
+          .onclick =
+          () =>
+            changeRole(
+              userDoc.id,
+              "teacher"
+            );
+
+
+        document
+          .getElementById(
+            "owner-add-admin"
+          )
+          .onclick =
+          () =>
+            changeRole(
+              userDoc.id,
+              "admin"
+            );
+
+
+        document
+          .getElementById(
+            "owner-remove-role"
+          )
+          .onclick =
+          () =>
+            changeRole(
+              userDoc.id,
+              "student"
+            );
 
 
       } catch (error) {
 
-        console.error(
-          "Firestore error:",
-          error
-        );
+        console.error(error);
 
-
-        userName.textContent =
-          "Unable to load";
-
-        userRole.textContent =
-          "Unable to load";
-
-        welcome.textContent =
-          "Welcome to Novex!";
+        result.innerHTML =
+          "<p>Could not search.</p>";
 
       }
-
-    });
-
-
-    /*
-      SEARCH FOR USER
-    */
-
-    searchUserButton.addEventListener(
-      "click",
-      async () => {
-
-        if (!currentUserIsOwner) {
-          return;
-        }
-
-
-        const email =
-          userSearch.value.trim().toLowerCase();
-
-
-        if (!email) {
-
-          userResult.innerHTML =
-            "<p>Please enter an email.</p>";
-
-          return;
-
-        }
-
-
-        userResult.innerHTML =
-          "<p>Searching...</p>";
-
-
-        try {
-
-          const usersRef =
-            collection(db, "users");
-
-
-          const userQuery =
-            query(
-              usersRef,
-              where("email", "==", email)
-            );
-
-
-          const snapshot =
-            await getDocs(userQuery);
-
-
-          if (snapshot.empty) {
-
-            userResult.innerHTML =
-              "<p>No Novex user found with that email.</p>";
-
-            return;
-
-          }
-
-
-          const userDoc =
-            snapshot.docs[0];
-
-
-          const data =
-            userDoc.data();
-
-
-          const role =
-            data.role || "student";
-
-
-          userResult.innerHTML = `
-
-            <div style="
-              padding: 18px;
-              background: #f4f6f8;
-              border-radius: 12px;
-            ">
-
-              <h3 style="margin-bottom: 8px;">
-                ${escapeHtml(data.name || "Unnamed user")}
-              </h3>
-
-              <p style="margin-bottom: 8px;">
-                ${escapeHtml(data.email || email)}
-              </p>
-
-              <p style="margin-bottom: 16px;">
-                <strong>Current role:</strong>
-                ${escapeHtml(role)}
-              </p>
-
-              <div style="
-                display: flex;
-                gap: 10px;
-                flex-wrap: wrap;
-              ">
-
-                ${
-                  role === "teacher"
-                    ? `
-                      <button
-                        id="remove-role-button"
-                        style="
-                          background: #dc2626;
-                          width: auto;
-                        "
-                      >
-                        Remove Teacher
-                      </button>
-                    `
-                    : `
-                      <button
-                        id="add-teacher-button"
-                        style="width: auto;"
-                      >
-                        Add Teacher
-                      </button>
-                    `
-                }
-
-                ${
-                  role === "admin"
-                    ? `
-                      <button
-                        id="remove-role-button"
-                        style="
-                          background: #dc2626;
-                          width: auto;
-                        "
-                      >
-                        Remove Admin
-                      </button>
-                    `
-                    : `
-                      <button
-                        id="add-admin-button"
-                        style="width: auto;"
-                      >
-                        Add Admin
-                      </button>
-                    `
-                }
-
-              </div>
-
-              <p
-                id="role-message"
-                style="margin-top: 14px;"
-              ></p>
-
-            </div>
-
-          `;
-
-
-          const addTeacherButton =
-            document.getElementById(
-              "add-teacher-button"
-            );
-
-
-          const addAdminButton =
-            document.getElementById(
-              "add-admin-button"
-            );
-
-
-          const removeRoleButton =
-            document.getElementById(
-              "remove-role-button"
-            );
-
-
-          const roleMessage =
-            document.getElementById(
-              "role-message"
-            );
-
-
-          /*
-            ADD TEACHER
-          */
-
-          if (addTeacherButton) {
-
-            addTeacherButton.addEventListener(
-              "click",
-              async () => {
-
-                try {
-
-                  await updateDoc(
-                    doc(
-                      db,
-                      "users",
-                      userDoc.id
-                    ),
-                    {
-                      role: "teacher"
-                    }
-                  );
-
-
-                  roleMessage.textContent =
-                    "Teacher added successfully.";
-
-                  userRole.textContent =
-                    role === "student"
-                      ? userRole.textContent
-                      : userRole.textContent;
-
-
-                } catch (error) {
-
-                  console.error(error);
-
-                  roleMessage.textContent =
-                    "Could not change the role.";
-
-                }
-
-              }
-            );
-
-          }
-
-
-          /*
-            ADD ADMIN
-          */
-
-          if (addAdminButton) {
-
-            addAdminButton.addEventListener(
-              "click",
-              async () => {
-
-                try {
-
-                  await updateDoc(
-                    doc(
-                      db,
-                      "users",
-                      userDoc.id
-                    ),
-                    {
-                      role: "admin"
-                    }
-                  );
-
-
-                  roleMessage.textContent =
-                    "Admin added successfully.";
-
-
-                } catch (error) {
-
-                  console.error(error);
-
-                  roleMessage.textContent =
-                    "Could not change the role.";
-
-                }
-
-              }
-            );
-
-          }
-
-
-          /*
-            REMOVE ROLE
-          */
-
-          if (removeRoleButton) {
-
-            removeRoleButton.addEventListener(
-              "click",
-              async () => {
-
-                try {
-
-                  await updateDoc(
-                    doc(
-                      db,
-                      "users",
-                      userDoc.id
-                    ),
-                    {
-                      role: "student"
-                    }
-                  );
-
-
-                  roleMessage.textContent =
-                    "Role removed. User is now a student.";
-
-
-                } catch (error) {
-
-                  console.error(error);
-
-                  roleMessage.textContent =
-                    "Could not remove the role.";
-
-                }
-
-              }
-            );
-
-          }
-
-
-        } catch (error) {
-
-          console.error(error);
-
-          userResult.innerHTML =
-            "<p>Something went wrong while searching.</p>";
-
-        }
-
-      }
-    );
-
-
-    /*
-      LOG OUT
-    */
-
-    logoutButton.addEventListener(
-      "click",
-      async () => {
-
-        try {
-
-          await signOut(auth);
-
-          window.location.href =
-            "index.html";
-
-        } catch (error) {
-
-          console.error(error);
-
-        }
-
-      }
-    );
-
-
-    /*
-      BASIC HTML ESCAPING
-    */
-
-    function escapeHtml(value) {
-
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
 
     }
+  );
 
-  </script>
+
+async function changeRole(
+  uid,
+  role
+) {
+
+  if (
+    currentUser?.email
+      ?.toLowerCase() !==
+    OWNER_EMAIL
+  ) {
+    return;
+  }
+
+
+  try {
+
+    await updateDoc(
+      doc(db, "users", uid),
+      {
+        role
+      }
+    );
+
+
+    const message =
+      document.getElementById(
+        "owner-role-message"
+      );
+
+
+    message.textContent =
+      `Role changed to ${role}.`;
+
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+logoutButton.addEventListener(
+  "click",
+  async () => {
+
+    await signOut(auth);
+
+    window.location.href =
+      "index.html";
+
+  }
+);
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+function formatDate(value) {
+
+  if (!value) {
+    return "No due date";
+  }
+
+  return new Date(value)
+    .toLocaleString();
+
+}
+
+
+function formatTimestamp(value) {
+
+  if (!value) {
+    return "Unknown";
+  }
+
+  if (
+    typeof value.toDate ===
+    "function"
+  ) {
+
+    return value
+      .toDate()
+      .toLocaleString();
+
+  }
+
+  return "Unknown";
+
+}
+
+</script>
 
 </body>
 </html>
