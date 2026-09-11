@@ -76,8 +76,6 @@ mainButton.addEventListener("click", async () => {
         createdAt: new Date()
       });
 
-      message.textContent = "Account created!";
-
       window.location.href = "dashboard.html";
 
     } else {
@@ -99,7 +97,10 @@ mainButton.addEventListener("click", async () => {
       message.textContent = "Please enter a valid email.";
     } else if (error.code === "auth/weak-password") {
       message.textContent = "Password must be at least 6 characters.";
-    } else if (error.code === "auth/invalid-credential") {
+    } else if (
+      error.code === "auth/invalid-credential" ||
+      error.code === "auth/invalid-login-credentials"
+    ) {
       message.textContent = "Incorrect email or password.";
     } else if (error.code === "permission-denied") {
       message.textContent = "Firestore permission denied.";
