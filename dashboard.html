@@ -5,6 +5,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Novex Dashboard</title>
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    .gradebook-table-wrap {
+      overflow-x: auto;
+      width: 100%;
+    }
+
+    .gradebook-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px;
+    }
+
+    .gradebook-table th,
+    .gradebook-table td {
+      padding: 13px 10px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .gradebook-table th {
+      font-size: 14px;
+      color: #6b7280;
+      font-weight: 600;
+    }
+
+    .gradebook-table td {
+      font-size: 15px;
+    }
+
+    .grade {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .grade-input,
+    .grade-select,
+    .grade-comment {
+      width: 100%;
+      padding: 9px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .grade-comment {
+      min-width: 180px;
+      resize: vertical;
+    }
+
+    .grade-save-button {
+      width: auto;
+      padding: 9px 13px;
+      font-size: 14px;
+      margin-top: 7px;
+    }
+
+    .gradebook-empty {
+      padding: 18px;
+      background: #f4f6f8;
+      border-radius: 12px;
+      color: #6b7280;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #f3f4f6;
+    }
+
+    .back-button {
+      width: auto;
+      margin-bottom: 18px;
+      padding: 10px 16px;
+    }
+  </style>
 </head>
 
 <body>
@@ -41,6 +121,23 @@
       <strong>Role:</strong>
       <span id="user-role">Loading...</span>
     </p>
+
+  </section>
+
+
+  <!-- GRADEBOOK -->
+
+  <section class="dashboard-card" id="gradebook-panel">
+
+    <h2>Gradebook</h2>
+
+    <p style="color:#6b7280;margin-bottom:20px;" id="gradebook-description">
+      Loading gradebook...
+    </p>
+
+    <div id="gradebook-container">
+      <p>Loading grades...</p>
+    </div>
 
   </section>
 
@@ -269,6 +366,12 @@ const submissionsPanel =
 const ownerPanel =
   document.getElementById("owner-panel");
 
+const gradebookContainer =
+  document.getElementById("gradebook-container");
+
+const gradebookDescription =
+  document.getElementById("gradebook-description");
+
 
 /* =====================================================
    STATE
@@ -285,8 +388,15 @@ let studentAssignments = [];
 
 let studentSubmissions = new Map();
 
+let gradebookAssignments = [];
+let gradebookSubmissions = [];
+
 let studentAssignmentListener = null;
 let studentSubmissionListener = null;
+
+let gradebookAssignmentListener = null;
+let gradebookSubmissionListener = null;
+
 let teacherSubmissionListener = null;
 
 
@@ -304,6 +414,7 @@ onAuthStateChanged(
         "index.html";
 
       return;
+
     }
 
 
@@ -326,9 +437,7 @@ onAuthStateChanged(
         );
 
 
-      if (
-        !userSnapshot.exists()
-      ) {
+      if (!userSnapshot.exists()) {
 
         currentUserData = {
           name: "Student",
@@ -355,6 +464,16 @@ onAuthStateChanged(
         OWNER_EMAIL;
 
 
+      const isAdmin =
+        role === "admin";
+
+
+      const canManageGrades =
+        role === "teacher" ||
+        isAdmin ||
+        isOwner;
+
+
       userName.textContent =
         currentUserData.name ||
         "Student";
@@ -371,11 +490,35 @@ onAuthStateChanged(
         }!`;
 
 
+      /* GRADEBOOK */
+
+      if (canManageGrades) {
+
+        gradebookDescription.textContent =
+          isOwner
+            ? "View and manage grades across Novex."
+            : isAdmin
+              ? "View and manage grades across Novex."
+              : "View and manage grades for your students.";
+
+        startGradebookListeners(
+          role,
+          isOwner
+        );
+
+      } else {
+
+        gradebookDescription.textContent =
+          "View your grades, percentages, and teacher comments.";
+
+        startStudentGradebookListeners();
+
+      }
+
+
       /* STUDENT */
 
-      if (
-        role === "student"
-      ) {
+      if (role === "student") {
 
         studentPanel.style.display =
           "block";
@@ -394,6 +537,18 @@ onAuthStateChanged(
 
         teacherPanel.style.display =
           "block";
+
+        submissionsPanel.style.display =
+          "block";
+
+        startTeacherSubmissionListener();
+
+      }
+
+
+      /* ADMIN */
+
+      if (isAdmin) {
 
         submissionsPanel.style.display =
           "block";
@@ -433,37 +588,23 @@ onAuthStateChanged(
 
 
 /* =====================================================
-   STUDENT REAL-TIME LISTENERS
+   STUDENT ASSIGNMENTS
 ===================================================== */
 
 function startStudentListeners() {
 
-  if (
-    studentAssignmentListener
-  ) {
-
+  if (studentAssignmentListener) {
     studentAssignmentListener();
-
   }
 
-
-  if (
-    studentSubmissionListener
-  ) {
-
+  if (studentSubmissionListener) {
     studentSubmissionListener();
-
   }
 
-
-  /* ASSIGNMENTS */
 
   const assignmentsQuery =
     query(
-      collection(
-        db,
-        "assignments"
-      ),
+      collection(db, "assignments"),
       where(
         "assignedTo",
         "array-contains",
@@ -480,15 +621,10 @@ function startStudentListeners() {
         studentAssignments =
           snapshot.docs.map(
             assignmentDoc => ({
-
-              id:
-                assignmentDoc.id,
-
+              id: assignmentDoc.id,
               ...assignmentDoc.data()
-
             })
           );
-
 
         renderStudentAssignments();
 
@@ -499,7 +635,6 @@ function startStudentListeners() {
           "Assignment error:",
           error
         );
-
 
         document.getElementById(
           "student-assignments"
@@ -530,14 +665,9 @@ function startStudentListeners() {
     );
 
 
-  /* SUBMISSIONS */
-
   const submissionsQuery =
     query(
-      collection(
-        db,
-        "submissions"
-      ),
+      collection(db, "submissions"),
       where(
         "studentId",
         "==",
@@ -553,24 +683,18 @@ function startStudentListeners() {
 
         studentSubmissions.clear();
 
-
         snapshot.docs.forEach(
           submissionDoc => {
 
             const data =
               submissionDoc.data();
 
-
-            if (
-              data.assignmentId
-            ) {
+            if (data.assignmentId) {
 
               studentSubmissions.set(
                 data.assignmentId,
                 {
-                  id:
-                    submissionDoc.id,
-
+                  id: submissionDoc.id,
                   ...data
                 }
               );
@@ -579,7 +703,6 @@ function startStudentListeners() {
 
           }
         );
-
 
         renderStudentAssignments();
 
@@ -598,6 +721,915 @@ function startStudentListeners() {
 
 
 /* =====================================================
+   STUDENT GRADEBOOK
+===================================================== */
+
+function startStudentGradebookListeners() {
+
+  if (gradebookAssignmentListener) {
+    gradebookAssignmentListener();
+  }
+
+  if (gradebookSubmissionListener) {
+    gradebookSubmissionListener();
+  }
+
+
+  const assignmentsQuery =
+    query(
+      collection(db, "assignments"),
+      where(
+        "assignedTo",
+        "array-contains",
+        currentUser.uid
+      )
+    );
+
+
+  gradebookAssignmentListener =
+    onSnapshot(
+      assignmentsQuery,
+      snapshot => {
+
+        gradebookAssignments =
+          snapshot.docs.map(
+            assignmentDoc => ({
+              id: assignmentDoc.id,
+              ...assignmentDoc.data()
+            })
+          );
+
+        renderGradebook();
+
+      },
+      error => {
+
+        console.error(
+          "Student gradebook assignment error:",
+          error
+        );
+
+        gradebookContainer.innerHTML =
+          "<p>Could not load your gradebook.</p>";
+
+      }
+    );
+
+
+  const submissionsQuery =
+    query(
+      collection(db, "submissions"),
+      where(
+        "studentId",
+        "==",
+        currentUser.uid
+      )
+    );
+
+
+  gradebookSubmissionListener =
+    onSnapshot(
+      submissionsQuery,
+      snapshot => {
+
+        gradebookSubmissions =
+          snapshot.docs.map(
+            submissionDoc => ({
+              id: submissionDoc.id,
+              ...submissionDoc.data()
+            })
+          );
+
+        renderGradebook();
+
+      },
+      error => {
+
+        console.error(
+          "Student gradebook submission error:",
+          error
+        );
+
+      }
+    );
+
+}
+
+
+/* =====================================================
+   TEACHER / ADMIN GRADEBOOK
+===================================================== */
+
+function startGradebookListeners(
+  role,
+  isOwner
+) {
+
+  if (gradebookAssignmentListener) {
+    gradebookAssignmentListener();
+  }
+
+  if (gradebookSubmissionListener) {
+    gradebookSubmissionListener();
+  }
+
+
+  let assignmentsQuery;
+
+
+  if (
+    role === "teacher" &&
+    !isOwner
+  ) {
+
+    assignmentsQuery =
+      query(
+        collection(db, "assignments"),
+        where(
+          "teacherId",
+          "==",
+          currentUser.uid
+        )
+      );
+
+  } else {
+
+    /*
+      ADMIN + OWNER
+
+      Admin/owner can see every assignment.
+    */
+
+    assignmentsQuery =
+      query(
+        collection(db, "assignments")
+      );
+
+  }
+
+
+  gradebookAssignmentListener =
+    onSnapshot(
+      assignmentsQuery,
+      snapshot => {
+
+        gradebookAssignments =
+          snapshot.docs.map(
+            assignmentDoc => ({
+              id: assignmentDoc.id,
+              ...assignmentDoc.data()
+            })
+          );
+
+        renderGradebook();
+
+      },
+      error => {
+
+        console.error(
+          "Gradebook assignment error:",
+          error
+        );
+
+        gradebookContainer.innerHTML =
+          "<p>Could not load the gradebook.</p>";
+
+      }
+    );
+
+
+  let submissionsQuery;
+
+
+  if (
+    role === "teacher" &&
+    !isOwner
+  ) {
+
+    submissionsQuery =
+      query(
+        collection(db, "submissions"),
+        where(
+          "teacherId",
+          "==",
+          currentUser.uid
+        )
+      );
+
+  } else {
+
+    submissionsQuery =
+      query(
+        collection(db, "submissions")
+      );
+
+  }
+
+
+  gradebookSubmissionListener =
+    onSnapshot(
+      submissionsQuery,
+      snapshot => {
+
+        gradebookSubmissions =
+          snapshot.docs.map(
+            submissionDoc => ({
+              id: submissionDoc.id,
+              ...submissionDoc.data()
+            })
+          );
+
+        renderGradebook();
+
+      },
+      error => {
+
+        console.error(
+          "Gradebook submission error:",
+          error
+        );
+
+        gradebookContainer.innerHTML =
+          "<p>Could not load grade data.</p>";
+
+      }
+    );
+
+}
+
+
+/* =====================================================
+   RENDER GRADEBOOK
+===================================================== */
+
+function renderGradebook() {
+
+  if (!currentUser) {
+    return;
+  }
+
+
+  const role =
+    currentUserData?.role ||
+    "student";
+
+
+  const isOwner =
+    currentUser.email
+      ?.toLowerCase() ===
+    OWNER_EMAIL;
+
+
+  const canEdit =
+    role === "teacher" ||
+    role === "admin" ||
+    isOwner;
+
+
+  if (!gradebookAssignments.length) {
+
+    gradebookContainer.innerHTML = `
+
+      <div class="gradebook-empty">
+
+        <strong>
+          No grades yet.
+        </strong>
+
+        <p style="margin-top:7px;">
+          Assignments will appear here when they are available.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const rows = [];
+
+
+  gradebookAssignments.forEach(
+    assignment => {
+
+      const matchingSubmissions =
+        gradebookSubmissions.filter(
+          submission =>
+            submission.assignmentId ===
+            assignment.id
+        );
+
+
+      /*
+        STUDENT VIEW
+      */
+
+      if (!canEdit) {
+
+        const submission =
+          matchingSubmissions.find(
+            item =>
+              item.studentId ===
+              currentUser.uid
+          );
+
+
+        rows.push({
+          assignment,
+          submission
+        });
+
+        return;
+
+      }
+
+
+      /*
+        TEACHER / ADMIN VIEW
+
+        Create a row for every assigned student.
+      */
+
+      const assignedStudents =
+        Array.isArray(
+          assignment.assignedTo
+        )
+          ? assignment.assignedTo
+          : [];
+
+
+      assignedStudents.forEach(
+        studentUid => {
+
+          const submission =
+            matchingSubmissions.find(
+              item =>
+                item.studentId ===
+                studentUid
+            );
+
+
+          rows.push({
+            assignment,
+            submission,
+            studentUid
+          });
+
+        }
+      );
+
+    }
+  );
+
+
+  if (!rows.length) {
+
+    gradebookContainer.innerHTML =
+      `<div class="gradebook-empty">
+        No gradebook entries yet.
+      </div>`;
+
+    return;
+
+  }
+
+
+  let html = `
+
+    <div class="gradebook-table-wrap">
+
+      <table class="gradebook-table">
+
+        <thead>
+
+          <tr>
+
+            ${
+              canEdit
+                ? "<th>Student</th>"
+                : ""
+            }
+
+            <th>Assignment</th>
+            <th>Status</th>
+            <th>Grade</th>
+            <th>Percentage</th>
+            <th>Comments</th>
+
+            ${
+              canEdit
+                ? "<th>Action</th>"
+                : ""
+            }
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+  `;
+
+
+  rows.forEach(
+    row => {
+
+      const assignment =
+        row.assignment;
+
+      const submission =
+        row.submission;
+
+
+      const grade =
+        submission?.grade ||
+        "";
+
+
+      const percentage =
+        submission?.percentage ??
+        "";
+
+
+      const comment =
+        submission?.comment ||
+        "";
+
+
+      let status =
+        "Not submitted";
+
+
+      if (submission) {
+
+        status =
+          submission.graded
+            ? "Graded"
+            : "Submitted — awaiting grade";
+
+      }
+
+
+      if (!canEdit) {
+
+        html += `
+
+          <tr>
+
+            <td>
+              ${escapeHtml(
+                assignment.title ||
+                "Untitled"
+              )}
+            </td>
+
+            <td>
+              <span class="status-pill">
+                ${escapeHtml(status)}
+              </span>
+            </td>
+
+            <td>
+
+              ${
+                submission?.graded
+                  ? `<span class="grade">
+                      ${escapeHtml(grade || "—")}
+                     </span>`
+                  : "—"
+              }
+
+            </td>
+
+            <td>
+
+              ${
+                submission?.graded &&
+                percentage !== ""
+                  ? `${escapeHtml(
+                      percentage
+                    )}%`
+                  : "—"
+              }
+
+            </td>
+
+            <td>
+
+              ${
+                submission?.graded &&
+                comment
+                  ? escapeHtml(comment)
+                  : "—"
+              }
+
+            </td>
+
+          </tr>
+
+        `;
+
+        return;
+
+      }
+
+
+      /*
+        TEACHER / ADMIN EDITABLE ROW
+      */
+
+      const studentName =
+        submission?.studentName ||
+        assignment.assignedName ||
+        "Student";
+
+
+      const studentEmail =
+        submission?.studentEmail ||
+        assignment.assignedEmail ||
+        "";
+
+
+      html += `
+
+        <tr>
+
+          <td>
+
+            <strong>
+              ${escapeHtml(studentName)}
+            </strong>
+
+            ${
+              studentEmail
+                ? `<div style="
+                    font-size:12px;
+                    color:#6b7280;
+                    margin-top:3px;
+                  ">
+                    ${escapeHtml(studentEmail)}
+                  </div>`
+                : ""
+            }
+
+          </td>
+
+
+          <td>
+            ${escapeHtml(
+              assignment.title ||
+              "Untitled"
+            )}
+          </td>
+
+
+          <td>
+
+            <span class="status-pill">
+              ${escapeHtml(status)}
+            </span>
+
+          </td>
+
+
+          <td>
+
+            ${
+              submission
+                ? `
+                  <select
+                    class="grade-select"
+                    id="grade-${submission.id}"
+                  >
+
+                    <option value="">
+                      —
+                    </option>
+
+                    <option
+                      value="A"
+                      ${
+                        grade === "A"
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      A
+                    </option>
+
+                    <option
+                      value="B"
+                      ${
+                        grade === "B"
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      B
+                    </option>
+
+                    <option
+                      value="C"
+                      ${
+                        grade === "C"
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      C
+                    </option>
+
+                    <option
+                      value="D"
+                      ${
+                        grade === "D"
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      D
+                    </option>
+
+                    <option
+                      value="F"
+                      ${
+                        grade === "F"
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      F
+                    </option>
+
+                  </select>
+                `
+                : "—"
+            }
+
+          </td>
+
+
+          <td>
+
+            ${
+              submission
+                ? `
+                  <input
+                    class="grade-input"
+                    id="percentage-${submission.id}"
+                    type="number"
+                    min="0"
+                    max="100"
+                    placeholder="0-100"
+                    value="${escapeHtml(
+                      percentage
+                    )}"
+                  >
+                `
+                : "—"
+            }
+
+          </td>
+
+
+          <td>
+
+            ${
+              submission
+                ? `
+                  <textarea
+                    class="grade-comment"
+                    id="comment-${submission.id}"
+                    rows="2"
+                    placeholder="Teacher comment..."
+                  >${escapeHtml(
+                    comment
+                  )}</textarea>
+                `
+                : "—"
+            }
+
+          </td>
+
+
+          <td>
+
+            ${
+              submission
+                ? `
+                  <button
+                    class="grade-save-button"
+                    data-submission-id="${
+                      submission.id
+                    }"
+                  >
+                    Save
+                  </button>
+
+                  <p
+                    id="save-message-${submission.id}"
+                    style="
+                      font-size:12px;
+                      margin-top:5px;
+                    "
+                  ></p>
+                `
+                : ""
+            }
+
+          </td>
+
+        </tr>
+
+      `;
+
+    }
+  );
+
+
+  html += `
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  `;
+
+
+  gradebookContainer.innerHTML =
+    html;
+
+
+  /*
+    SAVE BUTTONS
+  */
+
+  if (canEdit) {
+
+    document
+      .querySelectorAll(
+        ".grade-save-button"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            async () => {
+
+              const submissionId =
+                button.dataset.submissionId;
+
+
+              const gradeElement =
+                document.getElementById(
+                  `grade-${submissionId}`
+                );
+
+
+              const percentageElement =
+                document.getElementById(
+                  `percentage-${submissionId}`
+                );
+
+
+              const commentElement =
+                document.getElementById(
+                  `comment-${submissionId}`
+                );
+
+
+              const messageElement =
+                document.getElementById(
+                  `save-message-${submissionId}`
+                );
+
+
+              const newGrade =
+                gradeElement.value;
+
+
+              const percentageText =
+                percentageElement.value.trim();
+
+
+              const comment =
+                commentElement.value.trim();
+
+
+              let percentage =
+                null;
+
+
+              if (
+                percentageText !== ""
+              ) {
+
+                percentage =
+                  Number(
+                    percentageText
+                  );
+
+
+                if (
+                  Number.isNaN(
+                    percentage
+                  ) ||
+                  percentage < 0 ||
+                  percentage > 100
+                ) {
+
+                  messageElement.textContent =
+                    "Percentage must be 0–100.";
+
+                  return;
+
+                }
+
+              }
+
+
+              button.disabled =
+                true;
+
+              button.textContent =
+                "Saving...";
+
+
+              try {
+
+                await updateDoc(
+                  doc(
+                    db,
+                    "submissions",
+                    submissionId
+                  ),
+                  {
+
+                    grade:
+                      newGrade ||
+                      null,
+
+                    percentage,
+
+                    comment,
+
+                    graded:
+                      Boolean(
+                        newGrade
+                      ),
+
+                    gradedAt:
+                      serverTimestamp(),
+
+                    gradedBy:
+                      currentUser.uid
+
+                  }
+                );
+
+
+                messageElement.textContent =
+                  "Saved!";
+
+
+              } catch (error) {
+
+                console.error(
+                  "Gradebook save error:",
+                  error
+                );
+
+
+                messageElement.textContent =
+                  "Could not save.";
+
+              }
+
+
+              button.disabled =
+                false;
+
+              button.textContent =
+                "Save";
+
+            }
+          );
+
+        }
+      );
+
+  }
+
+}
+
+
+/* =====================================================
    RENDER STUDENT ASSIGNMENTS
 ===================================================== */
 
@@ -609,9 +1641,7 @@ function renderStudentAssignments() {
     );
 
 
-  if (
-    !studentAssignments.length
-  ) {
+  if (!studentAssignments.length) {
 
     container.innerHTML = `
 
@@ -655,24 +1685,16 @@ function renderStudentAssignments() {
       card.style.cssText = `
 
         padding:18px;
-
         margin-bottom:15px;
-
         background:#f4f6f8;
-
         border-radius:12px;
 
       `;
 
 
-      /* SUBMITTED */
-
       if (submission) {
 
-
-        if (
-          submission.graded
-        ) {
+        if (submission.graded) {
 
           card.innerHTML = `
 
@@ -758,8 +1780,6 @@ function renderStudentAssignments() {
       }
 
 
-      /* NOT SUBMITTED */
-
       card.innerHTML = `
 
         <h3>
@@ -815,16 +1835,12 @@ function renderStudentAssignments() {
 ===================================================== */
 
 document
-  .getElementById(
-    "add-question-button"
-  )
+  .getElementById("add-question-button")
   .addEventListener(
     "click",
     () => {
 
-      if (
-        questionCount >= 5
-      ) {
+      if (questionCount >= 5) {
 
         alert(
           "You can only have up to 5 questions."
@@ -927,9 +1943,7 @@ document
           typeSelect.value;
 
 
-        if (
-          type === "math"
-        ) {
+        if (type === "math") {
 
           answersArea.innerHTML = `
 
@@ -961,17 +1975,9 @@ document
               "
             >
 
-              <option value="0">
-                A
-              </option>
-
-              <option value="1">
-                B
-              </option>
-
-              <option value="2">
-                C
-              </option>
+              <option value="0">A</option>
+              <option value="1">B</option>
+              <option value="2">C</option>
 
             </select>
 
@@ -980,9 +1986,7 @@ document
         }
 
 
-        if (
-          type === "truefalse"
-        ) {
+        if (type === "truefalse") {
 
           answersArea.innerHTML = `
 
@@ -1021,9 +2025,7 @@ document
         }
 
 
-        if (
-          type === "written"
-        ) {
+        if (type === "written") {
 
           answersArea.innerHTML = `
 
@@ -1070,18 +2072,14 @@ document
 ===================================================== */
 
 document
-  .getElementById(
-    "find-student-button"
-  )
+  .getElementById("find-student-button")
   .addEventListener(
     "click",
     async () => {
 
       const email =
         document
-          .getElementById(
-            "student-email"
-          )
+          .getElementById("student-email")
           .value
           .trim()
           .toLowerCase();
@@ -1121,10 +2119,7 @@ document
 
         const q =
           query(
-            collection(
-              db,
-              "users"
-            ),
+            collection(db, "users"),
             where(
               "email",
               "==",
@@ -1137,9 +2132,7 @@ document
           await getDocs(q);
 
 
-        if (
-          snapshot.empty
-        ) {
+        if (snapshot.empty) {
 
           result.innerHTML =
             "<p>No user found with that email.</p>";
@@ -1157,9 +2150,7 @@ document
           studentDoc.data();
 
 
-        if (
-          data.role !== "student"
-        ) {
+        if (data.role !== "student") {
 
           result.innerHTML =
             "<p>This email does not belong to a student account.</p>";
@@ -1219,10 +2210,7 @@ document
 
       } catch (error) {
 
-        console.error(
-          error
-        );
-
+        console.error(error);
 
         result.innerHTML =
           "<p>Could not search for student.</p>";
@@ -1238,27 +2226,21 @@ document
 ===================================================== */
 
 document
-  .getElementById(
-    "create-quiz-button"
-  )
+  .getElementById("create-quiz-button")
   .addEventListener(
     "click",
     async () => {
 
       const title =
         document
-          .getElementById(
-            "quiz-title"
-          )
+          .getElementById("quiz-title")
           .value
           .trim();
 
 
       const dueDate =
         document
-          .getElementById(
-            "quiz-due-date"
-          )
+          .getElementById("quiz-due-date")
           .value;
 
 
@@ -1298,9 +2280,7 @@ document
       }
 
 
-      if (
-        questionCount < 1
-      ) {
+      if (questionCount < 1) {
 
         message.textContent =
           "Add at least one question.";
@@ -1332,17 +2312,13 @@ document
 
         const type =
           element
-            .querySelector(
-              ".question-type"
-            )
+            .querySelector(".question-type")
             .value;
 
 
         const text =
           element
-            .querySelector(
-              ".question-text"
-            )
+            .querySelector(".question-text")
             .value
             .trim();
 
@@ -1357,9 +2333,7 @@ document
         }
 
 
-        if (
-          type === "math"
-        ) {
+        if (type === "math") {
 
           const answers =
             [
@@ -1375,8 +2349,7 @@ document
 
           if (
             answers.some(
-              answer =>
-                !answer
+              answer => !answer
             )
           ) {
 
@@ -1427,9 +2400,7 @@ document
         }
 
 
-        if (
-          type === "truefalse"
-        ) {
+        if (type === "truefalse") {
 
           const correct =
             element
@@ -1471,9 +2442,7 @@ document
         }
 
 
-        if (
-          type === "written"
-        ) {
+        if (type === "written") {
 
           questions.push({
 
@@ -1653,6 +2622,13 @@ function showQuiz(
 
     <div>
 
+      <button
+        class="back-button"
+        id="back-to-assignments"
+      >
+        ← Back
+      </button>
+
       <h2>
         ${escapeHtml(
           assignment.title
@@ -1668,9 +2644,7 @@ function showQuiz(
 
       </p>
 
-
       <form id="quiz-form"></form>
-
 
       <button
         id="submit-quiz"
@@ -1679,12 +2653,25 @@ function showQuiz(
         Submit Quiz
       </button>
 
-
       <p id="submit-message"></p>
 
     </div>
 
   `;
+
+
+  document
+    .getElementById(
+      "back-to-assignments"
+    )
+    .addEventListener(
+      "click",
+      () => {
+
+        renderStudentAssignments();
+
+      }
+    );
 
 
   const form =
@@ -1694,7 +2681,10 @@ function showQuiz(
 
 
   assignment.questions.forEach(
-    (question, index) => {
+    (
+      question,
+      index
+    ) => {
 
       const div =
         document.createElement(
@@ -1705,11 +2695,8 @@ function showQuiz(
       div.style.cssText = `
 
         padding:18px;
-
         margin-bottom:15px;
-
         background:#f4f6f8;
-
         border-radius:12px;
 
       `;
@@ -1723,14 +2710,11 @@ function showQuiz(
         div.innerHTML = `
 
           <h3>
-
             ${index + 1}.
             ${escapeHtml(
               question.text
             )}
-
           </h3>
-
 
           <textarea
             name="q${index}"
@@ -1754,12 +2738,10 @@ function showQuiz(
         div.innerHTML = `
 
           <h3>
-
             ${index + 1}.
             ${escapeHtml(
               question.text
             )}
-
           </h3>
 
         `;
@@ -1801,18 +2783,14 @@ function showQuiz(
       }
 
 
-      form.appendChild(
-        div
-      );
+      form.appendChild(div);
 
     }
   );
 
 
   document
-    .getElementById(
-      "submit-quiz"
-    )
+    .getElementById("submit-quiz")
     .addEventListener(
       "click",
       async (event) => {
@@ -1843,9 +2821,7 @@ function showQuiz(
         ) {
 
           const question =
-            assignment.questions[
-              index
-            ];
+            assignment.questions[index];
 
 
           if (
@@ -1964,6 +2940,12 @@ function showQuiz(
               grade:
                 null,
 
+              percentage:
+                null,
+
+              comment:
+                "",
+
               questionResults:
                 []
 
@@ -1973,7 +2955,6 @@ function showQuiz(
 
           message.textContent =
             "Quiz submitted! Your teacher will grade it.";
-
 
         } catch (error) {
 
@@ -1999,14 +2980,12 @@ function showQuiz(
 
 
 /* =====================================================
-   TEACHER SUBMISSIONS
+   TEACHER / ADMIN SUBMISSIONS
 ===================================================== */
 
 function startTeacherSubmissionListener() {
 
-  if (
-    teacherSubmissionListener
-  ) {
+  if (teacherSubmissionListener) {
 
     teacherSubmissionListener();
 
@@ -2019,21 +2998,24 @@ function startTeacherSubmissionListener() {
     OWNER_EMAIL;
 
 
+  const role =
+    currentUserData?.role ||
+    "student";
+
+
   let submissionsQuery;
 
 
-  if (isOwner) {
+  if (
+    isOwner ||
+    role === "admin"
+  ) {
 
     submissionsQuery =
       query(
         collection(
           db,
           "submissions"
-        ),
-        where(
-          "graded",
-          "==",
-          false
         )
       );
 
@@ -2085,7 +3067,7 @@ function startTeacherSubmissionListener() {
 
 
 /* =====================================================
-   RENDER TEACHER SUBMISSIONS
+   RENDER SUBMISSIONS
 ===================================================== */
 
 async function renderTeacherSubmissions(
@@ -2098,29 +3080,12 @@ async function renderTeacherSubmissions(
     );
 
 
-  const isOwner =
-    currentUser.email
-      ?.toLowerCase() ===
-    OWNER_EMAIL;
-
-
   const submissions =
     snapshot.docs.filter(
       submissionDoc => {
 
         const data =
           submissionDoc.data();
-
-
-        if (
-          !isOwner &&
-          data.teacherId !==
-          currentUser.uid
-        ) {
-
-          return false;
-
-        }
 
 
         return data.graded !== true;
@@ -2151,12 +3116,8 @@ async function renderTeacherSubmissions(
       submissionDoc.data();
 
 
-    if (
-      !submission.assignmentId
-    ) {
-
+    if (!submission.assignmentId) {
       continue;
-
     }
 
 
@@ -2172,12 +3133,8 @@ async function renderTeacherSubmissions(
         );
 
 
-      if (
-        !assignmentSnapshot.exists()
-      ) {
-
+      if (!assignmentSnapshot.exists()) {
         continue;
-
       }
 
 
@@ -2194,11 +3151,8 @@ async function renderTeacherSubmissions(
       card.style.cssText = `
 
         padding:18px;
-
         margin-bottom:15px;
-
         background:#f4f6f8;
-
         border-radius:12px;
 
       `;
@@ -2270,16 +3224,12 @@ async function renderTeacherSubmissions(
         );
 
 
-      container.appendChild(
-        card
-      );
+      container.appendChild(card);
 
 
     } catch (error) {
 
-      console.error(
-        error
-      );
+      console.error(error);
 
     }
 
@@ -2326,6 +3276,13 @@ async function showGrading(
 
     container.innerHTML = `
 
+      <button
+        class="back-button"
+        id="back-to-submissions"
+      >
+        ← Back
+      </button>
+
       <h2>
         Grade:
         ${escapeHtml(
@@ -2357,9 +3314,7 @@ async function showGrading(
         margin-top:20px;
         margin-bottom:8px;
       ">
-
         Final Grade
-
       </label>
 
 
@@ -2378,42 +3333,90 @@ async function showGrading(
           Choose grade
         </option>
 
-        <option value="A">
-          A
-        </option>
-
-        <option value="B">
-          B
-        </option>
-
-        <option value="C">
-          C
-        </option>
-
-        <option value="D">
-          D
-        </option>
-
-        <option value="F">
-          F
-        </option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="F">F</option>
 
       </select>
+
+
+      <label style="
+        display:block;
+        margin-top:15px;
+        margin-bottom:8px;
+      ">
+        Percentage
+      </label>
+
+
+      <input
+        id="final-percentage"
+        type="number"
+        min="0"
+        max="100"
+        placeholder="Example: 92"
+      >
+
+
+      <label style="
+        display:block;
+        margin-top:15px;
+        margin-bottom:8px;
+      ">
+        Teacher Comment
+      </label>
+
+
+      <textarea
+        id="final-comment"
+        rows="4"
+        placeholder="Optional comment for the student..."
+        style="
+          width:100%;
+          padding:12px;
+          border:1px solid #d1d5db;
+          border-radius:10px;
+          font-size:16px;
+          resize:vertical;
+        "
+      ></textarea>
 
 
       <button
         id="save-grade"
         style="margin-top:20px;"
       >
-
         Return Grade to Student
-
       </button>
 
 
       <p id="grade-message"></p>
 
     `;
+
+
+    document
+      .getElementById(
+        "back-to-submissions"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          /*
+            Re-render the submissions
+            from the current listener.
+          */
+
+          document.getElementById(
+            "submissions-list"
+          ).innerHTML =
+            "<p>Loading submissions...</p>";
+
+        }
+      );
 
 
     const questionsContainer =
@@ -2449,9 +3452,9 @@ async function showGrading(
 
         } else if (
           studentAnswer !==
-            null &&
+          null &&
           studentAnswer !==
-            undefined
+          undefined
         ) {
 
           answerText =
@@ -2465,6 +3468,17 @@ async function showGrading(
         }
 
 
+        const previousResult =
+          submission.questionResults
+            ?.find(
+              item =>
+                item.number ===
+                question.number
+            )
+            ?.result ||
+          "";
+
+
         const div =
           document.createElement(
             "div"
@@ -2474,11 +3488,8 @@ async function showGrading(
         div.style.cssText = `
 
           padding:18px;
-
           margin-bottom:15px;
-
           background:#f4f6f8;
-
           border-radius:12px;
 
         `;
@@ -2526,11 +3537,27 @@ async function showGrading(
               Choose result
             </option>
 
-            <option value="correct">
+            <option
+              value="correct"
+              ${
+                previousResult ===
+                "correct"
+                  ? "selected"
+                  : ""
+              }
+            >
               Correct
             </option>
 
-            <option value="wrong">
+            <option
+              value="wrong"
+              ${
+                previousResult ===
+                "wrong"
+                  ? "selected"
+                  : ""
+              }
+            >
               Wrong
             </option>
 
@@ -2561,6 +3588,18 @@ async function showGrading(
             ).value;
 
 
+          const percentageText =
+            document.getElementById(
+              "final-percentage"
+            ).value.trim();
+
+
+          const comment =
+            document.getElementById(
+              "final-comment"
+            ).value.trim();
+
+
           const message =
             document.getElementById(
               "grade-message"
@@ -2573,6 +3612,36 @@ async function showGrading(
               "Choose a final grade.";
 
             return;
+
+          }
+
+
+          let percentage =
+            null;
+
+
+          if (percentageText !== "") {
+
+            percentage =
+              Number(
+                percentageText
+              );
+
+
+            if (
+              Number.isNaN(
+                percentage
+              ) ||
+              percentage < 0 ||
+              percentage > 100
+            ) {
+
+              message.textContent =
+                "Percentage must be 0–100.";
+
+              return;
+
+            }
 
           }
 
@@ -2626,6 +3695,10 @@ async function showGrading(
                   true,
 
                 grade,
+
+                percentage,
+
+                comment,
 
                 questionResults,
 
@@ -2692,12 +3765,17 @@ function showStudentResults(
 
   container.innerHTML = `
 
-    <h2>
+    <button
+      class="back-button"
+      id="back-to-student-assignments"
+    >
+      ← Back
+    </button>
 
+    <h2>
       ${escapeHtml(
         assignment.title
       )}
-
     </h2>
 
 
@@ -2713,9 +3791,68 @@ function showStudentResults(
     </h3>
 
 
+    ${
+      submission.percentage !==
+        null &&
+      submission.percentage !==
+        undefined
+        ? `
+          <p style="margin-bottom:12px;">
+            Percentage:
+            <strong>
+              ${escapeHtml(
+                submission.percentage
+              )}%
+            </strong>
+          </p>
+        `
+        : ""
+    }
+
+
+    ${
+      submission.comment
+        ? `
+          <div style="
+            padding:15px;
+            background:#f4f6f8;
+            border-radius:10px;
+            margin-bottom:20px;
+          ">
+
+            <strong>
+              Teacher Comment
+            </strong>
+
+            <p style="margin-top:8px;">
+              ${escapeHtml(
+                submission.comment
+              )}
+            </p>
+
+          </div>
+        `
+        : ""
+    }
+
+
     <div id="results"></div>
 
   `;
+
+
+  document
+    .getElementById(
+      "back-to-student-assignments"
+    )
+    .addEventListener(
+      "click",
+      () => {
+
+        renderStudentAssignments();
+
+      }
+    );
 
 
   const results =
@@ -2760,9 +3897,9 @@ function showStudentResults(
 
       } else if (
         studentAnswer !==
-          null &&
+        null &&
         studentAnswer !==
-          undefined
+        undefined
       ) {
 
         answerText =
@@ -2785,11 +3922,8 @@ function showStudentResults(
       div.style.cssText = `
 
         padding:18px;
-
         margin-bottom:15px;
-
         background:#f4f6f8;
-
         border-radius:12px;
 
       `;
@@ -2860,9 +3994,7 @@ function showStudentResults(
 ===================================================== */
 
 document
-  .getElementById(
-    "search-user-button"
-  )
+  .getElementById("search-user-button")
   .addEventListener(
     "click",
     async () => {
@@ -2880,9 +4012,7 @@ document
 
       const email =
         document
-          .getElementById(
-            "user-search"
-          )
+          .getElementById("user-search")
           .value
           .trim()
           .toLowerCase();
@@ -2908,10 +4038,7 @@ document
 
         const q =
           query(
-            collection(
-              db,
-              "users"
-            ),
+            collection(db, "users"),
             where(
               "email",
               "==",
@@ -2924,9 +4051,7 @@ document
           await getDocs(q);
 
 
-        if (
-          snapshot.empty
-        ) {
+        if (snapshot.empty) {
 
           result.innerHTML =
             "<p>No Novex user found.</p>";
@@ -3074,10 +4199,7 @@ document
 
       } catch (error) {
 
-        console.error(
-          error
-        );
-
+        console.error(error);
 
         result.innerHTML =
           "<p>Could not search.</p>";
@@ -3134,9 +4256,7 @@ async function changeRole(
 
   } catch (error) {
 
-    console.error(
-      error
-    );
+    console.error(error);
 
   }
 
@@ -3164,40 +4284,21 @@ logoutButton.addEventListener(
    HELPERS
 ===================================================== */
 
-function escapeHtml(
-  value
-) {
+function escapeHtml(value) {
 
   return String(
     value ?? ""
   )
-    .replaceAll(
-      "&",
-      "&amp;"
-    )
-    .replaceAll(
-      "<",
-      "&lt;"
-    )
-    .replaceAll(
-      ">",
-      "&gt;"
-    )
-    .replaceAll(
-      '"',
-      "&quot;"
-    )
-    .replaceAll(
-      "'",
-      "&#039;"
-    );
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 
 }
 
 
-function formatDate(
-  value
-) {
+function formatDate(value) {
 
   if (!value) {
     return "No due date";
@@ -3219,13 +4320,10 @@ function formatDate(
 }
 
 
-function formatTimestamp(
-  value
-) {
+function formatTimestamp(value) {
 
   if (!value) {
     return "Unknown";
-
   }
 
 
