@@ -22,6 +22,7 @@
       <button id="logout-button">Log out</button>
     </header>
 
+
     <section class="dashboard-card">
 
       <h2>Your Assignments</h2>
@@ -32,17 +33,63 @@
 
     </section>
 
+
     <section class="dashboard-card">
 
       <h2>Account</h2>
 
-      <p><strong>Name:</strong> <span id="user-name">Loading...</span></p>
-      <p><strong>Email:</strong> <span id="user-email">Loading...</span></p>
-      <p><strong>Role:</strong> <span id="user-role">Loading...</span></p>
+      <p>
+        <strong>Name:</strong>
+        <span id="user-name">Loading...</span>
+      </p>
+
+      <p>
+        <strong>Email:</strong>
+        <span id="user-email">Loading...</span>
+      </p>
+
+      <p>
+        <strong>Role:</strong>
+        <span id="user-role">Loading...</span>
+      </p>
 
     </section>
 
+
+    <!-- OWNER ONLY -->
+
+    <section
+      class="dashboard-card"
+      id="owner-panel"
+      style="display: none;"
+    >
+
+      <h2>Owner Controls</h2>
+
+      <p style="color: #6b7280; margin-bottom: 18px;">
+        Search for a Novex user by email and manage their role.
+      </p>
+
+      <input
+        id="user-search"
+        type="email"
+        placeholder="Search user email"
+      >
+
+      <button id="search-user-button">
+        Search
+      </button>
+
+      <div
+        id="user-result"
+        style="margin-top: 20px;"
+      ></div>
+
+    </section>
+
+
   </main>
+
 
   <script type="module">
 
@@ -55,68 +102,503 @@
 
     import {
       doc,
-      getDoc
+      getDoc,
+      getDocs,
+      updateDoc,
+      collection,
+      query,
+      where
     } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 
     const welcome = document.getElementById("welcome");
+
     const userName = document.getElementById("user-name");
     const userEmail = document.getElementById("user-email");
     const userRole = document.getElementById("user-role");
+
     const logoutButton = document.getElementById("logout-button");
 
+    const ownerPanel = document.getElementById("owner-panel");
+
+    const userSearch = document.getElementById("user-search");
+    const searchUserButton =
+      document.getElementById("search-user-button");
+
+    const userResult = document.getElementById("user-result");
+
+
+    const OWNER_EMAIL =
+      "gambrilljulian452@gmail.com";
+
+
+    let currentUserIsOwner = false;
+
+
+    /*
+      LOAD CURRENT USER
+    */
 
     onAuthStateChanged(auth, async (user) => {
 
       if (!user) {
+
         window.location.href = "index.html";
         return;
+
       }
 
-      userEmail.textContent = user.email;
+
+      userEmail.textContent =
+        user.email || "No email";
+
+
+      /*
+        OWNER CHECK
+
+        This is intentionally based on the
+        Firebase Authentication email.
+      */
+
+      currentUserIsOwner =
+        user.email?.toLowerCase() === OWNER_EMAIL;
+
+
+      if (currentUserIsOwner) {
+
+        ownerPanel.style.display = "block";
+
+      }
+
 
       try {
 
-        const userDocument = await getDoc(
-          doc(db, "users", user.uid)
-        );
+        const userRef =
+          doc(db, "users", user.uid);
 
-        if (userDocument.exists()) {
+        const userSnapshot =
+          await getDoc(userRef);
 
-          const data = userDocument.data();
 
-          userName.textContent = data.name || "Student";
-          userRole.textContent = data.role || "student";
+        if (userSnapshot.exists()) {
+
+          const data =
+            userSnapshot.data();
+
+
+          userName.textContent =
+            data.name || "Student";
+
+
+          userRole.textContent =
+            data.role || "student";
+
 
           welcome.textContent =
             `Welcome, ${data.name || "Student"}!`;
 
+
         } else {
 
-          userName.textContent = "Student";
-          userRole.textContent = "student";
-          welcome.textContent = "Welcome to Novex!";
+          userName.textContent =
+            "Student";
+
+          userRole.textContent =
+            "student";
+
+          welcome.textContent =
+            "Welcome to Novex!";
 
         }
 
+
       } catch (error) {
 
-        console.error(error);
+        console.error(
+          "Firestore error:",
+          error
+        );
 
-        welcome.textContent = "Welcome to Novex!";
+
+        userName.textContent =
+          "Unable to load";
+
+        userRole.textContent =
+          "Unable to load";
+
+        welcome.textContent =
+          "Welcome to Novex!";
 
       }
 
     });
 
 
-    logoutButton.addEventListener("click", async () => {
+    /*
+      SEARCH FOR USER
+    */
 
-      await signOut(auth);
+    searchUserButton.addEventListener(
+      "click",
+      async () => {
 
-      window.location.href = "index.html";
+        if (!currentUserIsOwner) {
+          return;
+        }
 
-    });
+
+        const email =
+          userSearch.value.trim().toLowerCase();
+
+
+        if (!email) {
+
+          userResult.innerHTML =
+            "<p>Please enter an email.</p>";
+
+          return;
+
+        }
+
+
+        userResult.innerHTML =
+          "<p>Searching...</p>";
+
+
+        try {
+
+          const usersRef =
+            collection(db, "users");
+
+
+          const userQuery =
+            query(
+              usersRef,
+              where("email", "==", email)
+            );
+
+
+          const snapshot =
+            await getDocs(userQuery);
+
+
+          if (snapshot.empty) {
+
+            userResult.innerHTML =
+              "<p>No Novex user found with that email.</p>";
+
+            return;
+
+          }
+
+
+          const userDoc =
+            snapshot.docs[0];
+
+
+          const data =
+            userDoc.data();
+
+
+          const role =
+            data.role || "student";
+
+
+          userResult.innerHTML = `
+
+            <div style="
+              padding: 18px;
+              background: #f4f6f8;
+              border-radius: 12px;
+            ">
+
+              <h3 style="margin-bottom: 8px;">
+                ${escapeHtml(data.name || "Unnamed user")}
+              </h3>
+
+              <p style="margin-bottom: 8px;">
+                ${escapeHtml(data.email || email)}
+              </p>
+
+              <p style="margin-bottom: 16px;">
+                <strong>Current role:</strong>
+                ${escapeHtml(role)}
+              </p>
+
+              <div style="
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+              ">
+
+                ${
+                  role === "teacher"
+                    ? `
+                      <button
+                        id="remove-role-button"
+                        style="
+                          background: #dc2626;
+                          width: auto;
+                        "
+                      >
+                        Remove Teacher
+                      </button>
+                    `
+                    : `
+                      <button
+                        id="add-teacher-button"
+                        style="width: auto;"
+                      >
+                        Add Teacher
+                      </button>
+                    `
+                }
+
+                ${
+                  role === "admin"
+                    ? `
+                      <button
+                        id="remove-role-button"
+                        style="
+                          background: #dc2626;
+                          width: auto;
+                        "
+                      >
+                        Remove Admin
+                      </button>
+                    `
+                    : `
+                      <button
+                        id="add-admin-button"
+                        style="width: auto;"
+                      >
+                        Add Admin
+                      </button>
+                    `
+                }
+
+              </div>
+
+              <p
+                id="role-message"
+                style="margin-top: 14px;"
+              ></p>
+
+            </div>
+
+          `;
+
+
+          const addTeacherButton =
+            document.getElementById(
+              "add-teacher-button"
+            );
+
+
+          const addAdminButton =
+            document.getElementById(
+              "add-admin-button"
+            );
+
+
+          const removeRoleButton =
+            document.getElementById(
+              "remove-role-button"
+            );
+
+
+          const roleMessage =
+            document.getElementById(
+              "role-message"
+            );
+
+
+          /*
+            ADD TEACHER
+          */
+
+          if (addTeacherButton) {
+
+            addTeacherButton.addEventListener(
+              "click",
+              async () => {
+
+                try {
+
+                  await updateDoc(
+                    doc(
+                      db,
+                      "users",
+                      userDoc.id
+                    ),
+                    {
+                      role: "teacher"
+                    }
+                  );
+
+
+                  roleMessage.textContent =
+                    "Teacher added successfully.";
+
+                  userRole.textContent =
+                    role === "student"
+                      ? userRole.textContent
+                      : userRole.textContent;
+
+
+                } catch (error) {
+
+                  console.error(error);
+
+                  roleMessage.textContent =
+                    "Could not change the role.";
+
+                }
+
+              }
+            );
+
+          }
+
+
+          /*
+            ADD ADMIN
+          */
+
+          if (addAdminButton) {
+
+            addAdminButton.addEventListener(
+              "click",
+              async () => {
+
+                try {
+
+                  await updateDoc(
+                    doc(
+                      db,
+                      "users",
+                      userDoc.id
+                    ),
+                    {
+                      role: "admin"
+                    }
+                  );
+
+
+                  roleMessage.textContent =
+                    "Admin added successfully.";
+
+
+                } catch (error) {
+
+                  console.error(error);
+
+                  roleMessage.textContent =
+                    "Could not change the role.";
+
+                }
+
+              }
+            );
+
+          }
+
+
+          /*
+            REMOVE ROLE
+          */
+
+          if (removeRoleButton) {
+
+            removeRoleButton.addEventListener(
+              "click",
+              async () => {
+
+                try {
+
+                  await updateDoc(
+                    doc(
+                      db,
+                      "users",
+                      userDoc.id
+                    ),
+                    {
+                      role: "student"
+                    }
+                  );
+
+
+                  roleMessage.textContent =
+                    "Role removed. User is now a student.";
+
+
+                } catch (error) {
+
+                  console.error(error);
+
+                  roleMessage.textContent =
+                    "Could not remove the role.";
+
+                }
+
+              }
+            );
+
+          }
+
+
+        } catch (error) {
+
+          console.error(error);
+
+          userResult.innerHTML =
+            "<p>Something went wrong while searching.</p>";
+
+        }
+
+      }
+    );
+
+
+    /*
+      LOG OUT
+    */
+
+    logoutButton.addEventListener(
+      "click",
+      async () => {
+
+        try {
+
+          await signOut(auth);
+
+          window.location.href =
+            "index.html";
+
+        } catch (error) {
+
+          console.error(error);
+
+        }
+
+      }
+    );
+
+
+    /*
+      BASIC HTML ESCAPING
+    */
+
+    function escapeHtml(value) {
+
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    }
 
   </script>
 
