@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Novex Dashboard</title>
-
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -47,7 +45,7 @@
   </section>
 
 
-  <!-- STUDENT QUIZZES -->
+  <!-- STUDENT -->
 
   <section
     class="dashboard-card"
@@ -64,7 +62,7 @@
   </section>
 
 
-  <!-- TEACHER CONTROLS -->
+  <!-- TEACHER -->
 
   <section
     class="dashboard-card"
@@ -79,99 +77,86 @@
     </p>
 
 
-    <div id="quiz-creator">
+    <h3>Create a Quiz</h3>
 
-      <h3 style="margin-bottom:15px;">
-        Create a Quiz
-      </h3>
+    <input
+      id="quiz-title"
+      type="text"
+      placeholder="Quiz title"
+    >
 
-      <input
-        id="quiz-title"
-        type="text"
-        placeholder="Quiz title"
-      >
+    <label style="display:block;margin-bottom:8px;">
+      Due date
+    </label>
 
-      <label style="display:block;margin-bottom:8px;">
-        Due date
-      </label>
-
-      <input
-        id="quiz-due-date"
-        type="datetime-local"
-      >
+    <input
+      id="quiz-due-date"
+      type="datetime-local"
+    >
 
 
-      <div id="questions-container"></div>
+    <div id="questions-container"></div>
 
 
-      <button
-        id="add-question-button"
-        style="margin-top:10px;"
-      >
-        Add Question
-      </button>
+    <button
+      id="add-question-button"
+      style="margin-top:10px;"
+    >
+      Add Question
+    </button>
 
 
-      <p
-        id="question-count"
-        style="margin-top:10px;color:#6b7280;"
-      >
-        0 / 5 questions
-      </p>
+    <p
+      id="question-count"
+      style="margin-top:10px;color:#6b7280;"
+    >
+      0 / 5 questions
+    </p>
 
 
-      <hr style="
-        margin:25px 0;
-        border:none;
-        border-top:1px solid #e5e7eb;
-      ">
+    <hr style="
+      margin:25px 0;
+      border:none;
+      border-top:1px solid #e5e7eb;
+    ">
 
 
-      <h3 style="margin-bottom:15px;">
-        Assign To Student
-      </h3>
+    <h3>Assign To Student</h3>
 
+    <input
+      id="student-email"
+      type="email"
+      placeholder="Student email"
+    >
 
-      <input
-        id="student-email"
-        type="email"
-        placeholder="Student email"
-      >
+    <button id="find-student-button">
+      Find Student
+    </button>
 
+    <div
+      id="student-search-result"
+      style="margin-top:15px;"
+    ></div>
 
-      <button id="find-student-button">
-        Find Student
-      </button>
+    <button
+      id="create-quiz-button"
+      style="
+        margin-top:20px;
+        display:none;
+      "
+    >
+      Create & Assign Quiz
+    </button>
 
-
-      <div
-        id="student-search-result"
-        style="margin-top:15px;"
-      ></div>
-
-
-      <button
-        id="create-quiz-button"
-        style="
-          margin-top:20px;
-          display:none;
-        "
-      >
-        Create & Assign Quiz
-      </button>
-
-
-      <p
-        id="quiz-message"
-        style="margin-top:15px;"
-      ></p>
-
-    </div>
+    <p
+      id="quiz-message"
+      style="margin-top:15px;"
+    ></p>
 
   </section>
 
 
-  <!-- TEACHER SUBMISSIONS -->
+  <!-- SUBMISSIONS -->
 
   <section
     class="dashboard-card"
@@ -188,7 +173,7 @@
   </section>
 
 
-  <!-- OWNER CONTROLS -->
+  <!-- OWNER -->
 
   <section
     class="dashboard-card"
@@ -219,7 +204,6 @@
 
   </section>
 
-
 </main>
 
 
@@ -241,14 +225,22 @@ import {
   collection,
   query,
   where,
-  orderBy,
+  onSnapshot,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 
+/* =====================================================
+   SETTINGS
+===================================================== */
+
 const OWNER_EMAIL =
   "gambrilljulian452@gmail.com";
 
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
 
 const welcome =
   document.getElementById("welcome");
@@ -278,805 +270,338 @@ const ownerPanel =
   document.getElementById("owner-panel");
 
 
+/* =====================================================
+   STATE
+===================================================== */
+
 let currentUser = null;
 let currentUserData = null;
 
 let selectedStudent = null;
+
 let questionCount = 0;
 
+let studentAssignments = [];
 
-/* =========================
+let studentSubmissions = new Map();
+
+let studentAssignmentListener = null;
+let studentSubmissionListener = null;
+let teacherSubmissionListener = null;
+
+
+/* =====================================================
    AUTH
-========================= */
+===================================================== */
 
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(
+  auth,
+  async (user) => {
 
-  if (!user) {
+    if (!user) {
 
-    window.location.href = "index.html";
-    return;
+      window.location.href =
+        "index.html";
+
+      return;
+    }
+
+
+    currentUser = user;
+
+
+    userEmail.textContent =
+      user.email || "No email";
+
+
+    try {
+
+      const userSnapshot =
+        await getDoc(
+          doc(
+            db,
+            "users",
+            user.uid
+          )
+        );
+
+
+      if (
+        !userSnapshot.exists()
+      ) {
+
+        currentUserData = {
+          name: "Student",
+          email: user.email,
+          role: "student"
+        };
+
+      } else {
+
+        currentUserData =
+          userSnapshot.data();
+
+      }
+
+
+      const role =
+        currentUserData.role ||
+        "student";
+
+
+      const isOwner =
+        user.email
+          ?.toLowerCase() ===
+        OWNER_EMAIL;
+
+
+      userName.textContent =
+        currentUserData.name ||
+        "Student";
+
+
+      userRole.textContent =
+        role;
+
+
+      welcome.textContent =
+        `Welcome, ${
+          currentUserData.name ||
+          "Student"
+        }!`;
+
+
+      /* STUDENT */
+
+      if (
+        role === "student"
+      ) {
+
+        studentPanel.style.display =
+          "block";
+
+        startStudentListeners();
+
+      }
+
+
+      /* TEACHER */
+
+      if (
+        role === "teacher" ||
+        isOwner
+      ) {
+
+        teacherPanel.style.display =
+          "block";
+
+        submissionsPanel.style.display =
+          "block";
+
+        startTeacherSubmissionListener();
+
+      }
+
+
+      /* OWNER */
+
+      if (isOwner) {
+
+        ownerPanel.style.display =
+          "block";
+
+      }
+
+
+    } catch (error) {
+
+      console.error(
+        "Account error:",
+        error
+      );
+
+      userName.textContent =
+        "Unable to load";
+
+      userRole.textContent =
+        "Unable to load";
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   STUDENT REAL-TIME LISTENERS
+===================================================== */
+
+function startStudentListeners() {
+
+  if (
+    studentAssignmentListener
+  ) {
+
+    studentAssignmentListener();
 
   }
 
-  currentUser = user;
 
-  userEmail.textContent =
-    user.email || "No email";
+  if (
+    studentSubmissionListener
+  ) {
 
-
-  try {
-
-    const snapshot =
-      await getDoc(
-        doc(db, "users", user.uid)
-      );
-
-
-    if (!snapshot.exists()) {
-
-      userName.textContent = "Student";
-      userRole.textContent = "student";
-
-      studentPanel.style.display = "block";
-
-      loadStudentAssignments();
-
-      return;
-
-    }
-
-
-    currentUserData =
-      snapshot.data();
-
-
-    const role =
-      currentUserData.role || "student";
-
-
-    userName.textContent =
-      currentUserData.name || "Student";
-
-    userRole.textContent =
-      role;
-
-
-    welcome.textContent =
-      `Welcome, ${currentUserData.name || "Student"}!`;
-
-
-    /* STUDENT */
-
-    if (role === "student") {
-
-      studentPanel.style.display =
-        "block";
-
-      await loadStudentAssignments();
-
-    }
-
-
-    /* TEACHER */
-
-    if (role === "teacher") {
-
-      teacherPanel.style.display =
-        "block";
-
-      submissionsPanel.style.display =
-        "block";
-
-      await loadTeacherSubmissions();
-
-    }
-
-
-    /* OWNER */
-
-    if (
-      user.email?.toLowerCase() ===
-      OWNER_EMAIL
-    ) {
-
-      ownerPanel.style.display =
-        "block";
-
-      teacherPanel.style.display =
-        "block";
-
-      submissionsPanel.style.display =
-        "block";
-
-      await loadTeacherSubmissions();
-
-    }
-
-
-  } catch (error) {
-
-    console.error(error);
-
-    userName.textContent =
-      "Unable to load";
-
-    userRole.textContent =
-      "Unable to load";
+    studentSubmissionListener();
 
   }
 
-});
 
-
-/* =========================
-   QUESTION CREATOR
-========================= */
-
-document
-  .getElementById("add-question-button")
-  .addEventListener("click", () => {
-
-    if (questionCount >= 5) {
-
-      alert("You can only have up to 5 questions.");
-
-      return;
-
-    }
-
-
-    questionCount++;
-
-
-    const container =
-      document.getElementById(
-        "questions-container"
-      );
-
-
-    const question =
-      document.createElement("div");
-
-
-    question.className =
-      "dashboard-card";
-
-
-    question.style.marginTop =
-      "15px";
-
-
-    question.innerHTML = `
-
-      <h3>
-        Question ${questionCount}
-      </h3>
-
-      <select
-        class="question-type"
-        style="
-          width:100%;
-          padding:14px;
-          margin:12px 0;
-          border:1px solid #d1d5db;
-          border-radius:10px;
-          font-size:16px;
-        "
-      >
-
-        <option value="math">
-          Math
-        </option>
-
-        <option value="written">
-          Written Response
-        </option>
-
-        <option value="truefalse">
-          True or False
-        </option>
-
-      </select>
-
-
-      <input
-        class="question-text"
-        type="text"
-        placeholder="Question"
-      >
-
-
-      <div class="answers-area"></div>
-
-    `;
-
-
-    container.appendChild(question);
-
-
-    const typeSelect =
-      question.querySelector(
-        ".question-type"
-      );
-
-
-    const answersArea =
-      question.querySelector(
-        ".answers-area"
-      );
-
-
-    function renderAnswers() {
-
-      const type =
-        typeSelect.value;
-
-
-      if (type === "math") {
-
-        answersArea.innerHTML = `
-
-          <input
-            class="answer"
-            placeholder="Answer A"
-          >
-
-          <input
-            class="answer"
-            placeholder="Answer B"
-          >
-
-          <input
-            class="answer"
-            placeholder="Answer C"
-          >
-
-          <label>
-            Correct answer:
-          </label>
-
-          <select
-            class="correct-answer"
-            style="
-              width:100%;
-              padding:12px;
-              margin-top:8px;
-            "
-          >
-
-            <option value="0">A</option>
-            <option value="1">B</option>
-            <option value="2">C</option>
-
-          </select>
-
-        `;
-
-      }
-
-
-      if (type === "truefalse") {
-
-        answersArea.innerHTML = `
-
-          <p style="margin-top:10px;">
-            Answers:
-            <strong>True / False</strong>
-          </p>
-
-          <label>
-            Correct answer:
-          </label>
-
-          <select
-            class="correct-answer"
-            style="
-              width:100%;
-              padding:12px;
-              margin-top:8px;
-            "
-          >
-
-            <option value="true">
-              True
-            </option>
-
-            <option value="false">
-              False
-            </option>
-
-          </select>
-
-        `;
-
-      }
-
-
-      if (type === "written") {
-
-        answersArea.innerHTML = `
-
-          <p style="
-            margin-top:10px;
-            color:#6b7280;
-          ">
-            Students will type their answer.
-            The teacher will decide whether it
-            is correct after submission.
-          </p>
-
-        `;
-
-      }
-
-    }
-
-
-    typeSelect.addEventListener(
-      "change",
-      renderAnswers
+  /* ASSIGNMENTS */
+
+  const assignmentsQuery =
+    query(
+      collection(
+        db,
+        "assignments"
+      ),
+      where(
+        "assignedTo",
+        "array-contains",
+        currentUser.uid
+      )
     );
 
 
-    renderAnswers();
+  studentAssignmentListener =
+    onSnapshot(
+      assignmentsQuery,
+      (snapshot) => {
 
+        studentAssignments =
+          snapshot.docs.map(
+            assignmentDoc => ({
 
-    document.getElementById(
-      "question-count"
-    ).textContent =
-      `${questionCount} / 5 questions`;
+              id:
+                assignmentDoc.id,
 
-  });
+              ...assignmentDoc.data()
 
-
-/* =========================
-   FIND STUDENT
-========================= */
-
-document
-  .getElementById("find-student-button")
-  .addEventListener("click", async () => {
-
-    const email =
-      document
-        .getElementById("student-email")
-        .value
-        .trim()
-        .toLowerCase();
-
-
-    const result =
-      document.getElementById(
-        "student-search-result"
-      );
-
-
-    const assignButton =
-      document.getElementById(
-        "create-quiz-button"
-      );
-
-
-    if (!email) {
-
-      result.innerHTML =
-        "<p>Please enter a student email.</p>";
-
-      return;
-
-    }
-
-
-    result.innerHTML =
-      "<p>Searching...</p>";
-
-
-    assignButton.style.display =
-      "none";
-
-
-    try {
-
-      const q =
-        query(
-          collection(db, "users"),
-          where("email", "==", email)
-        );
-
-
-      const snapshot =
-        await getDocs(q);
-
-
-      if (snapshot.empty) {
-
-        result.innerHTML =
-          "<p>No user found with that email.</p>";
-
-        return;
-
-      }
-
-
-      const studentDoc =
-        snapshot.docs[0];
-
-
-      const data =
-        studentDoc.data();
-
-
-      if (data.role !== "student") {
-
-        result.innerHTML =
-          "<p>This email does not belong to a student account.</p>";
-
-        return;
-
-      }
-
-
-      selectedStudent = {
-        uid: studentDoc.id,
-        email: data.email,
-        name: data.name || "Student"
-      };
-
-
-      result.innerHTML = `
-
-        <div style="
-          padding:15px;
-          background:#f4f6f8;
-          border-radius:10px;
-        ">
-
-          <strong>
-            ${escapeHtml(selectedStudent.name)}
-          </strong>
-
-          <p>
-            ${escapeHtml(selectedStudent.email)}
-          </p>
-
-          <p>
-            Role: student
-          </p>
-
-        </div>
-
-      `;
-
-
-      assignButton.style.display =
-        "block";
-
-
-    } catch (error) {
-
-      console.error(error);
-
-      result.innerHTML =
-        "<p>Could not search for student.</p>";
-
-    }
-
-  });
-
-
-/* =========================
-   CREATE QUIZ
-========================= */
-
-document
-  .getElementById("create-quiz-button")
-  .addEventListener("click", async () => {
-
-    const title =
-      document
-        .getElementById("quiz-title")
-        .value
-        .trim();
-
-
-    const dueDate =
-      document
-        .getElementById("quiz-due-date")
-        .value;
-
-
-    const message =
-      document.getElementById(
-        "quiz-message"
-      );
-
-
-    if (!title) {
-
-      message.textContent =
-        "Please enter a quiz title.";
-
-      return;
-
-    }
-
-
-    if (!dueDate) {
-
-      message.textContent =
-        "Please choose a due date.";
-
-      return;
-
-    }
-
-
-    if (!selectedStudent) {
-
-      message.textContent =
-        "Please find a student first.";
-
-      return;
-
-    }
-
-
-    if (questionCount < 1) {
-
-      message.textContent =
-        "Add at least one question.";
-
-      return;
-
-    }
-
-
-    const questionElements =
-      document.querySelectorAll(
-        "#questions-container > div"
-      );
-
-
-    const questions = [];
-    const answerKeys = [];
-
-
-    for (
-      let i = 0;
-      i < questionElements.length;
-      i++
-    ) {
-
-      const element =
-        questionElements[i];
-
-
-      const type =
-        element.querySelector(
-          ".question-type"
-        ).value;
-
-
-      const text =
-        element.querySelector(
-          ".question-text"
-        ).value.trim();
-
-
-      if (!text) {
-
-        message.textContent =
-          `Question ${i + 1} needs text.`;
-
-        return;
-
-      }
-
-
-      if (type === "math") {
-
-        const answers =
-          [...element.querySelectorAll(
-            ".answer"
-          )]
-          .map(input =>
-            input.value.trim()
+            })
           );
 
 
-        if (
-          answers.some(
-            answer => !answer
-          )
-        ) {
+        renderStudentAssignments();
 
-          message.textContent =
-            `Question ${i + 1} needs all 3 answers.`;
+      },
+      (error) => {
 
-          return;
-
-        }
-
-
-        const correct =
-          Number(
-            element.querySelector(
-              ".correct-answer"
-            ).value
-          );
-
-
-        questions.push({
-          number: i + 1,
-          type: "math",
-          text,
-          choices: answers
-        });
-
-
-        answerKeys.push({
-          number: i + 1,
-          correctChoice: correct
-        });
-
-      }
-
-
-      if (type === "truefalse") {
-
-        const correct =
-          element.querySelector(
-            ".correct-answer"
-          ).value === "true";
-
-
-        questions.push({
-          number: i + 1,
-          type: "truefalse",
-          text,
-          choices: [
-            "True",
-            "False"
-          ]
-        });
-
-
-        answerKeys.push({
-          number: i + 1,
-          correctChoice: correct
-        });
-
-      }
-
-
-      if (type === "written") {
-
-        questions.push({
-          number: i + 1,
-          type: "written",
-          text
-        });
-
-
-        answerKeys.push({
-          number: i + 1
-        });
-
-      }
-
-    }
-
-
-    try {
-
-      const assignmentRef =
-        doc(
-          collection(db, "assignments")
+        console.error(
+          "Assignment error:",
+          error
         );
 
 
-      await setDoc(
-        assignmentRef,
-        {
-          title,
-          assignedTo: [
-            selectedStudent.uid
-          ],
-          assignedEmail:
-            selectedStudent.email,
-          assignedName:
-            selectedStudent.name,
-          teacherId:
-            currentUser.uid,
-          teacherEmail:
-            currentUser.email,
-          questions,
-          dueDate,
-          createdAt:
-            serverTimestamp(),
-          status: "assigned"
-        }
-      );
+        document.getElementById(
+          "student-assignments"
+        ).innerHTML = `
+
+          <div style="
+            padding:18px;
+            background:#fee2e2;
+            border-radius:12px;
+          ">
+
+            <strong>
+              Could not load assignments.
+            </strong>
+
+            <p style="margin-top:8px;">
+              ${escapeHtml(
+                error.message ||
+                "Firestore error."
+              )}
+            </p>
+
+          </div>
+
+        `;
+
+      }
+    );
 
 
-      await setDoc(
-        doc(
-          db,
-          "answerKeys",
-          assignmentRef.id
-        ),
-        {
-          assignmentId:
-            assignmentRef.id,
-          teacherId:
-            currentUser.uid,
-          answers:
-            answerKeys
-        }
-      );
+  /* SUBMISSIONS */
+
+  const submissionsQuery =
+    query(
+      collection(
+        db,
+        "submissions"
+      ),
+      where(
+        "studentId",
+        "==",
+        currentUser.uid
+      )
+    );
 
 
-      message.textContent =
-        "Quiz created and assigned successfully!";
+  studentSubmissionListener =
+    onSnapshot(
+      submissionsQuery,
+      (snapshot) => {
+
+        studentSubmissions.clear();
 
 
-      document.getElementById(
-        "quiz-title"
-      ).value = "";
+        snapshot.docs.forEach(
+          submissionDoc => {
+
+            const data =
+              submissionDoc.data();
 
 
-      document.getElementById(
-        "quiz-due-date"
-      ).value = "";
+            if (
+              data.assignmentId
+            ) {
+
+              studentSubmissions.set(
+                data.assignmentId,
+                {
+                  id:
+                    submissionDoc.id,
+
+                  ...data
+                }
+              );
+
+            }
+
+          }
+        );
 
 
-      document.getElementById(
-        "student-email"
-      ).value = "";
+        renderStudentAssignments();
+
+      },
+      (error) => {
+
+        console.error(
+          "Submission listener error:",
+          error
+        );
+
+      }
+    );
+
+}
 
 
-      document.getElementById(
-        "questions-container"
-      ).innerHTML = "";
+/* =====================================================
+   RENDER STUDENT ASSIGNMENTS
+===================================================== */
 
-
-      document.getElementById(
-        "student-search-result"
-      ).innerHTML = "";
-
-
-      document.getElementById(
-        "create-quiz-button"
-      ).style.display = "none";
-
-
-      questionCount = 0;
-      selectedStudent = null;
-
-
-      document.getElementById(
-        "question-count"
-      ).textContent =
-        "0 / 5 questions";
-
-
-    } catch (error) {
-
-      console.error(error);
-
-      message.textContent =
-        "Could not create the quiz.";
-
-    }
-
-  });
-
-
-/* =========================
-   STUDENT ASSIGNMENTS
-========================= */
-
-async function loadStudentAssignments() {
+function renderStudentAssignments() {
 
   const container =
     document.getElementById(
@@ -1084,167 +609,1034 @@ async function loadStudentAssignments() {
     );
 
 
-  try {
+  if (
+    !studentAssignments.length
+  ) {
 
-    const q =
-      query(
-        collection(db, "assignments"),
-        where(
-          "assignedTo",
-          "array-contains",
-          currentUser.uid
-        )
-      );
+    container.innerHTML = `
 
+      <div style="
+        padding:18px;
+        background:#f4f6f8;
+        border-radius:12px;
+      ">
 
-    const snapshot =
-      await getDocs(q);
+        <p>
+          No assignments yet.
+        </p>
 
+      </div>
 
-    if (snapshot.empty) {
+    `;
 
-      container.innerHTML =
-        "<p>No assignments yet.</p>";
+    return;
 
-      return;
-
-    }
+  }
 
 
-    container.innerHTML = "";
+  container.innerHTML = "";
 
 
-    for (const assignmentDoc of snapshot.docs) {
-
-      const assignment =
-        assignmentDoc.data();
-
+  studentAssignments.forEach(
+    assignment => {
 
       const submission =
-        await getDoc(
-          doc(
-            db,
-            "submissions",
-            `${assignmentDoc.id}_${currentUser.uid}`
-          )
+        studentSubmissions.get(
+          assignment.id
         );
 
 
       const card =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
 
-      card.style.cssText =
-        `
-          padding:18px;
-          margin-bottom:15px;
-          background:#f4f6f8;
-          border-radius:12px;
-        `;
+      card.style.cssText = `
+
+        padding:18px;
+
+        margin-bottom:15px;
+
+        background:#f4f6f8;
+
+        border-radius:12px;
+
+      `;
 
 
-      if (submission.exists()) {
+      /* SUBMITTED */
 
-        const data =
-          submission.data();
-
-
-        card.innerHTML = `
-
-          <h3>
-            ${escapeHtml(assignment.title)}
-          </h3>
-
-          <p>
-            Submitted
-          </p>
-
-          <p>
-            Grade:
-            <strong>
-              ${escapeHtml(data.grade || "Not graded yet")}
-            </strong>
-          </p>
-
-          <button>
-            View Results
-          </button>
-
-        `;
+      if (submission) {
 
 
-        card
-          .querySelector("button")
-          .addEventListener(
-            "click",
-            () => {
+        if (
+          submission.graded
+        ) {
 
-              showStudentResults(
-                assignment,
-                data
-              );
+          card.innerHTML = `
 
-            }
-          );
+            <h3>
+              ${escapeHtml(
+                assignment.title ||
+                "Untitled Quiz"
+              )}
+            </h3>
+
+            <p style="margin-top:8px;">
+              Submitted
+            </p>
+
+            <p style="margin-top:8px;">
+
+              Grade:
+
+              <strong>
+                ${escapeHtml(
+                  submission.grade ||
+                  "Not graded"
+                )}
+              </strong>
+
+            </p>
+
+            <button
+              style="margin-top:12px;"
+            >
+              View Results
+            </button>
+
+          `;
 
 
-      } else {
+          card
+            .querySelector("button")
+            .addEventListener(
+              "click",
+              () => {
 
-        card.innerHTML = `
+                showStudentResults(
+                  assignment,
+                  submission
+                );
 
-          <h3>
-            ${escapeHtml(assignment.title)}
-          </h3>
-
-          <p>
-            Due:
-            ${formatDate(assignment.dueDate)}
-          </p>
-
-          <button>
-            Start Quiz
-          </button>
-
-        `;
+              }
+            );
 
 
-        card
-          .querySelector("button")
-          .addEventListener(
-            "click",
-            () => {
+        } else {
 
-              showQuiz(
-                assignmentDoc.id,
-                assignment
-              );
+          card.innerHTML = `
 
-            }
-          );
+            <h3>
+              ${escapeHtml(
+                assignment.title ||
+                "Untitled Quiz"
+              )}
+            </h3>
+
+            <p style="
+              margin-top:8px;
+              color:#6b7280;
+            ">
+
+              Submitted —
+              waiting for your teacher
+              to grade it.
+
+            </p>
+
+          `;
+
+        }
+
+
+        container.appendChild(card);
+
+        return;
 
       }
+
+
+      /* NOT SUBMITTED */
+
+      card.innerHTML = `
+
+        <h3>
+          ${escapeHtml(
+            assignment.title ||
+            "Untitled Quiz"
+          )}
+        </h3>
+
+        <p style="margin-top:8px;">
+
+          Due:
+          ${formatDate(
+            assignment.dueDate
+          )}
+
+        </p>
+
+        <button
+          style="margin-top:12px;"
+        >
+          Start Quiz
+        </button>
+
+      `;
+
+
+      card
+        .querySelector("button")
+        .addEventListener(
+          "click",
+          () => {
+
+            showQuiz(
+              assignment.id,
+              assignment
+            );
+
+          }
+        );
 
 
       container.appendChild(card);
 
     }
-
-
-  } catch (error) {
-
-    console.error(error);
-
-    container.innerHTML =
-      "<p>Could not load assignments.</p>";
-
-  }
+  );
 
 }
 
 
-/* =========================
+/* =====================================================
+   ADD QUESTION
+===================================================== */
+
+document
+  .getElementById(
+    "add-question-button"
+  )
+  .addEventListener(
+    "click",
+    () => {
+
+      if (
+        questionCount >= 5
+      ) {
+
+        alert(
+          "You can only have up to 5 questions."
+        );
+
+        return;
+
+      }
+
+
+      questionCount++;
+
+
+      const container =
+        document.getElementById(
+          "questions-container"
+        );
+
+
+      const question =
+        document.createElement(
+          "div"
+        );
+
+
+      question.className =
+        "dashboard-card";
+
+
+      question.style.marginTop =
+        "15px";
+
+
+      question.innerHTML = `
+
+        <h3>
+          Question ${questionCount}
+        </h3>
+
+
+        <select
+          class="question-type"
+          style="
+            width:100%;
+            padding:14px;
+            margin:12px 0;
+            border:1px solid #d1d5db;
+            border-radius:10px;
+            font-size:16px;
+          "
+        >
+
+          <option value="math">
+            Math
+          </option>
+
+          <option value="written">
+            Written Response
+          </option>
+
+          <option value="truefalse">
+            True or False
+          </option>
+
+        </select>
+
+
+        <input
+          class="question-text"
+          type="text"
+          placeholder="Question"
+        >
+
+
+        <div class="answers-area"></div>
+
+      `;
+
+
+      container.appendChild(
+        question
+      );
+
+
+      const typeSelect =
+        question.querySelector(
+          ".question-type"
+        );
+
+
+      const answersArea =
+        question.querySelector(
+          ".answers-area"
+        );
+
+
+      function renderAnswers() {
+
+        const type =
+          typeSelect.value;
+
+
+        if (
+          type === "math"
+        ) {
+
+          answersArea.innerHTML = `
+
+            <input
+              class="answer"
+              placeholder="Answer A"
+            >
+
+            <input
+              class="answer"
+              placeholder="Answer B"
+            >
+
+            <input
+              class="answer"
+              placeholder="Answer C"
+            >
+
+            <label>
+              Correct answer:
+            </label>
+
+            <select
+              class="correct-answer"
+              style="
+                width:100%;
+                padding:12px;
+                margin-top:8px;
+              "
+            >
+
+              <option value="0">
+                A
+              </option>
+
+              <option value="1">
+                B
+              </option>
+
+              <option value="2">
+                C
+              </option>
+
+            </select>
+
+          `;
+
+        }
+
+
+        if (
+          type === "truefalse"
+        ) {
+
+          answersArea.innerHTML = `
+
+            <p style="margin-top:10px;">
+              Answers:
+              <strong>
+                True / False
+              </strong>
+            </p>
+
+            <label>
+              Correct answer:
+            </label>
+
+            <select
+              class="correct-answer"
+              style="
+                width:100%;
+                padding:12px;
+                margin-top:8px;
+              "
+            >
+
+              <option value="true">
+                True
+              </option>
+
+              <option value="false">
+                False
+              </option>
+
+            </select>
+
+          `;
+
+        }
+
+
+        if (
+          type === "written"
+        ) {
+
+          answersArea.innerHTML = `
+
+            <p style="
+              margin-top:10px;
+              color:#6b7280;
+            ">
+
+              Students will type their
+              answer.
+
+              The teacher will grade it
+              manually.
+
+            </p>
+
+          `;
+
+        }
+
+      }
+
+
+      typeSelect.addEventListener(
+        "change",
+        renderAnswers
+      );
+
+
+      renderAnswers();
+
+
+      document.getElementById(
+        "question-count"
+      ).textContent =
+        `${questionCount} / 5 questions`;
+
+    }
+  );
+
+
+/* =====================================================
+   FIND STUDENT
+===================================================== */
+
+document
+  .getElementById(
+    "find-student-button"
+  )
+  .addEventListener(
+    "click",
+    async () => {
+
+      const email =
+        document
+          .getElementById(
+            "student-email"
+          )
+          .value
+          .trim()
+          .toLowerCase();
+
+
+      const result =
+        document.getElementById(
+          "student-search-result"
+        );
+
+
+      const assignButton =
+        document.getElementById(
+          "create-quiz-button"
+        );
+
+
+      if (!email) {
+
+        result.innerHTML =
+          "<p>Please enter a student email.</p>";
+
+        return;
+
+      }
+
+
+      result.innerHTML =
+        "<p>Searching...</p>";
+
+
+      assignButton.style.display =
+        "none";
+
+
+      try {
+
+        const q =
+          query(
+            collection(
+              db,
+              "users"
+            ),
+            where(
+              "email",
+              "==",
+              email
+            )
+          );
+
+
+        const snapshot =
+          await getDocs(q);
+
+
+        if (
+          snapshot.empty
+        ) {
+
+          result.innerHTML =
+            "<p>No user found with that email.</p>";
+
+          return;
+
+        }
+
+
+        const studentDoc =
+          snapshot.docs[0];
+
+
+        const data =
+          studentDoc.data();
+
+
+        if (
+          data.role !== "student"
+        ) {
+
+          result.innerHTML =
+            "<p>This email does not belong to a student account.</p>";
+
+          return;
+
+        }
+
+
+        selectedStudent = {
+
+          uid:
+            studentDoc.id,
+
+          email:
+            data.email,
+
+          name:
+            data.name ||
+            "Student"
+
+        };
+
+
+        result.innerHTML = `
+
+          <div style="
+            padding:15px;
+            background:#f4f6f8;
+            border-radius:10px;
+          ">
+
+            <strong>
+              ${escapeHtml(
+                selectedStudent.name
+              )}
+            </strong>
+
+            <p>
+              ${escapeHtml(
+                selectedStudent.email
+              )}
+            </p>
+
+            <p>
+              Role: student
+            </p>
+
+          </div>
+
+        `;
+
+
+        assignButton.style.display =
+          "block";
+
+
+      } catch (error) {
+
+        console.error(
+          error
+        );
+
+
+        result.innerHTML =
+          "<p>Could not search for student.</p>";
+
+      }
+
+    }
+  );
+
+
+/* =====================================================
+   CREATE QUIZ
+===================================================== */
+
+document
+  .getElementById(
+    "create-quiz-button"
+  )
+  .addEventListener(
+    "click",
+    async () => {
+
+      const title =
+        document
+          .getElementById(
+            "quiz-title"
+          )
+          .value
+          .trim();
+
+
+      const dueDate =
+        document
+          .getElementById(
+            "quiz-due-date"
+          )
+          .value;
+
+
+      const message =
+        document.getElementById(
+          "quiz-message"
+        );
+
+
+      if (!title) {
+
+        message.textContent =
+          "Please enter a quiz title.";
+
+        return;
+
+      }
+
+
+      if (!dueDate) {
+
+        message.textContent =
+          "Please choose a due date.";
+
+        return;
+
+      }
+
+
+      if (!selectedStudent) {
+
+        message.textContent =
+          "Please find a student first.";
+
+        return;
+
+      }
+
+
+      if (
+        questionCount < 1
+      ) {
+
+        message.textContent =
+          "Add at least one question.";
+
+        return;
+
+      }
+
+
+      const questionElements =
+        document.querySelectorAll(
+          "#questions-container > div"
+        );
+
+
+      const questions = [];
+      const answerKeys = [];
+
+
+      for (
+        let i = 0;
+        i < questionElements.length;
+        i++
+      ) {
+
+        const element =
+          questionElements[i];
+
+
+        const type =
+          element
+            .querySelector(
+              ".question-type"
+            )
+            .value;
+
+
+        const text =
+          element
+            .querySelector(
+              ".question-text"
+            )
+            .value
+            .trim();
+
+
+        if (!text) {
+
+          message.textContent =
+            `Question ${i + 1} needs text.`;
+
+          return;
+
+        }
+
+
+        if (
+          type === "math"
+        ) {
+
+          const answers =
+            [
+              ...element.querySelectorAll(
+                ".answer"
+              )
+            ]
+            .map(
+              input =>
+                input.value.trim()
+            );
+
+
+          if (
+            answers.some(
+              answer =>
+                !answer
+            )
+          ) {
+
+            message.textContent =
+              `Question ${i + 1} needs all 3 answers.`;
+
+            return;
+
+          }
+
+
+          const correct =
+            Number(
+              element
+                .querySelector(
+                  ".correct-answer"
+                )
+                .value
+            );
+
+
+          questions.push({
+
+            number:
+              i + 1,
+
+            type:
+              "math",
+
+            text,
+
+            choices:
+              answers
+
+          });
+
+
+          answerKeys.push({
+
+            number:
+              i + 1,
+
+            correctChoice:
+              correct
+
+          });
+
+        }
+
+
+        if (
+          type === "truefalse"
+        ) {
+
+          const correct =
+            element
+              .querySelector(
+                ".correct-answer"
+              )
+              .value ===
+            "true";
+
+
+          questions.push({
+
+            number:
+              i + 1,
+
+            type:
+              "truefalse",
+
+            text,
+
+            choices: [
+              "True",
+              "False"
+            ]
+
+          });
+
+
+          answerKeys.push({
+
+            number:
+              i + 1,
+
+            correctChoice:
+              correct
+
+          });
+
+        }
+
+
+        if (
+          type === "written"
+        ) {
+
+          questions.push({
+
+            number:
+              i + 1,
+
+            type:
+              "written",
+
+            text
+
+          });
+
+
+          answerKeys.push({
+
+            number:
+              i + 1
+
+          });
+
+        }
+
+      }
+
+
+      try {
+
+        const assignmentRef =
+          doc(
+            collection(
+              db,
+              "assignments"
+            )
+          );
+
+
+        await setDoc(
+          assignmentRef,
+          {
+
+            assignmentId:
+              assignmentRef.id,
+
+            title,
+
+            assignedTo: [
+              selectedStudent.uid
+            ],
+
+            assignedEmail:
+              selectedStudent.email,
+
+            assignedName:
+              selectedStudent.name,
+
+            teacherId:
+              currentUser.uid,
+
+            teacherEmail:
+              currentUser.email,
+
+            questions,
+
+            dueDate,
+
+            createdAt:
+              serverTimestamp(),
+
+            status:
+              "assigned"
+
+          }
+        );
+
+
+        await setDoc(
+          doc(
+            db,
+            "answerKeys",
+            assignmentRef.id
+          ),
+          {
+
+            assignmentId:
+              assignmentRef.id,
+
+            teacherId:
+              currentUser.uid,
+
+            answers:
+              answerKeys
+
+          }
+        );
+
+
+        message.textContent =
+          "Quiz created and assigned successfully!";
+
+
+        document.getElementById(
+          "quiz-title"
+        ).value = "";
+
+
+        document.getElementById(
+          "quiz-due-date"
+        ).value = "";
+
+
+        document.getElementById(
+          "student-email"
+        ).value = "";
+
+
+        document.getElementById(
+          "questions-container"
+        ).innerHTML = "";
+
+
+        document.getElementById(
+          "student-search-result"
+        ).innerHTML = "";
+
+
+        document.getElementById(
+          "create-quiz-button"
+        ).style.display =
+          "none";
+
+
+        questionCount = 0;
+
+        selectedStudent = null;
+
+
+        document.getElementById(
+          "question-count"
+        ).textContent =
+          "0 / 5 questions";
+
+
+      } catch (error) {
+
+        console.error(
+          "Create quiz error:",
+          error
+        );
+
+
+        message.textContent =
+          "Could not create the quiz.";
+
+      }
+
+    }
+  );
+
+
+/* =====================================================
    SHOW QUIZ
-========================= */
+===================================================== */
 
 function showQuiz(
   assignmentId,
@@ -1262,15 +1654,23 @@ function showQuiz(
     <div>
 
       <h2>
-        ${escapeHtml(assignment.title)}
+        ${escapeHtml(
+          assignment.title
+        )}
       </h2>
 
       <p style="margin-bottom:20px;">
+
         Due:
-        ${formatDate(assignment.dueDate)}
+        ${formatDate(
+          assignment.dueDate
+        )}
+
       </p>
 
+
       <form id="quiz-form"></form>
+
 
       <button
         id="submit-quiz"
@@ -1278,6 +1678,7 @@ function showQuiz(
       >
         Submit Quiz
       </button>
+
 
       <p id="submit-message"></p>
 
@@ -1296,28 +1697,40 @@ function showQuiz(
     (question, index) => {
 
       const div =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
 
-      div.style.cssText =
-        `
-          padding:18px;
-          margin-bottom:15px;
-          background:#f4f6f8;
-          border-radius:12px;
-        `;
+      div.style.cssText = `
+
+        padding:18px;
+
+        margin-bottom:15px;
+
+        background:#f4f6f8;
+
+        border-radius:12px;
+
+      `;
 
 
       if (
-        question.type === "written"
+        question.type ===
+        "written"
       ) {
 
         div.innerHTML = `
 
           <h3>
+
             ${index + 1}.
-            ${escapeHtml(question.text)}
+            ${escapeHtml(
+              question.text
+            )}
+
           </h3>
+
 
           <textarea
             name="q${index}"
@@ -1341,15 +1754,22 @@ function showQuiz(
         div.innerHTML = `
 
           <h3>
+
             ${index + 1}.
-            ${escapeHtml(question.text)}
+            ${escapeHtml(
+              question.text
+            )}
+
           </h3>
 
         `;
 
 
         question.choices.forEach(
-          (choice, choiceIndex) => {
+          (
+            choice,
+            choiceIndex
+          ) => {
 
             div.innerHTML += `
 
@@ -1367,7 +1787,9 @@ function showQuiz(
                   value="${choiceIndex}"
                 >
 
-                ${escapeHtml(choice)}
+                ${escapeHtml(
+                  choice
+                )}
 
               </label>
 
@@ -1379,23 +1801,91 @@ function showQuiz(
       }
 
 
-      form.appendChild(div);
+      form.appendChild(
+        div
+      );
 
     }
   );
 
 
   document
-    .getElementById("submit-quiz")
+    .getElementById(
+      "submit-quiz"
+    )
     .addEventListener(
       "click",
-      async () => {
+      async (event) => {
+
+        event.preventDefault();
+
+
+        const submitButton =
+          document.getElementById(
+            "submit-quiz"
+          );
+
+
+        const message =
+          document.getElementById(
+            "submit-message"
+          );
+
 
         const answers = [];
 
 
-        assignment.questions.forEach(
-          (question, index) => {
+        for (
+          let index = 0;
+          index <
+          assignment.questions.length;
+          index++
+        ) {
+
+          const question =
+            assignment.questions[
+              index
+            ];
+
+
+          if (
+            question.type ===
+            "written"
+          ) {
+
+            const textarea =
+              document.querySelector(
+                `[name="q${index}"]`
+              );
+
+
+            const answer =
+              textarea.value.trim();
+
+
+            if (!answer) {
+
+              message.textContent =
+                `Please answer question ${
+                  index + 1
+                }.`;
+
+              return;
+
+            }
+
+
+            answers.push({
+
+              number:
+                index + 1,
+
+              answer
+
+            });
+
+
+          } else {
 
             const selected =
               document.querySelector(
@@ -1403,37 +1893,39 @@ function showQuiz(
               );
 
 
-            if (
-              question.type === "written"
-            ) {
+            if (!selected) {
 
-              const textarea =
-                document.querySelector(
-                  `[name="q${index}"]`
-                );
+              message.textContent =
+                `Please answer question ${
+                  index + 1
+                }.`;
 
-
-              answers.push({
-                number: index + 1,
-                answer:
-                  textarea.value
-              });
-
-
-            } else {
-
-              answers.push({
-                number: index + 1,
-                answer:
-                  selected
-                    ? selected.value
-                    : null
-              });
+              return;
 
             }
 
+
+            answers.push({
+
+              number:
+                index + 1,
+
+              answer:
+                selected.value
+
+            });
+
           }
-        );
+
+        }
+
+
+        submitButton.disabled =
+          true;
+
+
+        message.textContent =
+          "Submitting...";
 
 
         try {
@@ -1445,43 +1937,57 @@ function showQuiz(
               `${assignmentId}_${currentUser.uid}`
             ),
             {
+
               assignmentId,
+
+              teacherId:
+                assignment.teacherId,
+
               studentId:
                 currentUser.uid,
+
               studentEmail:
                 currentUser.email,
+
               studentName:
                 currentUserData?.name ||
                 "Student",
+
               answers,
+
               submittedAt:
                 serverTimestamp(),
-              graded: false,
-              grade: null,
-              questionResults: []
+
+              graded:
+                false,
+
+              grade:
+                null,
+
+              questionResults:
+                []
+
             }
           );
 
 
-          document.getElementById(
-            "submit-message"
-          ).textContent =
+          message.textContent =
             "Quiz submitted! Your teacher will grade it.";
-
-
-          setTimeout(
-            loadStudentAssignments,
-            1000
-          );
 
 
         } catch (error) {
 
-          console.error(error);
+          console.error(
+            "Submit error:",
+            error
+          );
 
-          document.getElementById(
-            "submit-message"
-          ).textContent =
+
+          submitButton.disabled =
+            false;
+
+
+          message.textContent =
             "Could not submit the quiz.";
 
         }
@@ -1492,23 +1998,38 @@ function showQuiz(
 }
 
 
-/* =========================
+/* =====================================================
    TEACHER SUBMISSIONS
-========================= */
+===================================================== */
 
-async function loadTeacherSubmissions() {
+function startTeacherSubmissionListener() {
 
-  const container =
-    document.getElementById(
-      "submissions-list"
-    );
+  if (
+    teacherSubmissionListener
+  ) {
+
+    teacherSubmissionListener();
+
+  }
 
 
-  try {
+  const isOwner =
+    currentUser.email
+      ?.toLowerCase() ===
+    OWNER_EMAIL;
 
-    const q =
+
+  let submissionsQuery;
+
+
+  if (isOwner) {
+
+    submissionsQuery =
       query(
-        collection(db, "submissions"),
+        collection(
+          db,
+          "submissions"
+        ),
         where(
           "graded",
           "==",
@@ -1516,32 +2037,130 @@ async function loadTeacherSubmissions() {
         )
       );
 
+  } else {
 
-    const snapshot =
-      await getDocs(q);
+    submissionsQuery =
+      query(
+        collection(
+          db,
+          "submissions"
+        ),
+        where(
+          "teacherId",
+          "==",
+          currentUser.uid
+        )
+      );
+
+  }
 
 
-    if (snapshot.empty) {
+  teacherSubmissionListener =
+    onSnapshot(
+      submissionsQuery,
+      snapshot => {
 
-      container.innerHTML =
-        "<p>No ungraded submissions.</p>";
+        renderTeacherSubmissions(
+          snapshot
+        );
 
-      return;
+      },
+      error => {
+
+        console.error(
+          "Teacher submission error:",
+          error
+        );
+
+
+        document.getElementById(
+          "submissions-list"
+        ).innerHTML =
+          "<p>Could not load submissions.</p>";
+
+      }
+    );
+
+}
+
+
+/* =====================================================
+   RENDER TEACHER SUBMISSIONS
+===================================================== */
+
+async function renderTeacherSubmissions(
+  snapshot
+) {
+
+  const container =
+    document.getElementById(
+      "submissions-list"
+    );
+
+
+  const isOwner =
+    currentUser.email
+      ?.toLowerCase() ===
+    OWNER_EMAIL;
+
+
+  const submissions =
+    snapshot.docs.filter(
+      submissionDoc => {
+
+        const data =
+          submissionDoc.data();
+
+
+        if (
+          !isOwner &&
+          data.teacherId !==
+          currentUser.uid
+        ) {
+
+          return false;
+
+        }
+
+
+        return data.graded !== true;
+
+      }
+    );
+
+
+  if (!submissions.length) {
+
+    container.innerHTML =
+      "<p>No ungraded submissions.</p>";
+
+    return;
+
+  }
+
+
+  container.innerHTML = "";
+
+
+  for (
+    const submissionDoc
+    of submissions
+  ) {
+
+    const submission =
+      submissionDoc.data();
+
+
+    if (
+      !submission.assignmentId
+    ) {
+
+      continue;
 
     }
 
 
-    container.innerHTML = "";
-
-
-    for (
-      const submissionDoc
-      of snapshot.docs
-    ) {
-
-      const submission =
-        submissionDoc.data();
-
+    try {
 
       const assignmentSnapshot =
         await getDoc(
@@ -1553,21 +2172,8 @@ async function loadTeacherSubmissions() {
         );
 
 
-      if (!assignmentSnapshot.exists()) {
-        continue;
-      }
-
-
-      const assignment =
-        assignmentSnapshot.data();
-
-
       if (
-        assignment.teacherId !==
-        currentUser.uid
-        &&
-        currentUser.email?.toLowerCase() !==
-        OWNER_EMAIL
+        !assignmentSnapshot.exists()
       ) {
 
         continue;
@@ -1575,44 +2181,73 @@ async function loadTeacherSubmissions() {
       }
 
 
+      const assignment =
+        assignmentSnapshot.data();
+
+
       const card =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
 
-      card.style.cssText =
-        `
-          padding:18px;
-          margin-bottom:15px;
-          background:#f4f6f8;
-          border-radius:12px;
-        `;
+      card.style.cssText = `
+
+        padding:18px;
+
+        margin-bottom:15px;
+
+        background:#f4f6f8;
+
+        border-radius:12px;
+
+      `;
 
 
       card.innerHTML = `
 
         <h3>
-          ${escapeHtml(assignment.title)}
+
+          ${escapeHtml(
+            assignment.title ||
+            "Untitled Quiz"
+          )}
+
         </h3>
 
-        <p>
-          Student:
-          <strong>
-            ${escapeHtml(
-              submission.studentName ||
-              submission.studentEmail
-            )}
-          </strong>
-        </p>
 
         <p>
+
+          Student:
+          <strong>
+
+            ${escapeHtml(
+              submission.studentName ||
+              submission.studentEmail ||
+              "Student"
+            )}
+
+          </strong>
+
+        </p>
+
+
+        <p>
+
           Submitted:
           ${formatTimestamp(
             submission.submittedAt
           )}
+
         </p>
 
-        <button>
+
+        <button
+          style="margin-top:12px;"
+        >
+
           Grade Submission
+
         </button>
 
       `;
@@ -1626,6 +2261,7 @@ async function loadTeacherSubmissions() {
 
             showGrading(
               submissionDoc.id,
+              submission.assignmentId,
               assignment,
               submission
             );
@@ -1634,29 +2270,31 @@ async function loadTeacherSubmissions() {
         );
 
 
-      container.appendChild(card);
+      container.appendChild(
+        card
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        error
+      );
 
     }
-
-
-  } catch (error) {
-
-    console.error(error);
-
-    container.innerHTML =
-      "<p>Could not load submissions.</p>";
 
   }
 
 }
 
 
-/* =========================
+/* =====================================================
    GRADING
-========================= */
+===================================================== */
 
 async function showGrading(
   submissionId,
+  assignmentId,
   assignment,
   submission
 ) {
@@ -1667,303 +2305,379 @@ async function showGrading(
     );
 
 
-  const answerKeySnapshot =
-    await getDoc(
-      doc(
-        db,
-        "answerKeys",
-        assignment.id ||
-        assignment.assignmentId ||
-        submission.assignmentId
-      )
-    );
+  try {
+
+    const answerKeySnapshot =
+      await getDoc(
+        doc(
+          db,
+          "answerKeys",
+          assignmentId
+        )
+      );
 
 
-  const answerKey =
-    answerKeySnapshot.exists()
-      ? answerKeySnapshot.data().answers
-      : [];
+    const answerKey =
+      answerKeySnapshot.exists()
+        ? answerKeySnapshot.data()
+            .answers || []
+        : [];
 
 
-  container.innerHTML = `
+    container.innerHTML = `
 
-    <h2>
-      Grade:
-      ${escapeHtml(assignment.title)}
-    </h2>
-
-    <p style="margin-bottom:20px;">
-      Student:
-      <strong>
+      <h2>
+        Grade:
         ${escapeHtml(
-          submission.studentName ||
-          submission.studentEmail
+          assignment.title
         )}
-      </strong>
-    </p>
-
-    <div id="grading-questions"></div>
-
-    <label style="
-      display:block;
-      margin-top:20px;
-      margin-bottom:8px;
-    ">
-      Final Grade
-    </label>
-
-    <select
-      id="final-grade"
-      style="
-        width:100%;
-        padding:14px;
-        border:1px solid #d1d5db;
-        border-radius:10px;
-        font-size:16px;
-      "
-    >
-
-      <option value="">Choose grade</option>
-      <option value="A">A</option>
-      <option value="B">B</option>
-      <option value="C">C</option>
-      <option value="D">D</option>
-      <option value="F">F</option>
-
-    </select>
+      </h2>
 
 
-    <button
-      id="save-grade"
-      style="margin-top:20px;"
-    >
-      Return Grade to Student
-    </button>
+      <p style="margin-bottom:20px;">
+
+        Student:
+        <strong>
+
+          ${escapeHtml(
+            submission.studentName ||
+            submission.studentEmail
+          )}
+
+        </strong>
+
+      </p>
 
 
-    <p id="grade-message"></p>
-
-  `;
+      <div id="grading-questions"></div>
 
 
-  const questionsContainer =
-    document.getElementById(
-      "grading-questions"
-    );
+      <label style="
+        display:block;
+        margin-top:20px;
+        margin-bottom:8px;
+      ">
+
+        Final Grade
+
+      </label>
 
 
-  const results = [];
+      <select
+        id="final-grade"
+        style="
+          width:100%;
+          padding:14px;
+          border:1px solid #d1d5db;
+          border-radius:10px;
+          font-size:16px;
+        "
+      >
+
+        <option value="">
+          Choose grade
+        </option>
+
+        <option value="A">
+          A
+        </option>
+
+        <option value="B">
+          B
+        </option>
+
+        <option value="C">
+          C
+        </option>
+
+        <option value="D">
+          D
+        </option>
+
+        <option value="F">
+          F
+        </option>
+
+      </select>
 
 
-  assignment.questions.forEach(
-    (question, index) => {
+      <button
+        id="save-grade"
+        style="margin-top:20px;"
+      >
 
-      const studentAnswer =
-        submission.answers[index]
-          ?.answer;
+        Return Grade to Student
 
-
-      const key =
-        answerKey.find(
-          item =>
-            item.number ===
-            question.number
-        );
+      </button>
 
 
-      let answerText =
-        "No answer";
+      <p id="grade-message"></p>
+
+    `;
 
 
-      if (
-        question.type === "written"
-      ) {
+    const questionsContainer =
+      document.getElementById(
+        "grading-questions"
+      );
 
-        answerText =
-          studentAnswer ||
+
+    assignment.questions.forEach(
+      (
+        question,
+        index
+      ) => {
+
+        const studentAnswer =
+          submission.answers?.[
+            index
+          ]?.answer;
+
+
+        let answerText =
           "No answer";
-
-      } else if (
-        studentAnswer !== null &&
-        studentAnswer !== undefined
-      ) {
-
-        const choiceIndex =
-          Number(studentAnswer);
-
-
-        answerText =
-          question.choices[
-            choiceIndex
-          ] || "No answer";
-
-      }
-
-
-      const div =
-        document.createElement("div");
-
-
-      div.style.cssText =
-        `
-          padding:18px;
-          margin-bottom:15px;
-          background:#f4f6f8;
-          border-radius:12px;
-        `;
-
-
-      div.innerHTML = `
-
-        <h3>
-          ${index + 1}.
-          ${escapeHtml(question.text)}
-        </h3>
-
-        <p style="margin:10px 0;">
-          <strong>Student answer:</strong>
-          ${escapeHtml(answerText)}
-        </p>
-
-        <select
-          class="question-grade"
-          data-number="${question.number}"
-          style="
-            width:100%;
-            padding:12px;
-            border:1px solid #d1d5db;
-            border-radius:10px;
-          "
-        >
-
-          <option value="">
-            Choose result
-          </option>
-
-          <option value="correct">
-            Correct
-          </option>
-
-          <option value="wrong">
-            Wrong
-          </option>
-
-        </select>
-
-      `;
-
-
-      questionsContainer.appendChild(div);
-
-    }
-  );
-
-
-  document
-    .getElementById("save-grade")
-    .addEventListener(
-      "click",
-      async () => {
-
-        const grade =
-          document.getElementById(
-            "final-grade"
-          ).value;
-
-
-        const gradeMessage =
-          document.getElementById(
-            "grade-message"
-          );
-
-
-        if (!grade) {
-
-          gradeMessage.textContent =
-            "Choose a final grade.";
-
-          return;
-
-        }
-
-
-        const questionResults =
-          [...document.querySelectorAll(
-            ".question-grade"
-          )]
-          .map(select => ({
-            number:
-              Number(
-                select.dataset.number
-              ),
-            result:
-              select.value
-          }));
 
 
         if (
-          questionResults.some(
-            result =>
-              !result.result
-          )
+          question.type ===
+          "written"
         ) {
 
-          gradeMessage.textContent =
-            "Mark every question correct or wrong.";
+          answerText =
+            studentAnswer ||
+            "No answer";
 
-          return;
+        } else if (
+          studentAnswer !==
+            null &&
+          studentAnswer !==
+            undefined
+        ) {
+
+          answerText =
+            question.choices[
+              Number(
+                studentAnswer
+              )
+            ] ||
+            "No answer";
 
         }
 
 
-        try {
-
-          await updateDoc(
-            doc(
-              db,
-              "submissions",
-              submissionId
-            ),
-            {
-              graded: true,
-              grade,
-              questionResults,
-              gradedAt:
-                serverTimestamp(),
-              gradedBy:
-                currentUser.uid
-            }
+        const div =
+          document.createElement(
+            "div"
           );
 
 
-          gradeMessage.textContent =
-            "Grade returned to student!";
+        div.style.cssText = `
+
+          padding:18px;
+
+          margin-bottom:15px;
+
+          background:#f4f6f8;
+
+          border-radius:12px;
+
+        `;
 
 
-          setTimeout(
-            loadTeacherSubmissions,
-            1000
-          );
+        div.innerHTML = `
+
+          <h3>
+
+            ${index + 1}.
+            ${escapeHtml(
+              question.text
+            )}
+
+          </h3>
 
 
-        } catch (error) {
+          <p style="margin:10px 0;">
 
-          console.error(error);
+            <strong>
+              Student answer:
+            </strong>
 
-          gradeMessage.textContent =
-            "Could not save the grade.";
+            ${escapeHtml(
+              answerText
+            )}
 
-        }
+          </p>
+
+
+          <select
+            class="question-grade"
+            data-number="${
+              question.number
+            }"
+            style="
+              width:100%;
+              padding:12px;
+              border:1px solid #d1d5db;
+              border-radius:10px;
+            "
+          >
+
+            <option value="">
+              Choose result
+            </option>
+
+            <option value="correct">
+              Correct
+            </option>
+
+            <option value="wrong">
+              Wrong
+            </option>
+
+          </select>
+
+        `;
+
+
+        questionsContainer.appendChild(
+          div
+        );
 
       }
     );
+
+
+    document
+      .getElementById(
+        "save-grade"
+      )
+      .addEventListener(
+        "click",
+        async () => {
+
+          const grade =
+            document.getElementById(
+              "final-grade"
+            ).value;
+
+
+          const message =
+            document.getElementById(
+              "grade-message"
+            );
+
+
+          if (!grade) {
+
+            message.textContent =
+              "Choose a final grade.";
+
+            return;
+
+          }
+
+
+          const questionResults =
+            [
+              ...document.querySelectorAll(
+                ".question-grade"
+              )
+            ].map(
+              select => ({
+
+                number:
+                  Number(
+                    select.dataset.number
+                  ),
+
+                result:
+                  select.value
+
+              })
+            );
+
+
+          if (
+            questionResults.some(
+              item =>
+                !item.result
+            )
+          ) {
+
+            message.textContent =
+              "Mark every question correct or wrong.";
+
+            return;
+
+          }
+
+
+          try {
+
+            await updateDoc(
+              doc(
+                db,
+                "submissions",
+                submissionId
+              ),
+              {
+
+                graded:
+                  true,
+
+                grade,
+
+                questionResults,
+
+                gradedAt:
+                  serverTimestamp(),
+
+                gradedBy:
+                  currentUser.uid
+
+              }
+            );
+
+
+            message.textContent =
+              "Grade returned to student!";
+
+
+          } catch (error) {
+
+            console.error(
+              error
+            );
+
+
+            message.textContent =
+              "Could not save the grade.";
+
+          }
+
+        }
+      );
+
+
+  } catch (error) {
+
+    console.error(
+      "Grading error:",
+      error
+    );
+
+
+    container.innerHTML =
+      "<p>Could not open this submission.</p>";
+
+  }
 
 }
 
 
-/* =========================
+/* =====================================================
    STUDENT RESULTS
-========================= */
+===================================================== */
 
 function showStudentResults(
   assignment,
@@ -1979,16 +2693,25 @@ function showStudentResults(
   container.innerHTML = `
 
     <h2>
-      ${escapeHtml(assignment.title)}
+
+      ${escapeHtml(
+        assignment.title
+      )}
+
     </h2>
 
+
     <h3 style="margin:15px 0;">
+
       Grade:
+
       ${escapeHtml(
         submission.grade ||
         "Not graded yet"
       )}
+
     </h3>
+
 
     <div id="results"></div>
 
@@ -2002,7 +2725,10 @@ function showStudentResults(
 
 
   assignment.questions.forEach(
-    (question, index) => {
+    (
+      question,
+      index
+    ) => {
 
       const result =
         submission.questionResults
@@ -2014,8 +2740,9 @@ function showStudentResults(
 
 
       const studentAnswer =
-        submission.answers[index]
-          ?.answer;
+        submission.answers?.[
+          index
+        ]?.answer;
 
 
       let answerText =
@@ -2032,60 +2759,95 @@ function showStudentResults(
           "No answer";
 
       } else if (
-        studentAnswer !== null &&
-        studentAnswer !== undefined
+        studentAnswer !==
+          null &&
+        studentAnswer !==
+          undefined
       ) {
 
         answerText =
           question.choices[
-            Number(studentAnswer)
-          ] || "No answer";
+            Number(
+              studentAnswer
+            )
+          ] ||
+          "No answer";
 
       }
 
 
       const div =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
 
-      div.style.cssText =
-        `
-          padding:18px;
-          margin-bottom:15px;
-          background:#f4f6f8;
-          border-radius:12px;
-        `;
+      div.style.cssText = `
+
+        padding:18px;
+
+        margin-bottom:15px;
+
+        background:#f4f6f8;
+
+        border-radius:12px;
+
+      `;
+
+
+      const resultText =
+        result?.result ===
+        "correct"
+          ? "Correct"
+          : result?.result ===
+            "wrong"
+            ? "Wrong"
+            : "Not graded";
 
 
       div.innerHTML = `
 
         <h3>
+
           ${index + 1}.
-          ${escapeHtml(question.text)}
+          ${escapeHtml(
+            question.text
+          )}
+
         </h3>
 
+
         <p>
+
           Your answer:
+
           <strong>
-            ${escapeHtml(answerText)}
+
+            ${escapeHtml(
+              answerText
+            )}
+
           </strong>
+
         </p>
 
+
         <p style="margin-top:8px;">
+
           Result:
+
           <strong>
-            ${
-              result?.result === "correct"
-                ? "Correct"
-                : "Wrong"
-            }
+            ${resultText}
           </strong>
+
         </p>
 
       `;
 
 
-      results.appendChild(div);
+      results.appendChild(
+        div
+      );
 
     }
   );
@@ -2093,12 +2855,14 @@ function showStudentResults(
 }
 
 
-/* =========================
-   OWNER CONTROLS
-========================= */
+/* =====================================================
+   OWNER SEARCH
+===================================================== */
 
 document
-  .getElementById("search-user-button")
+  .getElementById(
+    "search-user-button"
+  )
   .addEventListener(
     "click",
     async () => {
@@ -2108,13 +2872,17 @@ document
           ?.toLowerCase() !==
         OWNER_EMAIL
       ) {
+
         return;
+
       }
 
 
       const email =
         document
-          .getElementById("user-search")
+          .getElementById(
+            "user-search"
+          )
           .value
           .trim()
           .toLowerCase();
@@ -2140,8 +2908,15 @@ document
 
         const q =
           query(
-            collection(db, "users"),
-            where("email", "==", email)
+            collection(
+              db,
+              "users"
+            ),
+            where(
+              "email",
+              "==",
+              email
+            )
           );
 
 
@@ -2149,7 +2924,9 @@ document
           await getDocs(q);
 
 
-        if (snapshot.empty) {
+        if (
+          snapshot.empty
+        ) {
 
           result.innerHTML =
             "<p>No Novex user found.</p>";
@@ -2168,7 +2945,8 @@ document
 
 
         const role =
-          data.role || "student";
+          data.role ||
+          "student";
 
 
         result.innerHTML = `
@@ -2180,23 +2958,38 @@ document
           ">
 
             <h3>
+
               ${escapeHtml(
-                data.name || "Unnamed"
+                data.name ||
+                "Unnamed"
               )}
+
             </h3>
 
+
             <p>
+
               ${escapeHtml(
                 data.email
               )}
+
             </p>
 
+
             <p style="margin:10px 0;">
+
               Current role:
+
               <strong>
-                ${escapeHtml(role)}
+
+                ${escapeHtml(
+                  role
+                )}
+
               </strong>
+
             </p>
+
 
             <div style="
               display:flex;
@@ -2211,12 +3004,14 @@ document
                 Add Teacher
               </button>
 
+
               <button
                 id="owner-add-admin"
                 style="width:auto;"
               >
                 Add Admin
               </button>
+
 
               <button
                 id="owner-remove-role"
@@ -2229,6 +3024,7 @@ document
               </button>
 
             </div>
+
 
             <p
               id="owner-role-message"
@@ -2278,7 +3074,10 @@ document
 
       } catch (error) {
 
-        console.error(error);
+        console.error(
+          error
+        );
+
 
         result.innerHTML =
           "<p>Could not search.</p>";
@@ -2288,6 +3087,10 @@ document
     }
   );
 
+
+/* =====================================================
+   CHANGE ROLE
+===================================================== */
 
 async function changeRole(
   uid,
@@ -2299,14 +3102,20 @@ async function changeRole(
       ?.toLowerCase() !==
     OWNER_EMAIL
   ) {
+
     return;
+
   }
 
 
   try {
 
     await updateDoc(
-      doc(db, "users", uid),
+      doc(
+        db,
+        "users",
+        uid
+      ),
       {
         role
       }
@@ -2325,16 +3134,18 @@ async function changeRole(
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
 
   }
 
 }
 
 
-/* =========================
+/* =====================================================
    LOGOUT
-========================= */
+===================================================== */
 
 logoutButton.addEventListener(
   "click",
@@ -2349,39 +3160,74 @@ logoutButton.addEventListener(
 );
 
 
-/* =========================
+/* =====================================================
    HELPERS
-========================= */
+===================================================== */
 
-function escapeHtml(value) {
+function escapeHtml(
+  value
+) {
 
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+  return String(
+    value ?? ""
+  )
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
 
-function formatDate(value) {
+function formatDate(
+  value
+) {
 
   if (!value) {
     return "No due date";
   }
 
-  return new Date(value)
-    .toLocaleString();
+
+  try {
+
+    return new Date(
+      value
+    ).toLocaleString();
+
+  } catch {
+
+    return "No due date";
+
+  }
 
 }
 
 
-function formatTimestamp(value) {
+function formatTimestamp(
+  value
+) {
 
   if (!value) {
     return "Unknown";
+
   }
+
 
   if (
     typeof value.toDate ===
@@ -2393,6 +3239,7 @@ function formatTimestamp(value) {
       .toLocaleString();
 
   }
+
 
   return "Unknown";
 
