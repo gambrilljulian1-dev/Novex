@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Novex</title>
 
   <style>
@@ -16,7 +15,7 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top right, rgba(67, 97, 238, .18), transparent 35%),
+        radial-gradient(circle at top right, rgba(76, 99, 255, .16), transparent 35%),
         radial-gradient(circle at bottom left, rgba(124, 58, 237, .12), transparent 35%),
         #080b14;
       color: #f5f7ff;
@@ -25,8 +24,8 @@
 
     button,
     input,
-    select,
-    textarea {
+    textarea,
+    select {
       font: inherit;
     }
 
@@ -35,24 +34,22 @@
     }
 
     .app {
-      display: flex;
       min-height: 100vh;
     }
 
     /* SIDEBAR */
 
     .sidebar {
-      width: 245px;
-      min-height: 100vh;
-      background: rgba(9, 12, 22, .94);
-      border-right: 1px solid rgba(255,255,255,.08);
-      padding: 24px 14px;
       position: fixed;
       left: 0;
       top: 0;
       bottom: 0;
-      z-index: 20;
+      width: 245px;
+      padding: 25px 14px;
+      background: rgba(9, 12, 22, .95);
+      border-right: 1px solid rgba(255,255,255,.08);
       backdrop-filter: blur(20px);
+      z-index: 50;
     }
 
     .brand {
@@ -60,17 +57,17 @@
     }
 
     .brand h1 {
-      font-size: 30px;
+      font-size: 31px;
       letter-spacing: -1px;
-      background: linear-gradient(90deg, #fff, #7c9cff);
+      background: linear-gradient(90deg, #ffffff, #829cff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .brand p {
-      color: #7f89a8;
+      color: #78829e;
       font-size: 12px;
-      margin-top: 4px;
+      margin-top: 5px;
     }
 
     .nav {
@@ -80,37 +77,38 @@
     }
 
     .nav button {
+      width: 100%;
       border: 0;
-      background: transparent;
-      color: #8e97b2;
-      padding: 13px 14px;
       border-radius: 13px;
+      padding: 13px;
       text-align: left;
-      font-size: 14px;
+      background: transparent;
+      color: #8b94ae;
       transition: .2s;
     }
 
     .nav button:hover {
-      background: rgba(255,255,255,.05);
       color: white;
+      background: rgba(255,255,255,.05);
     }
 
     .nav button.active {
-      background: linear-gradient(
-        135deg,
-        rgba(73, 103, 255, .25),
-        rgba(124, 58, 237, .18)
-      );
       color: white;
-      border: 1px solid rgba(111, 132, 255, .2);
+      background:
+        linear-gradient(
+          135deg,
+          rgba(72, 101, 255, .25),
+          rgba(124, 58, 237, .17)
+        );
+      border: 1px solid rgba(110,130,255,.2);
     }
 
     /* MAIN */
 
     .main {
       margin-left: 245px;
-      width: calc(100% - 245px);
       padding: 32px;
+      width: calc(100% - 245px);
     }
 
     .page {
@@ -128,7 +126,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 15px;
-      margin-bottom: 28px;
+      margin-bottom: 27px;
     }
 
     .topbar h2 {
@@ -136,61 +134,61 @@
     }
 
     .topbar p {
-      color: #8992ae;
-      font-size: 14px;
+      color: #858eaa;
+      font-size: 13px;
       margin-top: 5px;
     }
 
     .user-pill {
+      color: #aeb6cd;
+      font-size: 12px;
+      padding: 9px 13px;
+      border-radius: 999px;
       background: rgba(255,255,255,.05);
       border: 1px solid rgba(255,255,255,.08);
-      border-radius: 999px;
-      padding: 9px 13px;
-      color: #aeb7d2;
-      font-size: 13px;
     }
 
     /* HERO */
 
     .hero {
-      border: 1px solid rgba(255,255,255,.08);
+      padding: 31px;
+      margin-bottom: 23px;
       border-radius: 24px;
-      padding: 30px;
+      border: 1px solid rgba(255,255,255,.08);
       background:
         linear-gradient(
           135deg,
-          rgba(58, 82, 210, .18),
+          rgba(63, 88, 220, .18),
           rgba(124, 58, 237, .08)
         );
-      box-shadow: 0 20px 70px rgba(0,0,0,.25);
-      margin-bottom: 24px;
+      box-shadow: 0 20px 70px rgba(0,0,0,.23);
     }
 
     .hero h2 {
-      font-size: 32px;
-      margin-bottom: 9px;
+      font-size: 31px;
+      margin-bottom: 8px;
     }
 
     .hero p {
-      color: #919bb7;
-      max-width: 700px;
+      color: #929bb5;
       line-height: 1.6;
+      max-width: 720px;
     }
 
     /* CARDS */
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 17px;
     }
 
     .card {
-      background: rgba(15, 19, 32, .84);
-      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(15,19,32,.84);
+      border: 1px solid rgba(255,255,255,.075);
       border-radius: 20px;
       padding: 22px;
-      box-shadow: 0 15px 50px rgba(0,0,0,.16);
+      box-shadow: 0 15px 50px rgba(0,0,0,.15);
     }
 
     .card h3 {
@@ -199,10 +197,10 @@
     }
 
     .card-description {
-      color: #7f89a7;
+      color: #7d87a3;
       font-size: 13px;
       line-height: 1.5;
-      margin-bottom: 18px;
+      margin-bottom: 17px;
     }
 
     .action-card {
@@ -211,7 +209,54 @@
 
     .action-card:hover {
       transform: translateY(-2px);
-      border-color: rgba(110,130,255,.25);
+      border-color: rgba(105,128,255,.25);
+    }
+
+    /* BUTTONS */
+
+    .primary-btn,
+    .secondary-btn,
+    .danger-btn,
+    .small-btn {
+      border-radius: 11px;
+      padding: 11px 15px;
+      transition: .2s;
+    }
+
+    .primary-btn {
+      border: 0;
+      color: white;
+      background: linear-gradient(135deg, #4967ff, #7048d9);
+    }
+
+    .secondary-btn {
+      color: white;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .danger-btn {
+      color: #ff9ca9;
+      background: rgba(220,55,75,.12);
+      border: 1px solid rgba(255,70,90,.15);
+    }
+
+    .small-btn {
+      color: #c2ccff;
+      background: rgba(73,103,255,.17);
+      border: 1px solid rgba(100,125,255,.12);
+      padding: 8px 11px;
+      font-size: 12px;
+    }
+
+    button:hover {
+      filter: brightness(1.12);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
     }
 
     /* FORMS */
@@ -222,18 +267,18 @@
 
     label {
       display: block;
-      color: #a8b1cb;
+      color: #a8b1ca;
       font-size: 12px;
       margin-bottom: 7px;
     }
 
     input,
-    select,
-    textarea {
+    textarea,
+    select {
       width: 100%;
-      border: 1px solid rgba(255,255,255,.09);
-      background: rgba(255,255,255,.04);
       color: white;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.09);
       border-radius: 12px;
       padding: 12px 13px;
       outline: none;
@@ -245,76 +290,33 @@
     }
 
     input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: rgba(106,129,255,.6);
+    textarea:focus,
+    select:focus {
+      border-color: rgba(110,130,255,.6);
     }
 
     option {
-      background: #111522;
-    }
-
-    .primary-btn,
-    .secondary-btn,
-    .danger-btn,
-    .small-btn {
-      border: 0;
-      border-radius: 11px;
-      padding: 11px 15px;
-      color: white;
-      transition: .2s;
-    }
-
-    .primary-btn {
-      background: linear-gradient(135deg, #4967ff, #7048d9);
-    }
-
-    .secondary-btn {
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.08);
-    }
-
-    .danger-btn {
-      background: rgba(220, 55, 75, .16);
-      color: #ff9aa8;
-      border: 1px solid rgba(255,80,100,.15);
-    }
-
-    .small-btn {
-      background: rgba(73,103,255,.18);
-      color: #b8c4ff;
-      padding: 8px 11px;
-      font-size: 12px;
-    }
-
-    button:hover {
-      filter: brightness(1.12);
-    }
-
-    .button-row {
-      display: flex;
-      gap: 9px;
-      flex-wrap: wrap;
+      background: #101522;
     }
 
     /* STATS */
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3,1fr);
       gap: 14px;
-      margin-bottom: 24px;
+      margin-bottom: 23px;
     }
 
     .stat {
-      background: rgba(15,19,32,.8);
+      background: rgba(15,19,32,.82);
       border: 1px solid rgba(255,255,255,.07);
       border-radius: 17px;
-      padding: 20px;
+      padding: 19px;
     }
 
     .stat span {
-      color: #7e88a4;
+      color: #7e88a3;
       font-size: 12px;
     }
 
@@ -333,8 +335,8 @@
     }
 
     .assignment-card {
-      background: rgba(15,19,32,.8);
-      border: 1px solid rgba(255,255,255,.07);
+      background: rgba(15,19,32,.82);
+      border: 1px solid rgba(255,255,255,.075);
       border-radius: 17px;
       padding: 18px;
     }
@@ -342,8 +344,8 @@
     .assignment-header {
       display: flex;
       justify-content: space-between;
-      gap: 15px;
       align-items: flex-start;
+      gap: 15px;
     }
 
     .assignment-title {
@@ -352,36 +354,36 @@
     }
 
     .assignment-meta {
-      color: #818ba7;
+      color: #7f89a5;
       font-size: 12px;
+      line-height: 1.65;
       margin-top: 6px;
-      line-height: 1.6;
     }
 
     .badge {
       display: inline-flex;
       align-items: center;
-      border-radius: 999px;
       padding: 6px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.055);
+      color: #aab3cb;
       font-size: 11px;
-      background: rgba(255,255,255,.06);
-      color: #aab3cc;
       white-space: nowrap;
     }
 
     .badge.green {
-      color: #92e7b0;
       background: rgba(60,190,110,.1);
-    }
-
-    .badge.yellow {
-      color: #f1d98d;
-      background: rgba(220,180,60,.1);
+      color: #8fe5ae;
     }
 
     .badge.red {
-      color: #ff9aa8;
       background: rgba(220,60,80,.1);
+      color: #ff9ba9;
+    }
+
+    .badge.yellow {
+      background: rgba(220,180,60,.1);
+      color: #f1d88c;
     }
 
     /* QUESTIONS */
@@ -394,15 +396,16 @@
     }
 
     .question-box {
+      background: rgba(255,255,255,.025);
       border: 1px solid rgba(255,255,255,.07);
       border-radius: 15px;
       padding: 15px;
-      background: rgba(255,255,255,.025);
     }
 
     .question-top {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       gap: 10px;
       margin-bottom: 12px;
     }
@@ -413,14 +416,10 @@
       margin-top: 8px;
     }
 
-    .choice-row input {
-      flex: 1;
-    }
-
     /* GRADEBOOK */
 
     .grade-section {
-      margin-bottom: 25px;
+      margin-bottom: 26px;
     }
 
     .grade-section-header {
@@ -443,27 +442,37 @@
     .grade-item {
       background: rgba(15,19,32,.82);
       border: 1px solid rgba(255,255,255,.07);
-      border-radius: 15px;
-      padding: 15px;
+      border-radius: 16px;
+      padding: 16px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 15px;
     }
 
     .grade-value {
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 20px;
+      font-weight: 750;
     }
 
-    /* EMPTY */
+    /* REVIEW */
 
-    .empty {
-      text-align: center;
-      padding: 40px 20px;
-      color: #737e9c;
-      border: 1px dashed rgba(255,255,255,.08);
-      border-radius: 17px;
+    .review-question {
+      background: rgba(255,255,255,.025);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 15px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .answer-box {
+      background: rgba(255,255,255,.035);
+      color: #929cb7;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-top: 9px;
     }
 
     /* MODAL */
@@ -471,13 +480,13 @@
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.72);
-      backdrop-filter: blur(10px);
-      z-index: 100;
       display: none;
       align-items: center;
       justify-content: center;
       padding: 18px;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(10px);
+      z-index: 100;
     }
 
     .modal.open {
@@ -485,7 +494,7 @@
     }
 
     .modal-content {
-      width: min(850px, 100%);
+      width: min(850px,100%);
       max-height: 90vh;
       overflow-y: auto;
       background: #101522;
@@ -502,59 +511,50 @@
     }
 
     .close-btn {
-      background: rgba(255,255,255,.06);
-      color: white;
-      border: 0;
       width: 35px;
       height: 35px;
+      border: 0;
       border-radius: 10px;
+      color: white;
+      background: rgba(255,255,255,.06);
+      flex-shrink: 0;
     }
 
-    .review-question {
-      border: 1px solid rgba(255,255,255,.07);
-      border-radius: 15px;
-      padding: 15px;
-      margin-bottom: 12px;
-    }
-
-    .review-question p {
-      color: #dce1f2;
-      margin-bottom: 9px;
-    }
-
-    .answer-box {
-      color: #929db9;
-      background: rgba(255,255,255,.035);
-      padding: 10px;
-      border-radius: 10px;
-      font-size: 13px;
-      margin-bottom: 10px;
-    }
-
-    /* OWNER USER MANAGEMENT */
+    /* USERS */
 
     .user-result {
-      padding: 13px;
-      border-radius: 13px;
-      background: rgba(255,255,255,.035);
-      margin-top: 9px;
       display: flex;
       justify-content: space-between;
-      gap: 10px;
       align-items: center;
+      gap: 10px;
+      padding: 13px;
+      margin-top: 9px;
+      background: rgba(255,255,255,.035);
+      border-radius: 13px;
+    }
+
+    /* EMPTY */
+
+    .empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: #737d99;
+      border: 1px dashed rgba(255,255,255,.08);
+      border-radius: 17px;
     }
 
     /* MOBILE */
 
     @media (max-width: 800px) {
+
       .sidebar {
-        width: 100%;
-        min-height: auto;
-        height: auto;
         position: fixed;
         top: auto;
         bottom: 0;
         left: 0;
+        width: 100%;
+        height: auto;
+        min-height: auto;
         padding: 7px;
         border-right: 0;
         border-top: 1px solid rgba(255,255,255,.08);
@@ -566,15 +566,14 @@
 
       .nav {
         flex-direction: row;
-        justify-content: space-around;
         gap: 3px;
       }
 
       .nav button {
         flex: 1;
         text-align: center;
-        padding: 11px 4px;
-        font-size: 11px;
+        font-size: 10px;
+        padding: 11px 3px;
       }
 
       .main {
@@ -584,12 +583,12 @@
         padding-bottom: 100px;
       }
 
-      .topbar h2 {
-        font-size: 23px;
-      }
-
       .user-pill {
         display: none;
+      }
+
+      .topbar h2 {
+        font-size: 23px;
       }
 
       .hero {
@@ -606,7 +605,8 @@
       }
 
       .assignment-header,
-      .grade-item {
+      .grade-item,
+      .user-result {
         flex-direction: column;
         align-items: flex-start;
       }
@@ -623,141 +623,270 @@
 <div class="app">
 
   <aside class="sidebar">
+
     <div class="brand">
       <h1>Novex</h1>
       <p>Your school. Your work. Your progress.</p>
     </div>
 
-    <nav class="nav" id="nav"></nav>
+    <nav
+      class="nav"
+      id="nav"
+    ></nav>
+
   </aside>
+
 
   <main class="main">
 
     <!-- HOME -->
 
-    <section class="page active" id="page-home">
+    <section
+      class="page active"
+      id="page-home"
+    >
+
       <div class="topbar">
+
         <div>
           <h2>Home</h2>
-          <p id="home-subtitle">Welcome back.</p>
+
+          <p id="home-subtitle">
+            Welcome back.
+          </p>
         </div>
-        <div class="user-pill" id="user-pill"></div>
+
+        <div
+          class="user-pill"
+          id="user-pill"
+        ></div>
+
       </div>
 
       <div id="home-content"></div>
+
     </section>
 
 
-    <!-- UNFINISHED ASSIGNMENTS -->
+    <!-- UNFINISHED -->
 
-    <section class="page" id="page-unfinished">
+    <section
+      class="page"
+      id="page-unfinished"
+    >
+
       <div class="topbar">
+
         <div>
-          <h2>Unfinished Assignments</h2>
-          <p>Assignments you still need to complete.</p>
+
+          <h2>
+            Unfinished Assignments
+          </h2>
+
+          <p>
+            Assignments you still need to complete.
+          </p>
+
         </div>
+
       </div>
 
       <div id="unfinished-list"></div>
+
     </section>
 
 
-    <!-- SENT ASSIGNMENTS -->
+    <!-- SENT -->
 
-    <section class="page" id="page-sent">
+    <section
+      class="page"
+      id="page-sent"
+    >
+
       <div class="topbar">
+
         <div>
-          <h2 id="sent-title">Sent Assignments</h2>
-          <p>Review assignments, submissions, and student progress.</p>
+
+          <h2 id="sent-title">
+            Sent Assignments
+          </h2>
+
+          <p>
+            Review assignments, submissions, and student progress.
+          </p>
+
         </div>
+
       </div>
 
       <div id="sent-list"></div>
+
     </section>
 
 
     <!-- GRADE BOOK -->
 
-    <section class="page" id="page-gradebook">
+    <section
+      class="page"
+      id="page-gradebook"
+    >
+
       <div class="topbar">
+
         <div>
-          <h2 id="gradebook-title">Grade Book</h2>
+
+          <h2 id="gradebook-title">
+            Grade Book
+          </h2>
+
           <p id="gradebook-subtitle"></p>
+
         </div>
+
       </div>
 
       <div id="gradebook-content"></div>
+
     </section>
 
 
     <!-- COURSES -->
 
-    <section class="page" id="page-courses">
+    <section
+      class="page"
+      id="page-courses"
+    >
+
       <div class="topbar">
+
         <div>
-          <h2>Courses</h2>
-          <p>Keep your Novex work organized.</p>
+
+          <h2>
+            Courses
+          </h2>
+
+          <p>
+            Keep your Novex work organized.
+          </p>
+
         </div>
+
       </div>
 
       <div id="courses-content"></div>
+
     </section>
 
 
     <!-- ACCOUNT -->
 
-    <section class="page" id="page-account">
+    <section
+      class="page"
+      id="page-account"
+    >
+
       <div class="topbar">
+
         <div>
-          <h2>Account</h2>
-          <p>Your Novex account information.</p>
+
+          <h2>
+            Account
+          </h2>
+
+          <p>
+            Your Novex account information.
+          </p>
+
         </div>
+
       </div>
 
       <div id="account-content"></div>
+
     </section>
 
   </main>
+
 </div>
 
 
 <!-- QUIZ MODAL -->
 
-<div class="modal" id="quiz-modal">
+<div
+  class="modal"
+  id="quiz-modal"
+>
+
   <div class="modal-content">
 
     <div class="modal-header">
+
       <div>
-        <h2 id="quiz-modal-title">Assignment</h2>
-        <p id="quiz-modal-meta" class="card-description"></p>
+
+        <h2 id="quiz-modal-title">
+          Assignment
+        </h2>
+
+        <p
+          id="quiz-modal-meta"
+          class="card-description"
+        ></p>
+
       </div>
 
-      <button class="close-btn" onclick="closeModal('quiz-modal')">×</button>
+      <button
+        class="close-btn"
+        onclick="closeModal('quiz-modal')"
+      >
+        ×
+      </button>
+
     </div>
 
     <div id="quiz-content"></div>
 
   </div>
+
 </div>
 
 
 <!-- REVIEW MODAL -->
 
-<div class="modal" id="review-modal">
+<div
+  class="modal"
+  id="review-modal"
+>
+
   <div class="modal-content">
 
     <div class="modal-header">
+
       <div>
-        <h2 id="review-modal-title">Review</h2>
-        <p id="review-modal-meta" class="card-description"></p>
+
+        <h2 id="review-modal-title">
+          Review
+        </h2>
+
+        <p
+          id="review-modal-meta"
+          class="card-description"
+        ></p>
+
       </div>
 
-      <button class="close-btn" onclick="closeModal('review-modal')">×</button>
+      <button
+        class="close-btn"
+        onclick="closeModal('review-modal')"
+      >
+        ×
+      </button>
+
     </div>
 
     <div id="review-content"></div>
 
   </div>
+
 </div>
 
 
@@ -778,92 +907,146 @@ import {
   addDoc,
   setDoc,
   updateDoc,
-  deleteDoc,
   query,
   where,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 
-/* =========================================================
+/* =====================================================
    STATE
-========================================================= */
+===================================================== */
 
 let currentUser = null;
 let currentProfile = null;
 
 let assignments = [];
-let submissions = [];
 let studentAssignments = [];
+let submissions = [];
 
 let currentQuizAssignment = null;
 let currentReviewSubmission = null;
 
-const OWNER_EMAIL = "gambrilljulian452@gmail.com";
+const OWNER_EMAIL =
+  "gambrilljulian452@gmail.com";
+
+let questionCount = 0;
 
 
-/* =========================================================
-   BASIC HELPERS
-========================================================= */
+/* =====================================================
+   HELPERS
+===================================================== */
 
 function isOwner() {
-  return currentUser?.email?.toLowerCase() === OWNER_EMAIL;
+
+  return currentUser?.email?.toLowerCase() ===
+    OWNER_EMAIL;
+
 }
+
 
 function role() {
-  if (isOwner()) return "owner";
+
+  if (isOwner()) {
+    return "owner";
+  }
+
   return currentProfile?.role || "student";
+
 }
+
 
 function isStaff() {
-  return ["teacher", "admin", "owner"].includes(role());
+
+  return [
+    "teacher",
+    "admin",
+    "owner"
+  ].includes(role());
+
 }
+
 
 function canCreateAssignments() {
-  return role() === "teacher" || role() === "owner";
+
+  return (
+    role() === "teacher" ||
+    role() === "owner"
+  );
+
 }
 
+
 function escapeHTML(value) {
-  if (value === undefined || value === null) return "";
+
+  if (
+    value === undefined ||
+    value === null
+  ) {
+    return "";
+  }
+
   return String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+
 }
+
 
 function timestampValue(value) {
+
   if (!value) return 0;
-  if (typeof value.toMillis === "function") return value.toMillis();
-  if (value.seconds) return value.seconds * 1000;
+
+  if (
+    typeof value.toMillis === "function"
+  ) {
+    return value.toMillis();
+  }
+
+  if (value.seconds) {
+    return value.seconds * 1000;
+  }
+
   return new Date(value).getTime() || 0;
+
 }
 
+
 function formatDate(value) {
+
   if (!value) return "No date";
 
   const date = value?.toDate
     ? value.toDate()
     : new Date(value);
 
-  if (Number.isNaN(date.getTime())) return "No date";
+  if (Number.isNaN(date.getTime())) {
+    return "No date";
+  }
 
   return date.toLocaleDateString([], {
     month: "short",
     day: "numeric",
     year: "numeric"
   });
+
 }
 
+
 function formatDateTime(value) {
+
   if (!value) return "No date";
 
   const date = value?.toDate
     ? value.toDate()
     : new Date(value);
 
-  if (Number.isNaN(date.getTime())) return "No date";
+  if (Number.isNaN(date.getTime())) {
+    return "No date";
+  }
 
   return date.toLocaleString([], {
     month: "short",
@@ -872,38 +1055,65 @@ function formatDateTime(value) {
     hour: "numeric",
     minute: "2-digit"
   });
+
 }
+
 
 function typeName(type) {
-  if (type === "math") return "Math";
-  if (type === "written") return "Written Responses";
-  if (type === "truefalse") return "True / False";
+
+  if (type === "math") {
+    return "Math";
+  }
+
+  if (type === "written") {
+    return "Written Responses";
+  }
+
+  if (type === "truefalse") {
+    return "True / False";
+  }
+
   return "Other";
+
 }
 
+
 function typeIcon(type) {
+
   if (type === "math") return "∑";
   if (type === "written") return "✎";
   if (type === "truefalse") return "✓";
+
   return "•";
+
 }
 
-function sortNewest(list, field = "createdAt") {
+
+function sortNewest(
+  list,
+  field = "createdAt"
+) {
+
   return [...list].sort(
-    (a, b) => timestampValue(b[field]) - timestampValue(a[field])
+    (a,b) =>
+      timestampValue(b[field]) -
+      timestampValue(a[field])
   );
+
 }
 
 
-/* =========================================================
+/* =====================================================
    NAVIGATION
-========================================================= */
+===================================================== */
 
 function buildNavigation() {
 
-  const nav = document.getElementById("nav");
+  const nav =
+    document.getElementById("nav");
 
   let items = [];
+
 
   if (role() === "student") {
 
@@ -919,7 +1129,12 @@ function buildNavigation() {
 
     items = [
       ["home", "Home"],
-      ["sent", role() === "teacher" ? "Sent Assignments" : "All Assignments"],
+      [
+        "sent",
+        role() === "teacher"
+          ? "Sent Assignments"
+          : "All Assignments"
+      ],
       ["gradebook", "Grade Book"],
       ["courses", "Courses"],
       ["account", "Account"]
@@ -927,248 +1142,420 @@ function buildNavigation() {
 
   }
 
-  nav.innerHTML = items.map(([id, label]) => `
-    <button
-      data-page="${id}"
-      onclick="showPage('${id}')"
-    >
-      ${escapeHTML(label)}
-    </button>
-  `).join("");
+
+  nav.innerHTML =
+    items.map(([id,label]) => `
+
+      <button
+        data-page="${id}"
+        onclick="showPage('${id}')"
+      >
+        ${escapeHTML(label)}
+      </button>
+
+    `).join("");
+
 
   document
     .querySelector('[data-page="home"]')
     ?.classList.add("active");
+
 }
 
 
 window.showPage = function(page) {
 
-  document.querySelectorAll(".page").forEach(section => {
-    section.classList.remove("active");
-  });
+  document
+    .querySelectorAll(".page")
+    .forEach(section =>
+      section.classList.remove("active")
+    );
+
 
   document
     .getElementById(`page-${page}`)
     ?.classList.add("active");
 
-  document.querySelectorAll(".nav button").forEach(button => {
-    button.classList.toggle(
-      "active",
-      button.dataset.page === page
-    );
-  });
 
-  if (page === "home") renderHome();
-  if (page === "unfinished") renderUnfinished();
-  if (page === "sent") renderSentAssignments();
-  if (page === "gradebook") renderGradebook();
-  if (page === "courses") renderCourses();
-  if (page === "account") renderAccount();
+  document
+    .querySelectorAll(".nav button")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.page === page
+      );
+
+    });
+
+
+  if (page === "home") {
+    renderHome();
+  }
+
+  if (page === "unfinished") {
+    renderUnfinished();
+  }
+
+  if (page === "sent") {
+    renderSentAssignments();
+  }
+
+  if (page === "gradebook") {
+    renderGradebook();
+  }
+
+  if (page === "courses") {
+    renderCourses();
+  }
+
+  if (page === "account") {
+    renderAccount();
+  }
+
 
   window.scrollTo({
     top: 0,
     behavior: "smooth"
   });
+
 };
 
 
-/* =========================================================
-   LOAD USER
-========================================================= */
+/* =====================================================
+   AUTH
+===================================================== */
 
-onAuthStateChanged(auth, async user => {
+onAuthStateChanged(
+  auth,
+  async user => {
 
-  if (!user) {
-    window.location.href = "index.html";
-    return;
+    if (!user) {
+
+      window.location.href =
+        "index.html";
+
+      return;
+    }
+
+
+    currentUser = user;
+
+
+    try {
+
+      const snap =
+        await getDoc(
+          doc(
+            db,
+            "users",
+            user.uid
+          )
+        );
+
+
+      currentProfile =
+        snap.exists()
+          ? snap.data()
+          : {
+              name:
+                user.email?.split("@")[0] ||
+                "User",
+              role: "student"
+            };
+
+
+      buildNavigation();
+
+
+      document
+        .getElementById("user-pill")
+        .textContent =
+          currentProfile.name ||
+          currentUser.email;
+
+
+      document
+        .getElementById("home-subtitle")
+        .textContent =
+          `Signed in as ${
+            currentProfile.name ||
+            currentUser.email
+          }`;
+
+
+      await loadData();
+
+      renderHome();
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      document
+        .getElementById("home-content")
+        .innerHTML = `
+
+          <div class="empty">
+
+            <h3>
+              Unable to load Novex
+            </h3>
+
+            <p style="margin-top:8px;">
+              ${escapeHTML(error.message)}
+            </p>
+
+          </div>
+
+        `;
+
+    }
+
   }
-
-  currentUser = user;
-
-  try {
-
-    const userSnap = await getDoc(
-      doc(db, "users", user.uid)
-    );
-
-    currentProfile = userSnap.exists()
-      ? userSnap.data()
-      : {
-          name: user.email?.split("@")[0] || "User",
-          role: "student"
-        };
-
-    buildNavigation();
-
-    document.getElementById("user-pill").textContent =
-      currentProfile.name || currentUser.email;
-
-    document.getElementById("home-subtitle").textContent =
-      `Signed in as ${currentProfile.name || currentUser.email}`;
-
-    await loadData();
-
-    renderHome();
-
-  } catch (error) {
-
-    console.error(error);
-
-    document.getElementById("home-content").innerHTML = `
-      <div class="empty">
-        <h3>Unable to load Novex</h3>
-        <p style="margin-top:8px;">
-          ${escapeHTML(error.message)}
-        </p>
-      </div>
-    `;
-
-  }
-
-});
+);
 
 
-/* =========================================================
+/* =====================================================
    LOAD DATA
-========================================================= */
+===================================================== */
 
 async function loadData() {
 
   assignments = [];
-  submissions = [];
   studentAssignments = [];
+  submissions = [];
 
-  const currentRole = role();
 
-  if (currentRole === "student") {
+  if (role() === "student") {
 
-    const assignmentQuery = query(
-      collection(db, "assignments"),
-      where("assignedTo", "array-contains", currentUser.uid)
-    );
+    const assignmentQuery =
+      query(
+        collection(db,"assignments"),
+        where(
+          "assignedTo",
+          "array-contains",
+          currentUser.uid
+        )
+      );
 
-    const submissionQuery = query(
-      collection(db, "submissions"),
-      where("studentId", "==", currentUser.uid)
-    );
 
-    const [assignmentSnap, submissionSnap] = await Promise.all([
+    const submissionQuery =
+      query(
+        collection(db,"submissions"),
+        where(
+          "studentId",
+          "==",
+          currentUser.uid
+        )
+      );
+
+
+    const [
+      assignmentSnap,
+      submissionSnap
+    ] = await Promise.all([
       getDocs(assignmentQuery),
       getDocs(submissionQuery)
     ]);
 
-    studentAssignments = assignmentSnap.docs.map(d => ({
-      id: d.id,
-      ...d.data()
-    }));
 
-    submissions = submissionSnap.docs.map(d => ({
-      id: d.id,
-      ...d.data()
-    }));
+    studentAssignments =
+      assignmentSnap.docs.map(
+        d => ({
+          id: d.id,
+          ...d.data()
+        })
+      );
+
+
+    submissions =
+      submissionSnap.docs.map(
+        d => ({
+          id: d.id,
+          ...d.data()
+        })
+      );
+
 
     return;
   }
 
 
-  if (currentRole === "teacher") {
+  if (role() === "teacher") {
 
-    const assignmentQuery = query(
-      collection(db, "assignments"),
-      where("teacherId", "==", currentUser.uid)
-    );
+    const assignmentQuery =
+      query(
+        collection(db,"assignments"),
+        where(
+          "teacherId",
+          "==",
+          currentUser.uid
+        )
+      );
 
-    const submissionQuery = query(
-      collection(db, "submissions"),
-      where("teacherId", "==", currentUser.uid)
-    );
 
-    const [assignmentSnap, submissionSnap] = await Promise.all([
+    const submissionQuery =
+      query(
+        collection(db,"submissions"),
+        where(
+          "teacherId",
+          "==",
+          currentUser.uid
+        )
+      );
+
+
+    const [
+      assignmentSnap,
+      submissionSnap
+    ] = await Promise.all([
       getDocs(assignmentQuery),
       getDocs(submissionQuery)
     ]);
 
-    assignments = assignmentSnap.docs.map(d => ({
-      id: d.id,
-      ...d.data()
-    }));
 
-    submissions = submissionSnap.docs.map(d => ({
-      id: d.id,
-      ...d.data()
-    }));
+    assignments =
+      assignmentSnap.docs.map(
+        d => ({
+          id: d.id,
+          ...d.data()
+        })
+      );
+
+
+    submissions =
+      submissionSnap.docs.map(
+        d => ({
+          id: d.id,
+          ...d.data()
+        })
+      );
+
 
     return;
   }
 
 
-  if (currentRole === "owner" || currentRole === "admin") {
+  if (
+    role() === "owner" ||
+    role() === "admin"
+  ) {
 
-    const [assignmentSnap, submissionSnap] = await Promise.all([
-      getDocs(collection(db, "assignments")),
-      getDocs(collection(db, "submissions"))
+    const [
+      assignmentSnap,
+      submissionSnap
+    ] = await Promise.all([
+      getDocs(
+        collection(db,"assignments")
+      ),
+      getDocs(
+        collection(db,"submissions")
+      )
     ]);
 
-    assignments = assignmentSnap.docs.map(d => ({
-      id: d.id,
-      ...d.data()
-    }));
 
-    submissions = submissionSnap.docs.map(d => ({
-      id: d.id,
-      ...d.data()
-    }));
+    assignments =
+      assignmentSnap.docs.map(
+        d => ({
+          id: d.id,
+          ...d.data()
+        })
+      );
+
+
+    submissions =
+      submissionSnap.docs.map(
+        d => ({
+          id: d.id,
+          ...d.data()
+        })
+      );
 
   }
 
 }
 
 
-/* =========================================================
+/* =====================================================
    HOME
-========================================================= */
+===================================================== */
 
 function renderHome() {
 
-  const container = document.getElementById("home-content");
+  const container =
+    document.getElementById(
+      "home-content"
+    );
+
 
   if (role() === "student") {
+
     renderStudentHome(container);
-    return;
+
+  } else {
+
+    renderStaffHome(container);
+
   }
 
-  renderStaffHome(container);
 }
 
 
+/* =====================================================
+   STUDENT HOME
+===================================================== */
+
 function renderStudentHome(container) {
 
-  const submittedIds = new Set(
-    submissions.map(s => s.assignmentId)
-  );
+  const submittedIds =
+    new Set(
+      submissions.map(
+        s => s.assignmentId
+      )
+    );
 
-  const unfinished = studentAssignments.filter(
-    assignment => !submittedIds.has(assignment.id)
-  );
 
-  const graded = submissions.filter(
-    submission => submission.grade !== null &&
-                  submission.grade !== undefined
-  );
+  const unfinished =
+    studentAssignments.filter(
+      assignment =>
+        !submittedIds.has(
+          assignment.id
+        )
+    );
 
-  const recent = sortNewest(studentAssignments)
-    .slice(0, 5);
+
+  const graded =
+    submissions.filter(
+      submission =>
+        submission.grade !== null &&
+        submission.grade !== undefined
+    );
+
+
+  const recent =
+    sortNewest(
+      studentAssignments
+    ).slice(0,5);
+
 
   container.innerHTML = `
 
     <div class="hero">
-      <h2>Welcome to Novex.</h2>
+
+      <h2>
+        Welcome to Novex.
+      </h2>
+
       <p>
-        Stay on top of your school work, complete your assignments,
-        and keep track of your progress.
+        Stay on top of your school work,
+        complete your assignments, and keep
+        track of your progress.
       </p>
+
     </div>
+
 
     <div class="stats">
 
@@ -1189,56 +1576,87 @@ function renderStudentHome(container) {
 
     </div>
 
+
     <div class="card">
-      <h3>Latest Assignments</h3>
+
+      <h3>
+        Latest Assignments
+      </h3>
+
       <p class="card-description">
         Your newest school work.
       </p>
 
       <div class="assignment-list">
+
         ${
           recent.length
-            ? recent.map(renderStudentAssignmentCard).join("")
-            : `<div class="empty">No assignments yet.</div>`
+            ? recent
+                .map(
+                  renderStudentAssignmentCard
+                )
+                .join("")
+            : `
+                <div class="empty">
+                  No assignments yet.
+                </div>
+              `
         }
+
       </div>
+
     </div>
+
   `;
+
 }
 
 
-function renderStaffHome(container) {
+/* =====================================================
+   STAFF HOME
+===================================================== */
 
-  const creator = canCreateAssignments();
+function renderStaffHome(container) {
 
   container.innerHTML = `
 
     <div class="hero">
+
       <h2>
-        ${role() === "owner"
-          ? "Owner workspace."
-          : role() === "admin"
-            ? "Admin workspace."
-            : "Teacher workspace."
+
+        ${
+          role() === "owner"
+            ? "Owner workspace."
+            : role() === "admin"
+              ? "Admin workspace."
+              : "Teacher workspace."
         }
+
       </h2>
 
       <p>
-        Manage assignments, review submissions, and keep
-        student work organized from one place.
+        Manage assignments, review submissions,
+        and keep student work organized from one place.
       </p>
+
     </div>
+
 
     <div class="grid">
 
       ${
-        creator
+        canCreateAssignments()
           ? `
+
             <div class="card action-card">
-              <h3>Create Assignment</h3>
+
+              <h3>
+                Create Assignment
+              </h3>
 
               <p class="card-description">
-                Create a quiz and send it directly to a student.
+                Create a quiz and send it directly
+                to a student.
               </p>
 
               <button
@@ -1247,22 +1665,29 @@ function renderStaffHome(container) {
               >
                 Create & Send
               </button>
+
             </div>
+
           `
           : ""
       }
 
+
       <div class="card action-card">
+
         <h3>
+
           ${
             role() === "teacher"
               ? "Sent Assignments"
               : "All Assignments"
           }
+
         </h3>
 
         <p class="card-description">
-          Review quizzes, recipients, submissions, and grading.
+          Review quizzes, recipients,
+          submissions, and grading.
         </p>
 
         <button
@@ -1271,13 +1696,20 @@ function renderStaffHome(container) {
         >
           Open
         </button>
+
       </div>
 
+
       <div class="card action-card">
-        <h3>Grade Management</h3>
+
+        <h3>
+          Grade Management
+        </h3>
 
         <p class="card-description">
-          Review student submissions and edit grades.
+          Review student submissions and
+          edit percentages, question results,
+          and teacher feedback.
         </p>
 
         <button
@@ -1286,13 +1718,19 @@ function renderStaffHome(container) {
         >
           Open Grade Book
         </button>
+
       </div>
+
 
       ${
         role() === "owner"
           ? `
+
             <div class="card action-card">
-              <h3>Owner Controls</h3>
+
+              <h3>
+                Owner Controls
+              </h3>
 
               <p class="card-description">
                 Manage teacher, admin, and student accounts.
@@ -1300,62 +1738,84 @@ function renderStaffHome(container) {
 
               <button
                 class="secondary-btn"
-                onclick="document.getElementById('owner-controls').scrollIntoView({behavior:'smooth'})"
+                onclick="
+                  document
+                    .getElementById('owner-controls')
+                    .scrollIntoView({
+                      behavior:'smooth'
+                    })
+                "
               >
                 Open Controls
               </button>
+
             </div>
+
           `
           : ""
       }
 
     </div>
 
+
     ${
-      creator
+      canCreateAssignments()
         ? `
+
           <div
             class="card"
             id="create-assignment"
             style="margin-top:20px;"
           >
 
-            <h3>Teacher Controls</h3>
+            <h3>
+              Teacher Controls
+            </h3>
 
             <p class="card-description">
-              Create a new assignment and send it to a student.
+              Create a new assignment and send
+              it to a student.
             </p>
 
             ${assignmentFormHTML()}
 
           </div>
+
         `
         : ""
     }
 
+
     ${
       role() === "owner"
         ? `
+
           <div
             class="card"
             id="owner-controls"
             style="margin-top:20px;"
           >
 
-            <h3>Owner Controls</h3>
+            <h3>
+              Owner Controls
+            </h3>
 
             <p class="card-description">
-              Manage Novex user roles.
+              Search users and change their Novex roles.
             </p>
 
             <div class="form-group">
-              <label>Search user by email</label>
+
+              <label>
+                Search user by email
+              </label>
 
               <input
                 id="owner-search-email"
                 type="email"
                 placeholder="student@example.com"
               >
+
             </div>
 
             <button
@@ -1368,79 +1828,115 @@ function renderStaffHome(container) {
             <div id="owner-search-results"></div>
 
           </div>
+
         `
         : ""
     }
+
   `;
 
+
   buildQuestionBuilder();
+
 }
 
 
-window.scrollToCreateAssignment = function() {
+window.scrollToCreateAssignment =
+function() {
 
-  if (!canCreateAssignments()) return;
-
-  const element = document.getElementById("create-assignment");
-
-  if (element) {
-    element.scrollIntoView({
-      behavior: "smooth"
-    });
+  if (!canCreateAssignments()) {
+    return;
   }
+
+
+  document
+    .getElementById(
+      "create-assignment"
+    )
+    ?.scrollIntoView({
+      behavior:"smooth"
+    });
+
 };
 
 
-/* =========================================================
+/* =====================================================
    ASSIGNMENT FORM
-========================================================= */
+===================================================== */
 
 function assignmentFormHTML() {
 
   return `
 
     <div class="form-group">
-      <label>Course</label>
+
+      <label>
+        Course
+      </label>
 
       <input
         id="assignment-course"
         type="text"
         placeholder="Example: Math"
       >
+
     </div>
 
+
     <div class="form-group">
-      <label>Assignment title</label>
+
+      <label>
+        Assignment title
+      </label>
 
       <input
         id="assignment-title"
         type="text"
         placeholder="Example: Fractions Quiz"
       >
+
     </div>
 
+
     <div class="form-group">
-      <label>Student email</label>
+
+      <label>
+        Student email
+      </label>
 
       <input
         id="assignment-student-email"
         type="email"
         placeholder="student@example.com"
       >
+
     </div>
 
+
     <div class="form-group">
-      <label>Due date</label>
+
+      <label>
+        Due date
+      </label>
 
       <input
         id="assignment-due"
         type="date"
       >
+
     </div>
 
-    <div class="question-builder" id="question-builder"></div>
 
-    <div class="button-row" style="margin-top:14px;">
+    <div
+      class="question-builder"
+      id="question-builder"
+    ></div>
+
+
+    <div
+      class="button-row"
+      style="margin-top:14px;"
+    >
 
       <button
         class="secondary-btn"
@@ -1458,46 +1954,71 @@ function assignmentFormHTML() {
 
     </div>
 
+
     <p
       id="assignment-message"
-      style="margin-top:13px;color:#9ba5c1;font-size:13px;"
+      style="
+        margin-top:13px;
+        color:#9ba5c1;
+        font-size:13px;
+      "
     ></p>
+
   `;
+
 }
-
-
-let questionCount = 0;
 
 
 function buildQuestionBuilder() {
 
-  const builder = document.getElementById("question-builder");
+  const builder =
+    document.getElementById(
+      "question-builder"
+    );
+
 
   if (!builder) return;
+
 
   builder.innerHTML = "";
 
   questionCount = 0;
 
   addQuestion();
+
 }
 
 
-window.addQuestion = function() {
+window.addQuestion =
+function() {
 
-  const builder = document.getElementById("question-builder");
+  const builder =
+    document.getElementById(
+      "question-builder"
+    );
+
 
   if (!builder) return;
 
+
   questionCount++;
 
-  const id = questionCount;
 
-  const box = document.createElement("div");
+  const id =
+    questionCount;
 
-  box.className = "question-box";
 
-  box.dataset.questionId = id;
+  const box =
+    document.createElement("div");
+
+
+  box.className =
+    "question-box";
+
+
+  box.dataset.questionId =
+    id;
+
 
   box.innerHTML = `
 
@@ -1512,7 +2033,11 @@ window.addQuestion = function() {
           ? `
             <button
               class="danger-btn"
-              onclick="this.closest('.question-box').remove()"
+              onclick="
+                this
+                  .closest('.question-box')
+                  .remove()
+              "
             >
               Remove
             </button>
@@ -1522,9 +2047,12 @@ window.addQuestion = function() {
 
     </div>
 
+
     <div class="form-group">
 
-      <label>Question type</label>
+      <label>
+        Question type
+      </label>
 
       <select
         class="question-type"
@@ -1547,9 +2075,12 @@ window.addQuestion = function() {
 
     </div>
 
+
     <div class="form-group">
 
-      <label>Question</label>
+      <label>
+        Question
+      </label>
 
       <textarea
         class="question-text"
@@ -1558,32 +2089,48 @@ window.addQuestion = function() {
 
     </div>
 
+
     <div class="question-extra"></div>
+
   `;
+
 
   builder.appendChild(box);
 
+
   updateQuestionType(
-    box.querySelector(".question-type")
+    box.querySelector(
+      ".question-type"
+    )
   );
+
 };
 
 
-window.updateQuestionType = function(select) {
+window.updateQuestionType =
+function(select) {
 
-  const box = select.closest(".question-box");
+  const box =
+    select.closest(
+      ".question-box"
+    );
 
-  const extra = box.querySelector(".question-extra");
 
-  const type = select.value;
+  const extra =
+    box.querySelector(
+      ".question-extra"
+    );
 
-  if (type === "written") {
+
+  if (select.value === "written") {
 
     extra.innerHTML = `
 
       <div class="form-group">
 
-        <label>Expected answer / grading guide</label>
+        <label>
+          Grading guide
+        </label>
 
         <textarea
           class="answer-key"
@@ -1591,19 +2138,24 @@ window.updateQuestionType = function(select) {
         ></textarea>
 
       </div>
+
     `;
 
     return;
   }
 
 
-  if (type === "truefalse") {
+  if (
+    select.value === "truefalse"
+  ) {
 
     extra.innerHTML = `
 
       <div class="form-group">
 
-        <label>Correct answer</label>
+        <label>
+          Correct answer
+        </label>
 
         <select class="correct-answer">
 
@@ -1618,6 +2170,7 @@ window.updateQuestionType = function(select) {
         </select>
 
       </div>
+
     `;
 
     return;
@@ -1628,84 +2181,147 @@ window.updateQuestionType = function(select) {
 
     <div class="form-group">
 
-      <label>Answer choices</label>
+      <label>
+        Answer choices
+      </label>
 
       <div class="choice-row">
-        <input class="choice" placeholder="Choice 1">
+        <input
+          class="choice"
+          placeholder="Choice 1"
+        >
       </div>
 
       <div class="choice-row">
-        <input class="choice" placeholder="Choice 2">
+        <input
+          class="choice"
+          placeholder="Choice 2"
+        >
       </div>
 
       <div class="choice-row">
-        <input class="choice" placeholder="Choice 3">
+        <input
+          class="choice"
+          placeholder="Choice 3"
+        >
       </div>
 
     </div>
 
+
     <div class="form-group">
 
-      <label>Correct answer</label>
+      <label>
+        Correct answer
+      </label>
 
       <select class="correct-answer">
 
-        <option value="0">Choice 1</option>
-        <option value="1">Choice 2</option>
-        <option value="2">Choice 3</option>
+        <option value="0">
+          Choice 1
+        </option>
+
+        <option value="1">
+          Choice 2
+        </option>
+
+        <option value="2">
+          Choice 3
+        </option>
 
       </select>
 
     </div>
+
   `;
+
 };
 
 
-/* =========================================================
+/* =====================================================
    CREATE ASSIGNMENT
-========================================================= */
+===================================================== */
 
-window.createAssignment = async function() {
+window.createAssignment =
+async function() {
 
-  if (!canCreateAssignments()) return;
-
-  const message = document.getElementById("assignment-message");
-
-  const course =
-    document.getElementById("assignment-course")?.value.trim();
-
-  const title =
-    document.getElementById("assignment-title")?.value.trim();
-
-  const studentEmail =
-    document
-      .getElementById("assignment-student-email")
-      ?.value.trim()
-      .toLowerCase();
-
-  const dueDate =
-    document.getElementById("assignment-due")?.value;
-
-  if (!course || !title || !studentEmail || !dueDate) {
-
-    message.textContent =
-      "Please complete the course, title, student email, and due date.";
-
+  if (!canCreateAssignments()) {
     return;
   }
 
 
-  message.textContent = "Checking student...";
+  const message =
+    document.getElementById(
+      "assignment-message"
+    );
+
+
+  const course =
+    document
+      .getElementById(
+        "assignment-course"
+      )
+      ?.value.trim();
+
+
+  const title =
+    document
+      .getElementById(
+        "assignment-title"
+      )
+      ?.value.trim();
+
+
+  const studentEmail =
+    document
+      .getElementById(
+        "assignment-student-email"
+      )
+      ?.value.trim()
+      .toLowerCase();
+
+
+  const dueDate =
+    document.getElementById(
+      "assignment-due"
+    )?.value;
+
+
+  if (
+    !course ||
+    !title ||
+    !studentEmail ||
+    !dueDate
+  ) {
+
+    message.textContent =
+      "Please complete all assignment information.";
+
+    return;
+
+  }
 
 
   try {
 
-    const userQuery = query(
-      collection(db, "users"),
-      where("email", "==", studentEmail)
-    );
+    message.textContent =
+      "Checking student...";
 
-    const userSnap = await getDocs(userQuery);
+
+    const userQuery =
+      query(
+        collection(db,"users"),
+        where(
+          "email",
+          "==",
+          studentEmail
+        )
+      );
+
+
+    const userSnap =
+      await getDocs(userQuery);
+
 
     if (userSnap.empty) {
 
@@ -1713,10 +2329,13 @@ window.createAssignment = async function() {
         "No Novex account was found with that email.";
 
       return;
+
     }
 
 
-    const studentDoc = userSnap.docs[0];
+    const studentDoc =
+      userSnap.docs[0];
+
 
     const student = {
       id: studentDoc.id,
@@ -1724,26 +2343,22 @@ window.createAssignment = async function() {
     };
 
 
-    if (student.role !== "student") {
+    if (
+      student.role !== "student"
+    ) {
 
       message.textContent =
-        "Assignments can only be sent to student accounts.";
+        "Assignments can only be sent to students.";
 
       return;
+
     }
 
 
-    const questionBoxes =
-      document.querySelectorAll(".question-box");
-
-
-    if (!questionBoxes.length) {
-
-      message.textContent =
-        "Add at least one question.";
-
-      return;
-    }
+    const boxes =
+      document.querySelectorAll(
+        ".question-box"
+      );
 
 
     const questions = [];
@@ -1752,76 +2367,130 @@ window.createAssignment = async function() {
     let valid = true;
 
 
-    questionBoxes.forEach((box, index) => {
+    boxes.forEach(
+      (box,index) => {
 
-      const type =
-        box.querySelector(".question-type").value;
-
-      const text =
-        box.querySelector(".question-text").value.trim();
-
-      if (!text) {
-        valid = false;
-        return;
-      }
+        const type =
+          box.querySelector(
+            ".question-type"
+          ).value;
 
 
-      const question = {
-        id: index,
-        type,
-        text
-      };
+        const text =
+          box.querySelector(
+            ".question-text"
+          ).value.trim();
 
 
-      if (type === "math") {
+        if (!text) {
 
-        const choices = [
-          ...box.querySelectorAll(".choice")
-        ].map(input => input.value.trim());
-
-        if (choices.some(choice => !choice)) {
           valid = false;
+
           return;
+
         }
 
-        question.choices = choices;
 
-        answerKeys[index] = {
+        const question = {
+          id:index,
           type,
-          correctAnswer:
-            Number(
-              box.querySelector(".correct-answer").value
+          text
+        };
+
+
+        if (type === "math") {
+
+          const choices =
+            [
+              ...box.querySelectorAll(
+                ".choice"
+              )
+            ].map(
+              input =>
+                input.value.trim()
+            );
+
+
+          if (
+            choices.some(
+              choice => !choice
             )
-        };
+          ) {
+
+            valid = false;
+
+            return;
+
+          }
+
+
+          question.choices =
+            choices;
+
+
+          answerKeys[index] = {
+
+            type,
+
+            correctAnswer:
+              Number(
+                box
+                  .querySelector(
+                    ".correct-answer"
+                  )
+                  .value
+              )
+
+          };
+
+        }
+
+
+        if (
+          type === "truefalse"
+        ) {
+
+          answerKeys[index] = {
+
+            type,
+
+            correctAnswer:
+              box
+                .querySelector(
+                  ".correct-answer"
+                )
+                .value
+
+          };
+
+        }
+
+
+        if (
+          type === "written"
+        ) {
+
+          answerKeys[index] = {
+
+            type,
+
+            gradingGuide:
+              box
+                .querySelector(
+                  ".answer-key"
+                )
+                ?.value
+                .trim() || ""
+
+          };
+
+        }
+
+
+        questions.push(question);
 
       }
-
-
-      if (type === "truefalse") {
-
-        answerKeys[index] = {
-          type,
-          correctAnswer:
-            box.querySelector(".correct-answer").value
-        };
-
-      }
-
-
-      if (type === "written") {
-
-        answerKeys[index] = {
-          type,
-          gradingGuide:
-            box.querySelector(".answer-key")?.value.trim() || ""
-        };
-
-      }
-
-
-      questions.push(question);
-
-    });
+    );
 
 
     if (!valid) {
@@ -1830,6 +2499,7 @@ window.createAssignment = async function() {
         "Please complete every question.";
 
       return;
+
     }
 
 
@@ -1837,38 +2507,69 @@ window.createAssignment = async function() {
       "Sending assignment...";
 
 
-    const assignmentRef = await addDoc(
-      collection(db, "assignments"),
-      {
-        title,
-        courseName: course,
+    const assignmentRef =
+      await addDoc(
+        collection(
+          db,
+          "assignments"
+        ),
+        {
 
-        assignedTo: [student.id],
+          title,
 
-        assignedEmail: student.email,
-        assignedName: student.name || student.email,
+          courseName:
+            course,
 
-        teacherId: currentUser.uid,
-        teacherEmail: currentUser.email,
+          assignedTo:
+            [student.id],
 
-        questions,
+          assignedEmail:
+            student.email,
 
-        dueDate,
+          assignedName:
+            student.name ||
+            student.email,
 
-        status: "active",
+          teacherId:
+            currentUser.uid,
 
-        createdAt: serverTimestamp()
-      }
-    );
+          teacherEmail:
+            currentUser.email,
+
+          questions,
+
+          dueDate,
+
+          status:
+            "active",
+
+          createdAt:
+            serverTimestamp()
+
+        }
+      );
 
 
     await setDoc(
-      doc(db, "answerKeys", assignmentRef.id),
+      doc(
+        db,
+        "answerKeys",
+        assignmentRef.id
+      ),
       {
-        assignmentId: assignmentRef.id,
-        teacherId: currentUser.uid,
-        keys: answerKeys,
-        createdAt: serverTimestamp()
+
+        assignmentId:
+          assignmentRef.id,
+
+        teacherId:
+          currentUser.uid,
+
+        keys:
+          answerKeys,
+
+        createdAt:
+          serverTimestamp()
+
       }
     );
 
@@ -1876,16 +2577,34 @@ window.createAssignment = async function() {
     message.textContent =
       "Assignment sent successfully.";
 
-    document.getElementById("assignment-course").value = "";
-    document.getElementById("assignment-title").value = "";
-    document.getElementById("assignment-student-email").value = "";
-    document.getElementById("assignment-due").value = "";
+
+    document
+      .getElementById(
+        "assignment-course"
+      ).value = "";
+
+
+    document
+      .getElementById(
+        "assignment-title"
+      ).value = "";
+
+
+    document
+      .getElementById(
+        "assignment-student-email"
+      ).value = "";
+
+
+    document
+      .getElementById(
+        "assignment-due"
+      ).value = "";
+
 
     buildQuestionBuilder();
 
     await loadData();
-
-    renderHome();
 
   } catch (error) {
 
@@ -1893,24 +2612,27 @@ window.createAssignment = async function() {
 
     message.textContent =
       `Could not send assignment: ${error.message}`;
+
   }
 
 };
 
 
-/* =========================================================
-   STUDENT ASSIGNMENT CARDS
-========================================================= */
+/* =====================================================
+   STUDENT ASSIGNMENTS
+===================================================== */
 
-function renderStudentAssignmentCard(assignment) {
+function renderStudentAssignmentCard(
+  assignment
+) {
 
   const submitted =
     submissions.find(
-      submission =>
-        submission.assignmentId === assignment.id
+      s =>
+        s.assignmentId ===
+        assignment.id
     );
 
-  const isSubmitted = !!submitted;
 
   return `
 
@@ -1921,248 +2643,371 @@ function renderStudentAssignmentCard(assignment) {
         <div>
 
           <div class="assignment-title">
-            ${escapeHTML(assignment.title)}
+            ${escapeHTML(
+              assignment.title
+            )}
           </div>
 
           <div class="assignment-meta">
 
             ${escapeHTML(
-              assignment.courseName || "General"
+              assignment.courseName ||
+              "General"
             )}
 
             <br>
 
             Due:
             ${escapeHTML(
-              formatDate(assignment.dueDate)
+              formatDate(
+                assignment.dueDate
+              )
             )}
 
           </div>
 
         </div>
 
-        <span class="badge ${isSubmitted ? "green" : "yellow"}">
-          ${isSubmitted ? "Submitted" : "Unfinished"}
+
+        <span class="badge ${
+          submitted
+            ? "green"
+            : "yellow"
+        }">
+
+          ${
+            submitted
+              ? "Submitted"
+              : "Unfinished"
+          }
+
         </span>
 
       </div>
 
-      <div class="button-row" style="margin-top:14px;">
+
+      <div
+        class="button-row"
+        style="margin-top:14px;"
+      >
 
         ${
-          !isSubmitted
+          submitted
             ? `
               <button
-                class="primary-btn"
-                onclick="openStudentQuiz('${assignment.id}')"
+                class="secondary-btn"
+                onclick="
+                  openStudentGradeReview(
+                    '${submitted.id}'
+                  )
+                "
               >
-                Start Assignment
+                View Grade
               </button>
             `
             : `
-              <span class="badge green">
-                Submitted ${formatDateTime(submitted.submittedAt)}
-              </span>
+              <button
+                class="primary-btn"
+                onclick="
+                  openStudentQuiz(
+                    '${assignment.id}'
+                  )
+                "
+              >
+                Start Assignment
+              </button>
             `
         }
 
       </div>
 
     </div>
+
   `;
+
 }
 
 
-/* =========================================================
-   UNFINISHED PAGE
-========================================================= */
+/* =====================================================
+   UNFINISHED
+===================================================== */
 
 function renderUnfinished() {
 
-  if (role() !== "student") return;
+  if (role() !== "student") {
+    return;
+  }
+
 
   const container =
-    document.getElementById("unfinished-list");
+    document.getElementById(
+      "unfinished-list"
+    );
 
-  const submittedIds = new Set(
-    submissions.map(s => s.assignmentId)
-  );
+
+  const submittedIds =
+    new Set(
+      submissions.map(
+        s => s.assignmentId
+      )
+    );
+
 
   const unfinished =
-    sortNewest(studentAssignments)
-      .filter(a => !submittedIds.has(a.id));
+    sortNewest(
+      studentAssignments
+    ).filter(
+      a =>
+        !submittedIds.has(a.id)
+    );
 
 
-  container.innerHTML = unfinished.length
-    ? `<div class="assignment-list">
-        ${unfinished.map(renderStudentAssignmentCard).join("")}
-       </div>`
-    : `
-      <div class="empty">
-        <h3>You're all caught up.</h3>
-        <p style="margin-top:7px;">
-          There are no unfinished assignments right now.
-        </p>
-      </div>
-    `;
+  container.innerHTML =
+    unfinished.length
+
+      ? `
+        <div class="assignment-list">
+
+          ${
+            unfinished
+              .map(
+                renderStudentAssignmentCard
+              )
+              .join("")
+          }
+
+        </div>
+      `
+
+      : `
+
+        <div class="empty">
+
+          <h3>
+            You're all caught up.
+          </h3>
+
+          <p style="margin-top:7px;">
+            There are no unfinished assignments right now.
+          </p>
+
+        </div>
+
+      `;
+
 }
 
 
-/* =========================================================
+/* =====================================================
    STUDENT QUIZ
-========================================================= */
+===================================================== */
 
-window.openStudentQuiz = function(assignmentId) {
+window.openStudentQuiz =
+function(assignmentId) {
 
   const assignment =
     studentAssignments.find(
       a => a.id === assignmentId
     );
 
+
   if (!assignment) return;
 
-  currentQuizAssignment = assignment;
 
-  document.getElementById("quiz-modal-title").textContent =
-    assignment.title;
-
-  document.getElementById("quiz-modal-meta").textContent =
-    `${assignment.courseName || "General"} • Due ${formatDate(assignment.dueDate)}`;
-
-
-  document.getElementById("quiz-content").innerHTML = `
-
-    <div id="student-quiz-form">
-
-      ${
-        assignment.questions.map((question, index) => `
-
-          <div class="question-box">
-
-            <strong>
-              ${index + 1}. ${escapeHTML(question.text)}
-            </strong>
-
-            <div style="margin-top:13px;">
-
-              ${
-                question.type === "math"
-                  ? question.choices.map((choice, choiceIndex) => `
-                      <label
-                        style="
-                          display:block;
-                          padding:10px;
-                          background:rgba(255,255,255,.035);
-                          border-radius:10px;
-                          margin-bottom:7px;
-                          cursor:pointer;
-                        "
-                      >
-
-                        <input
-                          type="radio"
-                          name="question-${index}"
-                          value="${choiceIndex}"
-                        >
-
-                        ${escapeHTML(choice)}
-
-                      </label>
-                    `).join("")
-                  : ""
-              }
-
-
-              ${
-                question.type === "truefalse"
-                  ? `
-                    <label
-                      style="
-                        display:block;
-                        padding:10px;
-                        background:rgba(255,255,255,.035);
-                        border-radius:10px;
-                        margin-bottom:7px;
-                      "
-                    >
-                      <input
-                        type="radio"
-                        name="question-${index}"
-                        value="true"
-                      >
-                      True
-                    </label>
-
-                    <label
-                      style="
-                        display:block;
-                        padding:10px;
-                        background:rgba(255,255,255,.035);
-                        border-radius:10px;
-                      "
-                    >
-                      <input
-                        type="radio"
-                        name="question-${index}"
-                        value="false"
-                      >
-                      False
-                    </label>
-                  `
-                  : ""
-              }
-
-
-              ${
-                question.type === "written"
-                  ? `
-                    <textarea
-                      name="question-${index}"
-                      placeholder="Type your response..."
-                    ></textarea>
-                  `
-                  : ""
-              }
-
-            </div>
-
-          </div>
-
-        `).join("")
-      }
-
-      <button
-        class="primary-btn"
-        onclick="submitStudentQuiz()"
-      >
-        Submit Assignment
-      </button>
-
-      <p
-        id="quiz-submit-message"
-        style="
-          margin-top:12px;
-          color:#9ba5c1;
-          font-size:13px;
-        "
-      ></p>
-
-    </div>
-  `;
+  currentQuizAssignment =
+    assignment;
 
 
   document
-    .getElementById("quiz-modal")
+    .getElementById(
+      "quiz-modal-title"
+    )
+    .textContent =
+      assignment.title;
+
+
+  document
+    .getElementById(
+      "quiz-modal-meta"
+    )
+    .textContent =
+      `${assignment.courseName || "General"} • Due ${formatDate(assignment.dueDate)}`;
+
+
+  document
+    .getElementById(
+      "quiz-content"
+    )
+    .innerHTML = `
+
+      <div>
+
+        ${
+          assignment.questions
+            .map(
+              (question,index) => `
+
+                <div class="question-box">
+
+                  <strong>
+                    ${index + 1}.
+                    ${escapeHTML(
+                      question.text
+                    )}
+                  </strong>
+
+
+                  <div style="margin-top:13px;">
+
+                    ${
+                      question.type === "math"
+                        ? question.choices
+                            .map(
+                              (choice,i) => `
+
+                                <label
+                                  style="
+                                    display:block;
+                                    padding:10px;
+                                    background:rgba(255,255,255,.035);
+                                    border-radius:10px;
+                                    margin-bottom:7px;
+                                  "
+                                >
+
+                                  <input
+                                    type="radio"
+                                    name="question-${index}"
+                                    value="${i}"
+                                  >
+
+                                  ${escapeHTML(choice)}
+
+                                </label>
+
+                              `
+                            )
+                            .join("")
+                        : ""
+                    }
+
+
+                    ${
+                      question.type === "truefalse"
+                        ? `
+
+                          <label
+                            style="
+                              display:block;
+                              padding:10px;
+                              background:rgba(255,255,255,.035);
+                              border-radius:10px;
+                              margin-bottom:7px;
+                            "
+                          >
+
+                            <input
+                              type="radio"
+                              name="question-${index}"
+                              value="true"
+                            >
+
+                            True
+
+                          </label>
+
+
+                          <label
+                            style="
+                              display:block;
+                              padding:10px;
+                              background:rgba(255,255,255,.035);
+                              border-radius:10px;
+                            "
+                          >
+
+                            <input
+                              type="radio"
+                              name="question-${index}"
+                              value="false"
+                            >
+
+                            False
+
+                          </label>
+
+                        `
+                        : ""
+                    }
+
+
+                    ${
+                      question.type === "written"
+                        ? `
+
+                          <textarea
+                            name="question-${index}"
+                            placeholder="Type your response..."
+                          ></textarea>
+
+                        `
+                        : ""
+                    }
+
+                  </div>
+
+                </div>
+
+              `
+            )
+            .join("")
+        }
+
+
+        <button
+          class="primary-btn"
+          onclick="submitStudentQuiz()"
+        >
+          Submit Assignment
+        </button>
+
+
+        <p
+          id="quiz-submit-message"
+          style="
+            margin-top:12px;
+            color:#9ba5c1;
+            font-size:13px;
+          "
+        ></p>
+
+      </div>
+
+    `;
+
+
+  document
+    .getElementById(
+      "quiz-modal"
+    )
     .classList.add("open");
+
 };
 
 
-window.submitStudentQuiz = async function() {
+window.submitStudentQuiz =
+async function() {
 
-  if (!currentQuizAssignment) return;
+  if (!currentQuizAssignment) {
+    return;
+  }
+
 
   const message =
-    document.getElementById("quiz-submit-message");
+    document.getElementById(
+      "quiz-submit-message"
+    );
+
 
   const assignment =
     currentQuizAssignment;
@@ -2172,24 +3017,27 @@ window.submitStudentQuiz = async function() {
 
     const answers = [];
 
+
     for (
-      let index = 0;
-      index < assignment.questions.length;
-      index++
+      let i = 0;
+      i < assignment.questions.length;
+      i++
     ) {
 
       const question =
-        assignment.questions[index];
+        assignment.questions[i];
 
 
       if (
-        question.type === "written"
+        question.type ===
+        "written"
       ) {
 
         const textarea =
           document.querySelector(
-            `[name="question-${index}"]`
+            `[name="question-${i}"]`
           );
+
 
         answers.push(
           textarea?.value.trim() || ""
@@ -2199,19 +3047,43 @@ window.submitStudentQuiz = async function() {
 
         const selected =
           document.querySelector(
-            `[name="question-${index}"]:checked`
+            `[name="question-${i}"]:checked`
           );
+
 
         if (!selected) {
 
           message.textContent =
-            `Please answer question ${index + 1}.`;
+            `Please answer question ${i + 1}.`;
 
           return;
+
         }
 
-        answers.push(selected.value);
+
+        answers.push(
+          selected.value
+        );
+
       }
+
+    }
+
+
+    const alreadySubmitted =
+      submissions.find(
+        s =>
+          s.assignmentId ===
+          assignment.id
+      );
+
+
+    if (alreadySubmitted) {
+
+      message.textContent =
+        "This assignment has already been submitted.";
+
+      return;
 
     }
 
@@ -2220,53 +3092,67 @@ window.submitStudentQuiz = async function() {
       "Submitting...";
 
 
-    const existing =
-      submissions.find(
-        s => s.assignmentId === assignment.id
-      );
-
-
-    if (existing) {
-
-      message.textContent =
-        "This assignment has already been submitted.";
-
-      return;
-    }
-
-
     await addDoc(
-      collection(db, "submissions"),
+      collection(
+        db,
+        "submissions"
+      ),
       {
-        assignmentId: assignment.id,
 
-        teacherId: assignment.teacherId,
+        assignmentId:
+          assignment.id,
 
-        studentId: currentUser.uid,
-        studentEmail: currentUser.email,
+        teacherId:
+          assignment.teacherId,
+
+        studentId:
+          currentUser.uid,
+
+        studentEmail:
+          currentUser.email,
+
         studentName:
-          currentProfile.name || currentUser.email,
+          currentProfile.name ||
+          currentUser.email,
 
         answers,
 
-        submittedAt: serverTimestamp(),
+        submittedAt:
+          serverTimestamp(),
 
-        graded: false,
+        graded:
+          false,
 
-        grade: null,
+        grade:
+          null,
 
-        questionResults: []
+        percentage:
+          null,
+
+        questionResults:
+          [],
+
+        teacherNote:
+          ""
+
       }
     );
 
 
     await loadData();
 
-    closeModal("quiz-modal");
+
+    closeModal(
+      "quiz-modal"
+    );
+
 
     renderHome();
 
-    alert("Assignment submitted successfully.");
+    alert(
+      "Assignment submitted successfully."
+    );
+
 
   } catch (error) {
 
@@ -2274,37 +3160,53 @@ window.submitStudentQuiz = async function() {
 
     message.textContent =
       `Submission failed: ${error.message}`;
+
   }
 
 };
 
 
-/* =========================================================
+/* =====================================================
    SENT ASSIGNMENTS
-========================================================= */
+===================================================== */
 
 function renderSentAssignments() {
 
-  if (!isStaff()) return;
+  if (!isStaff()) {
+    return;
+  }
+
 
   const container =
-    document.getElementById("sent-list");
+    document.getElementById(
+      "sent-list"
+    );
+
+
+  document
+    .getElementById(
+      "sent-title"
+    )
+    .textContent =
+      role() === "teacher"
+        ? "Sent Assignments"
+        : "All Assignments";
+
 
   const list =
     sortNewest(assignments);
 
 
-  document.getElementById("sent-title").textContent =
-    role() === "teacher"
-      ? "Sent Assignments"
-      : "All Assignments";
-
-
   if (!list.length) {
 
     container.innerHTML = `
+
       <div class="empty">
-        <h3>No assignments yet.</h3>
+
+        <h3>
+          No assignments yet.
+        </h3>
+
         <p style="margin-top:7px;">
           ${
             canCreateAssignments()
@@ -2312,7 +3214,9 @@ function renderSentAssignments() {
               : "There are no assignments to review."
           }
         </p>
+
       </div>
+
     `;
 
     return;
@@ -2320,24 +3224,40 @@ function renderSentAssignments() {
 
 
   container.innerHTML = `
+
     <div class="assignment-list">
-      ${list.map(renderStaffAssignmentCard).join("")}
+
+      ${
+        list
+          .map(
+            renderStaffAssignmentCard
+          )
+          .join("")
+      }
+
     </div>
+
   `;
+
 }
 
 
-function renderStaffAssignmentCard(assignment) {
+function renderStaffAssignmentCard(
+  assignment
+) {
 
   const related =
     submissions.filter(
       submission =>
-        submission.assignmentId === assignment.id
+        submission.assignmentId ===
+        assignment.id
     );
 
 
   const assignedCount =
-    assignment.assignedTo?.length || 0;
+    assignment.assignedTo?.length ||
+    0;
+
 
   const submittedCount =
     related.length;
@@ -2352,41 +3272,57 @@ function renderStaffAssignmentCard(assignment) {
         <div>
 
           <div class="assignment-title">
-            ${escapeHTML(assignment.title)}
+
+            ${escapeHTML(
+              assignment.title
+            )}
+
           </div>
+
 
           <div class="assignment-meta">
 
             Course:
             ${escapeHTML(
-              assignment.courseName || "General"
+              assignment.courseName ||
+              "General"
             )}
 
             <br>
 
             Sent by:
             ${escapeHTML(
-              assignment.teacherEmail || "Unknown"
+              assignment.teacherEmail ||
+              "Unknown"
             )}
 
             <br>
 
             Due:
             ${escapeHTML(
-              formatDate(assignment.dueDate)
+              formatDate(
+                assignment.dueDate
+              )
             )}
 
             <br>
 
             Questions:
-            ${assignment.questions?.length || 0}
+            ${
+              assignment.questions?.length ||
+              0
+            }
 
           </div>
 
         </div>
 
+
         <span class="badge">
-          ${submittedCount}/${assignedCount} submitted
+
+          ${submittedCount}/${assignedCount}
+          submitted
+
         </span>
 
       </div>
@@ -2404,55 +3340,72 @@ function renderStaffAssignmentCard(assignment) {
           Recipients
         </strong>
 
-        <div style="margin-top:8px;">
 
-          <div class="user-result">
+        <div class="user-result">
 
-            <div>
+          <div>
 
-              <strong style="font-size:13px;">
-                ${escapeHTML(
-                  assignment.assignedName ||
-                  "Student"
-                )}
-              </strong>
+            <strong style="font-size:13px;">
 
-              <div
-                style="
-                  color:#7f89a7;
-                  font-size:11px;
-                  margin-top:3px;
-                "
-              >
-                ${escapeHTML(
-                  assignment.assignedEmail || ""
-                )}
-              </div>
+              ${escapeHTML(
+                assignment.assignedName ||
+                "Student"
+              )}
+
+            </strong>
+
+
+            <div
+              style="
+                color:#7f89a7;
+                font-size:11px;
+                margin-top:3px;
+              "
+            >
+
+              ${escapeHTML(
+                assignment.assignedEmail ||
+                ""
+              )}
 
             </div>
 
-            <span class="badge ${
-              related.length ? "green" : "yellow"
-            }">
-              ${
-                related.length
-                  ? "Submitted"
-                  : "Not submitted"
-              }
-            </span>
-
           </div>
+
+
+          <span
+            class="badge ${
+              related.length
+                ? "green"
+                : "yellow"
+            }"
+          >
+
+            ${
+              related.length
+                ? "Submitted"
+                : "Not submitted"
+            }
+
+          </span>
 
         </div>
 
       </div>
 
 
-      <div class="button-row" style="margin-top:14px;">
+      <div
+        class="button-row"
+        style="margin-top:14px;"
+      >
 
         <button
           class="secondary-btn"
-          onclick="reviewAssignment('${assignment.id}')"
+          onclick="
+            reviewAssignment(
+              '${assignment.id}'
+            )
+          "
         >
           Review Submissions
         </button>
@@ -2460,155 +3413,216 @@ function renderStaffAssignmentCard(assignment) {
       </div>
 
     </div>
+
   `;
+
 }
 
 
-/* =========================================================
+/* =====================================================
    REVIEW ASSIGNMENT
-========================================================= */
+===================================================== */
 
-window.reviewAssignment = function(assignmentId) {
+window.reviewAssignment =
+function(assignmentId) {
 
   const assignment =
     assignments.find(
       a => a.id === assignmentId
     );
 
+
   if (!assignment) return;
 
 
   const related =
     submissions.filter(
-      submission =>
-        submission.assignmentId === assignmentId
+      s =>
+        s.assignmentId ===
+        assignmentId
     );
 
 
-  document.getElementById("review-modal-title").textContent =
-    assignment.title;
-
-  document.getElementById("review-modal-meta").textContent =
-    `${assignment.courseName || "General"} • Due ${formatDate(assignment.dueDate)}`;
-
-
-  document.getElementById("review-content").innerHTML = `
-
-    <div class="assignment-list">
-
-      ${
-        related.length
-          ? related.map(submission => `
-
-              <div class="assignment-card">
-
-                <div class="assignment-header">
-
-                  <div>
-
-                    <div class="assignment-title">
-                      ${escapeHTML(
-                        submission.studentName ||
-                        submission.studentEmail ||
-                        "Student"
-                      )}
-                    </div>
-
-                    <div class="assignment-meta">
-
-                      ${escapeHTML(
-                        submission.studentEmail || ""
-                      )}
-
-                      <br>
-
-                      Submitted:
-                      ${formatDateTime(
-                        submission.submittedAt
-                      )}
-
-                    </div>
-
-                  </div>
-
-                  <span class="badge ${
-                    submission.grade !== null &&
-                    submission.grade !== undefined
-                      ? "green"
-                      : "yellow"
-                  }">
-
-                    ${
-                      submission.grade !== null &&
-                      submission.grade !== undefined
-                        ? `${escapeHTML(submission.grade)}`
-                        : "Needs grading"
-                    }
-
-                  </span>
-
-                </div>
-
-                <div
-                  class="button-row"
-                  style="margin-top:13px;"
-                >
-
-                  <button
-                    class="primary-btn"
-                    onclick="openSubmissionReview(
-                      '${submission.id}'
-                    )"
-                  >
-                    ${
-                      submission.grade !== null &&
-                      submission.grade !== undefined
-                        ? "Edit Grade"
-                        : "Grade Submission"
-                    }
-                  </button>
-
-                </div>
-
-              </div>
-
-            `).join("")
-          : `
-            <div class="empty">
-              No submissions have been received yet.
-            </div>
-          `
-      }
-
-    </div>
-  `;
+  document
+    .getElementById(
+      "review-modal-title"
+    )
+    .textContent =
+      assignment.title;
 
 
   document
-    .getElementById("review-modal")
+    .getElementById(
+      "review-modal-meta"
+    )
+    .textContent =
+      `${assignment.courseName || "General"} • Due ${formatDate(assignment.dueDate)}`;
+
+
+  document
+    .getElementById(
+      "review-content"
+    )
+    .innerHTML = `
+
+      <div class="assignment-list">
+
+        ${
+          related.length
+
+            ? related
+                .map(
+                  submission => `
+
+                    <div class="assignment-card">
+
+                      <div class="assignment-header">
+
+                        <div>
+
+                          <div class="assignment-title">
+
+                            ${escapeHTML(
+                              submission.studentName ||
+                              submission.studentEmail ||
+                              "Student"
+                            )}
+
+                          </div>
+
+
+                          <div class="assignment-meta">
+
+                            ${escapeHTML(
+                              submission.studentEmail ||
+                              ""
+                            )}
+
+                            <br>
+
+                            Submitted:
+                            ${formatDateTime(
+                              submission.submittedAt
+                            )}
+
+                          </div>
+
+                        </div>
+
+
+                        <span
+                          class="badge ${
+                            submission.percentage !== null &&
+                            submission.percentage !== undefined
+                              ? "green"
+                              : "yellow"
+                          }"
+                        >
+
+                          ${
+                            submission.percentage !== null &&
+                            submission.percentage !== undefined
+                              ? `${submission.percentage}%`
+                              : "Needs grading"
+                          }
+
+                        </span>
+
+                      </div>
+
+
+                      <div
+                        class="button-row"
+                        style="margin-top:13px;"
+                      >
+
+                        <button
+                          class="primary-btn"
+                          onclick="
+                            openSubmissionReview(
+                              '${submission.id}'
+                            )
+                          "
+                        >
+
+                          ${
+                            submission.percentage !== null &&
+                            submission.percentage !== undefined
+                              ? "Edit Grade"
+                              : "Grade Submission"
+                          }
+
+                        </button>
+
+                      </div>
+
+                    </div>
+
+                  `
+                )
+                .join("")
+
+            : `
+
+                <div class="empty">
+
+                  No submissions have been received yet.
+
+                </div>
+
+              `
+        }
+
+      </div>
+
+    `;
+
+
+  document
+    .getElementById(
+      "review-modal"
+    )
     .classList.add("open");
+
 };
 
 
-/* =========================================================
-   GRADE SUBMISSION
-========================================================= */
+/* =====================================================
+   TEACHER / ADMIN / OWNER GRADING
+===================================================== */
 
-window.openSubmissionReview = async function(submissionId) {
+window.openSubmissionReview =
+async function(submissionId) {
+
+  if (
+    ![
+      "teacher",
+      "admin",
+      "owner"
+    ].includes(role())
+  ) {
+    return;
+  }
+
 
   const submission =
     submissions.find(
       s => s.id === submissionId
     );
 
+
   if (!submission) return;
 
-  currentReviewSubmission = submission;
+
+  currentReviewSubmission =
+    submission;
 
 
   const assignment =
     assignments.find(
-      a => a.id === submission.assignmentId
+      a =>
+        a.id ===
+        submission.assignmentId
     );
 
 
@@ -2629,8 +3643,10 @@ window.openSubmissionReview = async function(submissionId) {
         )
       );
 
+
     if (keySnap.exists()) {
-      answerKeyData = keySnap.data();
+      answerKeyData =
+        keySnap.data();
     }
 
   } catch (error) {
@@ -2640,177 +3656,476 @@ window.openSubmissionReview = async function(submissionId) {
   }
 
 
-  document.getElementById("review-modal-title").textContent =
-    "Grade Submission";
-
-  document.getElementById("review-modal-meta").textContent =
-    `${submission.studentName || submission.studentEmail} • ${assignment.title}`;
-
-
   const keys =
     answerKeyData?.keys || {};
 
 
-  document.getElementById("review-content").innerHTML = `
-
-    <div>
-
-      ${
-        assignment.questions.map((question, index) => {
-
-          const answer =
-            submission.answers?.[index] ?? "";
-
-          const key =
-            keys[index];
-
-          let correctText = "Manual grading required.";
-
-          if (key?.type === "math") {
-
-            correctText =
-              question.choices?.[Number(key.correctAnswer)]
-              || "Unknown";
-
-          }
-
-          if (key?.type === "truefalse") {
-
-            correctText =
-              key.correctAnswer === "true"
-                ? "True"
-                : "False";
-          }
-
-          if (key?.type === "written") {
-
-            correctText =
-              key.gradingGuide ||
-              "No grading guide provided.";
-          }
+  const existingResults =
+    submission.questionResults ||
+    [];
 
 
-          let studentAnswer = answer;
-
-          if (question.type === "math") {
-
-            studentAnswer =
-              question.choices?.[Number(answer)]
-              || "No answer";
-          }
+  document
+    .getElementById(
+      "review-modal-title"
+    )
+    .textContent =
+      "Grade Submission";
 
 
-          return `
-
-            <div class="review-question">
-
-              <p>
-                <strong>
-                  ${index + 1}.
-                </strong>
-
-                ${escapeHTML(question.text)}
-              </p>
-
-              <div class="answer-box">
-                <strong>Student answer:</strong><br>
-                ${escapeHTML(studentAnswer || "No answer")}
-              </div>
-
-              <div class="answer-box">
-                <strong>Answer key / grading guide:</strong><br>
-                ${escapeHTML(correctText)}
-              </div>
-
-            </div>
-          `;
-
-        }).join("")
-      }
+  document
+    .getElementById(
+      "review-modal-meta"
+    )
+    .textContent =
+      `${submission.studentName || submission.studentEmail} • ${assignment.title}`;
 
 
-      <div class="card" style="margin-top:15px;">
+  document
+    .getElementById(
+      "review-content"
+    )
+    .innerHTML = `
 
-        <h3>Final Grade</h3>
+      <div>
 
-        <p class="card-description">
-          Enter or edit the student's final grade.
-        </p>
+        ${
+          assignment.questions
+            .map(
+              (question,index) => {
 
-        <div class="form-group">
+                const answer =
+                  submission
+                    .answers?.[index] ??
+                  "";
 
-          <label>
-            Grade
-          </label>
 
-          <input
-            id="grade-input"
-            type="text"
-            placeholder="Example: A, 95, 8/10"
-            value="${
-              submission.grade !== null &&
-              submission.grade !== undefined
-                ? escapeHTML(submission.grade)
-                : ""
-            }"
+                const key =
+                  keys[index] ||
+                  {};
+
+
+                let studentAnswer =
+                  answer;
+
+
+                if (
+                  question.type ===
+                  "math"
+                ) {
+
+                  studentAnswer =
+                    question
+                      .choices?.[
+                        Number(answer)
+                      ] ||
+                    "No answer";
+
+                }
+
+
+                if (
+                  question.type ===
+                  "truefalse"
+                ) {
+
+                  studentAnswer =
+                    answer === "true"
+                      ? "True"
+                      : answer === "false"
+                        ? "False"
+                        : "No answer";
+
+                }
+
+
+                const existing =
+                  existingResults[index] ||
+                  {};
+
+
+                let correctAnswer =
+                  "Manual grading required.";
+
+
+                if (
+                  key.type ===
+                  "math"
+                ) {
+
+                  correctAnswer =
+                    question
+                      .choices?.[
+                        Number(
+                          key.correctAnswer
+                        )
+                      ] ||
+                    "Unknown";
+
+                }
+
+
+                if (
+                  key.type ===
+                  "truefalse"
+                ) {
+
+                  correctAnswer =
+                    key.correctAnswer ===
+                    "true"
+                      ? "True"
+                      : "False";
+
+                }
+
+
+                if (
+                  key.type ===
+                  "written"
+                ) {
+
+                  correctAnswer =
+                    key.gradingGuide ||
+                    "Manual grading required.";
+
+                }
+
+
+                return `
+
+                  <div
+                    class="review-question"
+                  >
+
+                    <p>
+
+                      <strong>
+                        ${index + 1}.
+                      </strong>
+
+                      ${escapeHTML(
+                        question.text
+                      )}
+
+                    </p>
+
+
+                    <div class="answer-box">
+
+                      <strong>
+                        Student answer:
+                      </strong>
+
+                      <br>
+
+                      ${escapeHTML(
+                        studentAnswer
+                      )}
+
+                    </div>
+
+
+                    <div class="answer-box">
+
+                      <strong>
+                        Answer key / grading guide:
+                      </strong>
+
+                      <br>
+
+                      ${escapeHTML(
+                        correctAnswer
+                      )}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                      <label>
+                        Result
+                      </label>
+
+                      <select
+                        class="question-result"
+                        data-index="${index}"
+                      >
+
+                        <option
+                          value=""
+                          ${
+                            existing.correct ===
+                            undefined
+                              ? "selected"
+                              : ""
+                          }
+                        >
+                          Not graded
+                        </option>
+
+
+                        <option
+                          value="correct"
+                          ${
+                            existing.correct ===
+                            true
+                              ? "selected"
+                              : ""
+                          }
+                        >
+                          ✓ Correct
+                        </option>
+
+
+                        <option
+                          value="incorrect"
+                          ${
+                            existing.correct ===
+                            false
+                              ? "selected"
+                              : ""
+                          }
+                        >
+                          ✕ Incorrect
+                        </option>
+
+                      </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                      <label>
+                        Teacher's note for this question
+                      </label>
+
+                      <textarea
+                        class="question-note"
+                        data-index="${index}"
+                        placeholder="Leave feedback about this question..."
+                      >${escapeHTML(
+                        existing.note ||
+                        ""
+                      )}</textarea>
+
+                    </div>
+
+                  </div>
+
+                `;
+
+              }
+            )
+            .join("")
+        }
+
+
+        <div
+          class="card"
+          style="margin-top:18px;"
+        >
+
+          <h3>
+            Final Result
+          </h3>
+
+
+          <p class="card-description">
+            This percentage will appear directly
+            in the student's Grade Book.
+          </p>
+
+
+          <div class="form-group">
+
+            <label>
+              Percentage
+            </label>
+
+            <input
+              id="percentage-input"
+              type="number"
+              min="0"
+              max="100"
+              step="0.01"
+              placeholder="Example: 87"
+              value="${
+                submission.percentage !==
+                undefined &&
+                submission.percentage !==
+                null
+                  ? escapeHTML(
+                      submission.percentage
+                    )
+                  : ""
+              }"
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Overall Teacher Note
+            </label>
+
+            <textarea
+              id="teacher-note-input"
+              placeholder="Leave overall feedback..."
+            >${escapeHTML(
+              submission.teacherNote ||
+              ""
+            )}</textarea>
+
+          </div>
+
+
+          <button
+            class="primary-btn"
+            onclick="saveSubmissionGrade()"
           >
+            Save Grade & Feedback
+          </button>
+
+
+          <p
+            id="grade-message"
+            style="
+              margin-top:10px;
+              color:#9ba5c1;
+              font-size:13px;
+            "
+          ></p>
 
         </div>
 
-        <button
-          class="primary-btn"
-          onclick="saveSubmissionGrade()"
-        >
-          Save Grade
-        </button>
-
-        <p
-          id="grade-message"
-          style="
-            margin-top:10px;
-            color:#9ba5c1;
-            font-size:13px;
-          "
-        ></p>
-
       </div>
 
-    </div>
-  `;
+    `;
 
 };
 
 
-/* =========================================================
+/* =====================================================
    SAVE GRADE
-========================================================= */
+===================================================== */
 
-window.saveSubmissionGrade = async function() {
+window.saveSubmissionGrade =
+async function() {
 
-  if (!currentReviewSubmission) return;
-
-  if (!["teacher", "admin", "owner"].includes(role())) {
+  if (!currentReviewSubmission) {
     return;
   }
 
 
-  const input =
-    document.getElementById("grade-input");
+  if (
+    ![
+      "teacher",
+      "admin",
+      "owner"
+    ].includes(role())
+  ) {
+    return;
+  }
+
+
+  const percentageInput =
+    document.getElementById(
+      "percentage-input"
+    );
+
+
+  const teacherNoteInput =
+    document.getElementById(
+      "teacher-note-input"
+    );
+
 
   const message =
-    document.getElementById("grade-message");
+    document.getElementById(
+      "grade-message"
+    );
 
-  const grade =
-    input.value.trim();
+
+  const percentage =
+    percentageInput.value.trim();
 
 
-  if (!grade) {
+  if (!percentage) {
 
     message.textContent =
-      "Enter a grade first.";
+      "Enter a percentage first.";
 
     return;
+
   }
+
+
+  const numericPercentage =
+    Number(percentage);
+
+
+  if (
+    Number.isNaN(
+      numericPercentage
+    ) ||
+    numericPercentage < 0 ||
+    numericPercentage > 100
+  ) {
+
+    message.textContent =
+      "Percentage must be between 0 and 100.";
+
+    return;
+
+  }
+
+
+  const questionResults = [];
+
+
+  document
+    .querySelectorAll(
+      ".question-result"
+    )
+    .forEach(select => {
+
+      const index =
+        Number(
+          select.dataset.index
+        );
+
+
+      const result =
+        select.value;
+
+
+      const note =
+        document
+          .querySelector(
+            `.question-note[data-index="${index}"]`
+          )
+          ?.value
+          .trim() ||
+        "";
+
+
+      questionResults[index] = {
+
+        correct:
+          result === "correct"
+            ? true
+            : result === "incorrect"
+              ? false
+              : null,
+
+        note
+
+      };
+
+    });
 
 
   try {
@@ -2826,9 +4141,26 @@ window.saveSubmissionGrade = async function() {
         currentReviewSubmission.id
       ),
       {
-        grade,
-        graded: true,
-        gradedAt: serverTimestamp()
+
+        percentage:
+          numericPercentage,
+
+        grade:
+          `${numericPercentage}%`,
+
+        questionResults,
+
+        teacherNote:
+          teacherNoteInput
+            .value
+            .trim(),
+
+        graded:
+          true,
+
+        gradedAt:
+          serverTimestamp()
+
       }
     );
 
@@ -2837,11 +4169,14 @@ window.saveSubmissionGrade = async function() {
 
 
     message.textContent =
-      "Grade saved.";
+      "Grade and feedback saved.";
+
 
     currentReviewSubmission =
       submissions.find(
-        s => s.id === currentReviewSubmission.id
+        s =>
+          s.id ===
+          currentReviewSubmission.id
       );
 
 
@@ -2854,54 +4189,80 @@ window.saveSubmissionGrade = async function() {
 
     message.textContent =
       `Could not save grade: ${error.message}`;
+
   }
 
 };
 
 
-/* =========================================================
-   GRADEBOOK
-========================================================= */
+/* =====================================================
+   GRADE BOOK
+===================================================== */
 
 function renderGradebook() {
 
   const title =
-    document.getElementById("gradebook-title");
+    document.getElementById(
+      "gradebook-title"
+    );
+
 
   const subtitle =
-    document.getElementById("gradebook-subtitle");
+    document.getElementById(
+      "gradebook-subtitle"
+    );
+
 
   const container =
-    document.getElementById("gradebook-content");
+    document.getElementById(
+      "gradebook-content"
+    );
 
 
-  if (role() === "student") {
+  if (
+    role() === "student"
+  ) {
 
-    title.textContent = "Grade Book";
+    title.textContent =
+      "Grade Book";
+
 
     subtitle.textContent =
-      "Your grades, organized by question type.";
+      "Your grades, feedback, and answer reviews.";
 
-    renderStudentGradebook(container);
+
+    renderStudentGradebook(
+      container
+    );
+
 
     return;
+
   }
 
 
-  title.textContent = "Grade Book";
+  title.textContent =
+    "Grade Book";
+
 
   subtitle.textContent =
-    "Manage student grades and review submissions.";
+    "Manage student grades and feedback.";
 
-  renderStaffGradebook(container);
+
+  renderStaffGradebook(
+    container
+  );
+
 }
 
 
-/* =========================================================
-   STUDENT GRADEBOOK
-========================================================= */
+/* =====================================================
+   STUDENT GRADE BOOK
+===================================================== */
 
-function renderStudentGradebook(container) {
+function renderStudentGradebook(
+  container
+) {
 
   const graded =
     submissions.filter(
@@ -2914,64 +4275,95 @@ function renderStudentGradebook(container) {
   if (!graded.length) {
 
     container.innerHTML = `
+
       <div class="empty">
-        <h3>No grades yet.</h3>
+
+        <h3>
+          No grades yet.
+        </h3>
+
         <p style="margin-top:7px;">
           Your graded assignments will appear here.
         </p>
+
       </div>
+
     `;
 
     return;
+
   }
 
 
   const categories = {
+
     math: [],
     written: [],
     truefalse: []
+
   };
 
 
-  graded.forEach(submission => {
+  graded.forEach(
+    submission => {
 
-    const assignment =
-      studentAssignments.find(
-        a => a.id === submission.assignmentId
-      );
-
-    if (!assignment) return;
-
-
-    const types = new Set(
-      assignment.questions?.map(
-        question => question.type
-      )
-    );
+      const assignment =
+        studentAssignments.find(
+          a =>
+            a.id ===
+            submission.assignmentId
+        );
 
 
-    types.forEach(type => {
-
-      if (categories[type]) {
-        categories[type].push({
-          submission,
-          assignment
-        });
+      if (!assignment) {
+        return;
       }
 
-    });
 
-  });
+      const types =
+        new Set(
+          assignment.questions?.map(
+            q => q.type
+          )
+        );
+
+
+      types.forEach(
+        type => {
+
+          if (
+            categories[type]
+          ) {
+
+            categories[type].push({
+
+              submission,
+
+              assignment
+
+            });
+
+          }
+
+        }
+      );
+
+    }
+  );
 
 
   let html = "";
 
 
-  ["math", "written", "truefalse"].forEach(type => {
+  [
+    "math",
+    "written",
+    "truefalse"
+  ].forEach(type => {
 
     const items =
       categories[type].sort(
-        (a, b) =>
+        (a,b) =>
           timestampValue(
             b.submission.gradedAt ||
             b.submission.submittedAt
@@ -3004,95 +4396,582 @@ function renderStudentGradebook(container) {
 
         </div>
 
+
         <div class="grade-items">
 
           ${
             items.length
-              ? items.map(item => `
 
-                  <div class="grade-item">
+              ? items
+                  .map(
+                    item => {
 
-                    <div>
+                      const percentage =
+                        item.submission
+                          .percentage !==
+                        undefined &&
+                        item.submission
+                          .percentage !==
+                        null
 
-                      <strong>
-                        ${escapeHTML(
-                          item.assignment.title
-                        )}
-                      </strong>
+                          ? `${item.submission.percentage}%`
 
-                      <div
-                        style="
-                          color:#7f89a7;
-                          font-size:11px;
-                          margin-top:5px;
-                        "
-                      >
+                          : item.submission.grade ||
+                            "No percentage";
 
-                        ${escapeHTML(
-                          item.assignment.courseName ||
-                          "General"
-                        )}
 
-                        •
+                      const results =
+                        item.submission
+                          .questionResults ||
+                        [];
 
-                        ${formatDateTime(
-                          item.submission.gradedAt ||
-                          item.submission.submittedAt
-                        )}
 
-                      </div>
+                      const correctCount =
+                        results.filter(
+                          result =>
+                            result.correct ===
+                            true
+                        ).length;
 
-                    </div>
 
-                    <div class="grade-value">
-                      ${escapeHTML(
-                        item.submission.grade
-                      )}
-                    </div>
+                      const questionCount =
+                        item.assignment
+                          .questions
+                          ?.length ||
+                        0;
 
+
+                      return `
+
+                        <div class="grade-item">
+
+                          <div
+                            style="
+                              flex:1;
+                            "
+                          >
+
+                            <strong>
+
+                              ${escapeHTML(
+                                item.assignment.title
+                              )}
+
+                            </strong>
+
+
+                            <div
+                              style="
+                                color:#7f89a7;
+                                font-size:11px;
+                                margin-top:5px;
+                              "
+                            >
+
+                              ${escapeHTML(
+                                item.assignment
+                                  .courseName ||
+                                "General"
+                              )}
+
+                              •
+
+                              ${formatDateTime(
+                                item.submission
+                                  .gradedAt ||
+                                item.submission
+                                  .submittedAt
+                              )}
+
+                            </div>
+
+
+                            <div
+                              style="
+                                display:flex;
+                                gap:8px;
+                                flex-wrap:wrap;
+                                margin-top:10px;
+                              "
+                            >
+
+                              <span
+                                class="badge green"
+                              >
+                                ${escapeHTML(
+                                  percentage
+                                )}
+                              </span>
+
+
+                              ${
+                                results.length
+                                  ? `
+
+                                    <span
+                                      class="badge"
+                                    >
+
+                                      ${correctCount}/${questionCount}
+                                      correct
+
+                                    </span>
+
+                                  `
+                                  : ""
+                              }
+
+                            </div>
+
+                          </div>
+
+
+                          <div
+                            style="
+                              display:flex;
+                              flex-direction:column;
+                              align-items:flex-end;
+                              gap:9px;
+                            "
+                          >
+
+                            <div
+                              class="grade-value"
+                            >
+                              ${escapeHTML(
+                                percentage
+                              )}
+                            </div>
+
+
+                            <button
+                              class="small-btn"
+                              onclick="
+                                openStudentGradeReview(
+                                  '${item.submission.id}'
+                                )
+                              "
+                            >
+                              Review Submission
+                            </button>
+
+                          </div>
+
+                        </div>
+
+                      `;
+
+                    }
+                  )
+                  .join("")
+
+              : `
+
+                  <div class="empty">
+                    No grades in this category yet.
                   </div>
 
-                `).join("")
-              : `
-                <div class="empty">
-                  No grades in this category yet.
-                </div>
-              `
+                `
           }
 
         </div>
 
       </div>
+
     `;
+
   });
 
 
-  container.innerHTML = html;
+  container.innerHTML =
+    html;
+
 }
 
 
-/* =========================================================
-   STAFF GRADEBOOK
-========================================================= */
+/* =====================================================
+   STUDENT REVIEW
+===================================================== */
 
-function renderStaffGradebook(container) {
+window.openStudentGradeReview =
+function(submissionId) {
+
+  if (
+    role() !== "student"
+  ) {
+    return;
+  }
+
+
+  const submission =
+    submissions.find(
+      s =>
+        s.id ===
+        submissionId
+    );
+
+
+  if (!submission) return;
+
+
+  const assignment =
+    studentAssignments.find(
+      a =>
+        a.id ===
+        submission.assignmentId
+    );
+
+
+  if (!assignment) return;
+
+
+  const results =
+    submission.questionResults ||
+    [];
+
+
+  const percentage =
+    submission.percentage !==
+      undefined &&
+    submission.percentage !==
+      null
+
+      ? `${submission.percentage}%`
+
+      : submission.grade ||
+        "Not provided";
+
+
+  const teacherNote =
+    submission.teacherNote ||
+    "No overall teacher note was provided.";
+
+
+  document
+    .getElementById(
+      "review-modal-title"
+    )
+    .textContent =
+      "Submission Review";
+
+
+  document
+    .getElementById(
+      "review-modal-meta"
+    )
+    .textContent =
+      `${assignment.title} • ${assignment.courseName || "General"}`;
+
+
+  document
+    .getElementById(
+      "review-content"
+    )
+    .innerHTML = `
+
+      <div>
+
+        <!-- PERCENTAGE -->
+
+        <div
+          class="card"
+          style="
+            margin-bottom:18px;
+            text-align:center;
+          "
+        >
+
+          <div
+            style="
+              color:#7f89a7;
+              font-size:12px;
+              margin-bottom:7px;
+            "
+          >
+            FINAL PERCENTAGE
+          </div>
+
+
+          <div
+            style="
+              font-size:44px;
+              font-weight:800;
+              background:linear-gradient(
+                90deg,
+                #ffffff,
+                #9baeff
+              );
+              -webkit-background-clip:text;
+              -webkit-text-fill-color:transparent;
+            "
+          >
+            ${escapeHTML(
+              percentage
+            )}
+          </div>
+
+        </div>
+
+
+        <!-- OVERALL NOTE -->
+
+        <div
+          class="card"
+          style="margin-bottom:18px;"
+        >
+
+          <h3>
+            Teacher's Note
+          </h3>
+
+
+          <p
+            style="
+              color:#aab3cc;
+              font-size:13px;
+              line-height:1.6;
+              margin-top:10px;
+            "
+          >
+            ${escapeHTML(
+              teacherNote
+            )}
+          </p>
+
+        </div>
+
+
+        <!-- QUESTIONS -->
+
+        <h3
+          style="margin-bottom:12px;"
+        >
+          Question Review
+        </h3>
+
+
+        ${
+          assignment.questions
+            .map(
+              (question,index) => {
+
+                const result =
+                  results[index] ||
+                  {};
+
+
+                const studentAnswer =
+                  submission
+                    .answers?.[index] ??
+                  "";
+
+
+                let displayedAnswer =
+                  studentAnswer;
+
+
+                if (
+                  question.type ===
+                  "math"
+                ) {
+
+                  displayedAnswer =
+                    question
+                      .choices?.[
+                        Number(
+                          studentAnswer
+                        )
+                      ] ||
+                    "No answer";
+
+                }
+
+
+                if (
+                  question.type ===
+                  "truefalse"
+                ) {
+
+                  displayedAnswer =
+                    studentAnswer ===
+                    "true"
+                      ? "True"
+                      : studentAnswer ===
+                        "false"
+                        ? "False"
+                        : "No answer";
+
+                }
+
+
+                const correct =
+                  result.correct ===
+                  true;
+
+
+                const incorrect =
+                  result.correct ===
+                  false;
+
+
+                return `
+
+                  <div
+                    class="review-question"
+                    style="
+                      border-left:
+                        4px solid
+                        ${
+                          correct
+                            ? "#55d68a"
+                            : incorrect
+                              ? "#ff6577"
+                              : "#7f89a7"
+                        };
+                    "
+                  >
+
+                    <div
+                      style="
+                        display:flex;
+                        justify-content:space-between;
+                        gap:10px;
+                        align-items:flex-start;
+                      "
+                    >
+
+                      <p>
+                        <strong>
+                          ${index + 1}.
+                        </strong>
+
+                        ${escapeHTML(
+                          question.text
+                        )}
+                      </p>
+
+
+                      <span
+                        class="badge ${
+                          correct
+                            ? "green"
+                            : incorrect
+                              ? "red"
+                              : ""
+                        }"
+                      >
+
+                        ${
+                          correct
+                            ? "✓ Correct"
+                            : incorrect
+                              ? "✕ Incorrect"
+                              : "Not graded"
+                        }
+
+                      </span>
+
+                    </div>
+
+
+                    <div class="answer-box">
+
+                      <strong>
+                        Your answer:
+                      </strong>
+
+                      <br>
+
+                      ${escapeHTML(
+                        displayedAnswer ||
+                        "No answer"
+                      )}
+
+                    </div>
+
+
+                    ${
+                      result.note
+                        ? `
+
+                          <div
+                            class="answer-box"
+                          >
+
+                            <strong>
+                              Teacher's note:
+                            </strong>
+
+                            <br>
+
+                            ${escapeHTML(
+                              result.note
+                            )}
+
+                          </div>
+
+                        `
+                        : ""
+                    }
+
+                  </div>
+
+                `;
+
+              }
+            )
+            .join("")
+        }
+
+      </div>
+
+    `;
+
+
+  document
+    .getElementById(
+      "review-modal"
+    )
+    .classList.add("open");
+
+};
+
+
+/* =====================================================
+   STAFF GRADEBOOK
+===================================================== */
+
+function renderStaffGradebook(
+  container
+) {
 
   const list =
-    sortNewest(submissions, "submittedAt");
+    sortNewest(
+      submissions,
+      "submittedAt"
+    );
 
 
   if (!list.length) {
 
     container.innerHTML = `
+
       <div class="empty">
-        <h3>No submissions yet.</h3>
+
+        <h3>
+          No submissions yet.
+        </h3>
+
         <p style="margin-top:7px;">
           Student submissions will appear here.
         </p>
+
       </div>
+
     `;
 
     return;
+
   }
 
 
@@ -3101,109 +4980,149 @@ function renderStaffGradebook(container) {
     <div class="assignment-list">
 
       ${
-        list.map(submission => {
+        list
+          .map(
+            submission => {
 
-          const assignment =
-            assignments.find(
-              a => a.id === submission.assignmentId
-            );
-
-
-          if (!assignment) return "";
-
-
-          const graded =
-            submission.grade !== null &&
-            submission.grade !== undefined;
+              const assignment =
+                assignments.find(
+                  a =>
+                    a.id ===
+                    submission.assignmentId
+                );
 
 
-          return `
+              if (!assignment) {
+                return "";
+              }
 
-            <div class="assignment-card">
 
-              <div class="assignment-header">
+              const graded =
+                submission.percentage !==
+                  null &&
+                submission.percentage !==
+                  undefined;
 
-                <div>
 
-                  <div class="assignment-title">
-                    ${escapeHTML(
-                      submission.studentName ||
-                      submission.studentEmail
-                    )}
+              return `
+
+                <div class="assignment-card">
+
+                  <div
+                    class="assignment-header"
+                  >
+
+                    <div>
+
+                      <div
+                        class="assignment-title"
+                      >
+
+                        ${escapeHTML(
+                          submission.studentName ||
+                          submission.studentEmail
+                        )}
+
+                      </div>
+
+
+                      <div
+                        class="assignment-meta"
+                      >
+
+                        ${escapeHTML(
+                          submission.studentEmail ||
+                          ""
+                        )}
+
+                        <br>
+
+                        Assignment:
+                        ${escapeHTML(
+                          assignment.title
+                        )}
+
+                        <br>
+
+                        Submitted:
+                        ${formatDateTime(
+                          submission.submittedAt
+                        )}
+
+                      </div>
+
+                    </div>
+
+
+                    <span
+                      class="badge ${
+                        graded
+                          ? "green"
+                          : "yellow"
+                      }"
+                    >
+
+                      ${
+                        graded
+                          ? `${submission.percentage}%`
+                          : "Needs grading"
+                      }
+
+                    </span>
+
                   </div>
 
-                  <div class="assignment-meta">
 
-                    ${escapeHTML(
-                      submission.studentEmail || ""
-                    )}
+                  <div
+                    class="button-row"
+                    style="margin-top:13px;"
+                  >
 
-                    <br>
+                    <button
+                      class="primary-btn"
+                      onclick="
+                        openSubmissionReview(
+                          '${submission.id}'
+                        )
+                      "
+                    >
 
-                    Assignment:
-                    ${escapeHTML(
-                      assignment.title
-                    )}
+                      ${
+                        graded
+                          ? "Edit Grade"
+                          : "Grade"
+                      }
 
-                    <br>
-
-                    Submitted:
-                    ${formatDateTime(
-                      submission.submittedAt
-                    )}
+                    </button>
 
                   </div>
 
                 </div>
 
-                <span class="badge ${
-                  graded ? "green" : "yellow"
-                }">
+              `;
 
-                  ${
-                    graded
-                      ? escapeHTML(submission.grade)
-                      : "Needs grading"
-                  }
-
-                </span>
-
-              </div>
-
-
-              <div
-                class="button-row"
-                style="margin-top:13px;"
-              >
-
-                <button
-                  class="primary-btn"
-                  onclick="openSubmissionReview('${submission.id}')"
-                >
-                  ${graded ? "Edit Grade" : "Grade"}
-                </button>
-
-              </div>
-
-            </div>
-          `;
-
-        }).join("")
+            }
+          )
+          .join("")
       }
 
     </div>
+
   `;
+
 }
 
 
-/* =========================================================
+/* =====================================================
    COURSES
-========================================================= */
+===================================================== */
 
 function renderCourses() {
 
   const container =
-    document.getElementById("courses-content");
+    document.getElementById(
+      "courses-content"
+    );
 
 
   const source =
@@ -3215,29 +5134,42 @@ function renderCourses() {
   if (!source.length) {
 
     container.innerHTML = `
+
       <div class="empty">
-        <h3>No courses yet.</h3>
+        <h3>
+          No courses yet.
+        </h3>
       </div>
+
     `;
 
     return;
+
   }
 
 
   const courses = {};
 
 
-  source.forEach(assignment => {
+  source.forEach(
+    assignment => {
 
-    const course =
-      assignment.courseName || "General";
+      const course =
+        assignment.courseName ||
+        "General";
 
-    if (!courses[course]) {
-      courses[course] = [];
+
+      if (!courses[course]) {
+        courses[course] = [];
+      }
+
+
+      courses[course].push(
+        assignment
+      );
+
     }
-
-    courses[course].push(assignment);
-  });
+  );
 
 
   container.innerHTML = `
@@ -3246,77 +5178,100 @@ function renderCourses() {
 
       ${
         Object.entries(courses)
-          .map(([course, courseAssignments]) => `
+          .map(
+            ([course,list]) => `
 
-            <div class="card">
+              <div class="card">
 
-              <h3>
-                ${escapeHTML(course)}
-              </h3>
+                <h3>
+                  ${escapeHTML(course)}
+                </h3>
 
-              <p class="card-description">
-                ${courseAssignments.length}
-                assignment${courseAssignments.length === 1 ? "" : "s"}
-              </p>
 
-              <div class="assignment-list">
+                <p class="card-description">
+                  ${list.length}
+                  assignment${list.length === 1 ? "" : "s"}
+                </p>
 
-                ${
-                  sortNewest(courseAssignments)
-                    .slice(0, 5)
-                    .map(assignment => `
 
-                      <div
-                        style="
-                          padding:10px 0;
-                          border-bottom:1px solid rgba(255,255,255,.06);
-                        "
-                      >
+                <div
+                  class="assignment-list"
+                >
 
-                        <strong style="font-size:13px;">
-                          ${escapeHTML(
-                            assignment.title
-                          )}
-                        </strong>
+                  ${
+                    sortNewest(list)
+                      .slice(0,5)
+                      .map(
+                        assignment => `
 
-                        <div
-                          style="
-                            color:#7f89a7;
-                            font-size:11px;
-                            margin-top:4px;
-                          "
-                        >
-                          Due:
-                          ${formatDate(
-                            assignment.dueDate
-                          )}
-                        </div>
+                          <div
+                            style="
+                              padding:10px 0;
+                              border-bottom:
+                                1px solid
+                                rgba(255,255,255,.06);
+                            "
+                          >
 
-                      </div>
+                            <strong
+                              style="font-size:13px;"
+                            >
 
-                    `).join("")
-                }
+                              ${escapeHTML(
+                                assignment.title
+                              )}
+
+                            </strong>
+
+
+                            <div
+                              style="
+                                color:#7f89a7;
+                                font-size:11px;
+                                margin-top:4px;
+                              "
+                            >
+
+                              Due:
+                              ${formatDate(
+                                assignment.dueDate
+                              )}
+
+                            </div>
+
+                          </div>
+
+                        `
+                      )
+                      .join("")
+                  }
+
+                </div>
 
               </div>
 
-            </div>
-
-          `).join("")
+            `
+          )
+          .join("")
       }
 
     </div>
+
   `;
+
 }
 
 
-/* =========================================================
+/* =====================================================
    ACCOUNT
-========================================================= */
+===================================================== */
 
 function renderAccount() {
 
   const container =
-    document.getElementById("account-content");
+    document.getElementById(
+      "account-content"
+    );
 
 
   container.innerHTML = `
@@ -3330,31 +5285,43 @@ function renderAccount() {
         )}
       </h3>
 
+
       <p class="card-description">
         Your account information.
       </p>
 
+
       <div class="form-group">
 
-        <label>Email</label>
+        <label>
+          Email
+        </label>
 
         <input
-          value="${escapeHTML(currentUser.email)}"
+          value="${escapeHTML(
+            currentUser.email
+          )}"
           disabled
         >
 
       </div>
 
+
       <div class="form-group">
 
-        <label>Role</label>
+        <label>
+          Role
+        </label>
 
         <input
-          value="${escapeHTML(role())}"
+          value="${escapeHTML(
+            role()
+          )}"
           disabled
         >
 
       </div>
+
 
       <button
         class="danger-btn"
@@ -3364,46 +5331,70 @@ function renderAccount() {
       </button>
 
     </div>
+
   `;
+
 }
 
 
-window.logout = async function() {
+window.logout =
+async function() {
 
   await signOut(auth);
 
-  window.location.href = "index.html";
+  window.location.href =
+    "index.html";
+
 };
 
 
-/* =========================================================
-   OWNER USER MANAGEMENT
-========================================================= */
+/* =====================================================
+   OWNER CONTROLS
+===================================================== */
 
-window.searchUsers = async function() {
+window.searchUsers =
+async function() {
 
-  if (role() !== "owner") return;
+  if (
+    role() !== "owner"
+  ) {
+    return;
+  }
 
 
   const email =
     document
-      .getElementById("owner-search-email")
-      ?.value.trim()
+      .getElementById(
+        "owner-search-email"
+      )
+      ?.value
+      .trim()
       .toLowerCase();
 
 
   const results =
-    document.getElementById("owner-search-results");
+    document.getElementById(
+      "owner-search-results"
+    );
 
 
   if (!email) {
 
-    results.innerHTML =
-      `<p style="color:#ff9aa8;margin-top:10px;">
+    results.innerHTML = `
+
+      <p
+        style="
+          color:#ff9aa8;
+          margin-top:10px;
+        "
+      >
         Enter an email.
-      </p>`;
+      </p>
+
+    `;
 
     return;
+
   }
 
 
@@ -3411,8 +5402,12 @@ window.searchUsers = async function() {
 
     const userQuery =
       query(
-        collection(db, "users"),
-        where("email", "==", email)
+        collection(db,"users"),
+        where(
+          "email",
+          "==",
+          email
+        )
       );
 
 
@@ -3423,19 +5418,27 @@ window.searchUsers = async function() {
     if (snap.empty) {
 
       results.innerHTML = `
-        <div class="empty" style="margin-top:12px;">
+
+        <div
+          class="empty"
+          style="margin-top:12px;"
+        >
           No user found.
         </div>
+
       `;
 
       return;
+
     }
 
 
-    const userDoc = snap.docs[0];
+    const userDoc =
+      snap.docs[0];
+
 
     const user = {
-      id: userDoc.id,
+      id:userDoc.id,
       ...userDoc.data()
     };
 
@@ -3453,6 +5456,7 @@ window.searchUsers = async function() {
             )}
           </strong>
 
+
           <div
             style="
               color:#7f89a7;
@@ -3460,8 +5464,13 @@ window.searchUsers = async function() {
               margin-top:3px;
             "
           >
-            ${escapeHTML(user.email)}
+
+            ${escapeHTML(
+              user.email
+            )}
+
           </div>
+
 
           <div
             style="
@@ -3470,31 +5479,54 @@ window.searchUsers = async function() {
               margin-top:3px;
             "
           >
+
             Current role:
-            ${escapeHTML(user.role || "student")}
+            ${escapeHTML(
+              user.role ||
+              "student"
+            )}
+
           </div>
 
         </div>
+
 
         <div class="button-row">
 
           <button
             class="small-btn"
-            onclick="changeUserRole('${user.id}','teacher')"
+            onclick="
+              changeUserRole(
+                '${user.id}',
+                'teacher'
+              )
+            "
           >
             Teacher
           </button>
 
+
           <button
             class="small-btn"
-            onclick="changeUserRole('${user.id}','admin')"
+            onclick="
+              changeUserRole(
+                '${user.id}',
+                'admin'
+              )
+            "
           >
             Admin
           </button>
 
+
           <button
             class="small-btn"
-            onclick="changeUserRole('${user.id}','student')"
+            onclick="
+              changeUserRole(
+                '${user.id}',
+                'student'
+              )
+            "
           >
             Student
           </button>
@@ -3502,39 +5534,64 @@ window.searchUsers = async function() {
         </div>
 
       </div>
-    `;
 
+    `;
 
   } catch (error) {
 
     results.innerHTML = `
-      <p style="color:#ff9aa8;margin-top:10px;">
-        ${escapeHTML(error.message)}
+
+      <p
+        style="
+          color:#ff9aa8;
+          margin-top:10px;
+        "
+      >
+        ${escapeHTML(
+          error.message
+        )}
       </p>
+
     `;
+
   }
 
 };
 
 
-window.changeUserRole = async function(userId, newRole) {
+window.changeUserRole =
+async function(
+  userId,
+  newRole
+) {
 
-  if (role() !== "owner") return;
+  if (
+    role() !== "owner"
+  ) {
+    return;
+  }
 
 
   try {
 
     await updateDoc(
-      doc(db, "users", userId),
+      doc(
+        db,
+        "users",
+        userId
+      ),
       {
-        role: newRole
+        role:newRole
       }
     );
 
 
     await searchUsers();
 
-    alert(`User role changed to ${newRole}.`);
+
+    alert(
+      `User role changed to ${newRole}.`
+    );
 
   } catch (error) {
 
@@ -3543,34 +5600,49 @@ window.changeUserRole = async function(userId, newRole) {
     alert(
       `Could not change role: ${error.message}`
     );
+
   }
 
 };
 
 
-/* =========================================================
+/* =====================================================
    MODALS
-========================================================= */
+===================================================== */
 
-window.closeModal = function(id) {
+window.closeModal =
+function(id) {
 
   document
     .getElementById(id)
-    ?.classList.remove("open");
+    ?.classList
+    .remove("open");
+
 };
 
 
-document.querySelectorAll(".modal").forEach(modal => {
+document
+  .querySelectorAll(".modal")
+  .forEach(modal => {
 
-  modal.addEventListener("click", event => {
+    modal.addEventListener(
+      "click",
+      event => {
 
-    if (event.target === modal) {
-      modal.classList.remove("open");
-    }
+        if (
+          event.target === modal
+        ) {
+
+          modal.classList.remove(
+            "open"
+          );
+
+        }
+
+      }
+    );
 
   });
-
-});
 
 </script>
 
