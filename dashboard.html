@@ -638,7 +638,7 @@
 
     <div class="topbar">
       <div class="brand">
-        <h1>Novex</h1>
+        <img src="logo.png" alt="Novex logo">
         <p id="welcome-text">Your school. Your work. Your progress.</p>
       </div>
 
@@ -678,7 +678,6 @@
       serverTimestamp
     } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-
     // ============================================================
     // GLOBAL STATE
     // ============================================================
@@ -694,7 +693,6 @@
     let currentGradingSubmission = null;
     let currentGradingAssignment = null;
 
-
     // ============================================================
     // BASIC HELPERS
     // ============================================================
@@ -705,7 +703,6 @@
     const welcomeText = document.getElementById("welcome-text");
     const modalRoot = document.getElementById("modal-root");
     const toastRoot = document.getElementById("toast-root");
-
 
     function escapeHTML(value) {
       if (value === null || value === undefined) return "";
@@ -718,7 +715,6 @@
         .replaceAll("'", "&#039;");
     }
 
-
     function showToast(text) {
       toastRoot.innerHTML = `
         <div class="toast">
@@ -730,7 +726,6 @@
         toastRoot.innerHTML = "";
       }, 3000);
     }
-
 
     function openModal(html) {
       modalRoot.innerHTML = `
@@ -750,13 +745,11 @@
         });
     }
 
-
     function closeModal() {
       modalRoot.innerHTML = "";
       currentGradingSubmission = null;
       currentGradingAssignment = null;
     }
-
 
     function formatDate(timestamp) {
       if (!timestamp) return "Unknown date";
@@ -778,7 +771,6 @@
       }
     }
 
-
     function formatShortDate(timestamp) {
       if (!timestamp) return "Unknown";
 
@@ -797,7 +789,6 @@
       }
     }
 
-
     function isStaff() {
       return (
         currentRole === "teacher" ||
@@ -806,14 +797,12 @@
       );
     }
 
-
     function canCreateAssignments() {
       return (
         currentRole === "teacher" ||
         currentRole === "owner"
       );
     }
-
 
     function isOwner() {
       return (
@@ -823,7 +812,6 @@
           "gambrilljulian452@gmail.com"
       );
     }
-
 
     // ============================================================
     // AUTH
@@ -880,7 +868,6 @@
 
     });
 
-
     // ============================================================
     // NAVIGATION
     // ============================================================
@@ -933,7 +920,6 @@
 
       }).join("");
 
-
       navInner.querySelectorAll("[data-nav]").forEach(button => {
 
         button.addEventListener("click", () => {
@@ -953,7 +939,6 @@
       });
 
     }
-
 
     function renderPage() {
 
@@ -996,7 +981,6 @@
       }
 
     }
-
 
     // ============================================================
     // HOME
@@ -1046,11 +1030,9 @@
           console.error(error);
         }
 
-
         const unfinished = assignments.filter(a => {
           return a.status !== "completed";
         });
-
 
         home.innerHTML = `
           <div class="grid">
@@ -1096,7 +1078,6 @@
           </div>
         `;
 
-
         document
           .getElementById("home-unfinished")
           .addEventListener("click", () => {
@@ -1104,7 +1085,6 @@
             buildNavigation();
             renderPage();
           });
-
 
         document
           .getElementById("home-grades")
@@ -1114,10 +1094,8 @@
             renderPage();
           });
 
-
         return;
       }
-
 
       // STAFF HOME
 
@@ -1165,7 +1143,6 @@
         </div>
       `;
 
-
       if (isOwner()) {
 
         cards += `
@@ -1191,9 +1168,7 @@
 
       }
 
-
       home.innerHTML = cards;
-
 
       if (canCreateAssignments()) {
 
@@ -1206,7 +1181,6 @@
 
       }
 
-
       document
         .getElementById("staff-gradebook-home")
         ?.addEventListener("click", () => {
@@ -1217,7 +1191,6 @@
 
         });
 
-
       document
         .getElementById("owner-users-button")
         ?.addEventListener(
@@ -1226,7 +1199,6 @@
         );
 
     }
-
 
     // ============================================================
     // OWNER CONTROLS
@@ -1270,7 +1242,6 @@
         </div>
       `;
 
-
       document
         .getElementById("owner-search-button")
         .addEventListener(
@@ -1279,7 +1250,6 @@
         );
 
     }
-
 
     async function searchUsers() {
 
@@ -1306,13 +1276,11 @@
         return;
       }
 
-
       results.innerHTML = `
         <p class="muted small" style="margin-top:12px;">
           Searching...
         </p>
       `;
-
 
       try {
 
@@ -1326,7 +1294,6 @@
         );
 
         snapshots = exactQuery.docs;
-
 
         if (snapshots.length === 0) {
 
@@ -1349,7 +1316,6 @@
 
         }
 
-
         if (snapshots.length === 0) {
 
           results.innerHTML = `
@@ -1360,7 +1326,6 @@
 
           return;
         }
-
 
         results.innerHTML =
           snapshots.map(d => {
@@ -1424,7 +1389,6 @@
 
           }).join("");
 
-
         results
           .querySelectorAll("[data-role-user]")
           .forEach(button => {
@@ -1452,7 +1416,6 @@
       }
 
     }
-
 
     async function changeUserRole(uid, role) {
 
@@ -1483,7 +1446,6 @@
 
     }
 
-
     // ============================================================
     // CREATE ASSIGNMENT
     // ============================================================
@@ -1498,7 +1460,6 @@
         return;
       }
 
-
       selectedStudent = null;
 
       assignmentQuestions = [
@@ -1509,7 +1470,6 @@
           correctChoice: "A"
         }
       ];
-
 
       openModal(`
         <div class="modal-header">
@@ -1528,7 +1488,6 @@
           </button>
         </div>
 
-
         <label>
           Assignment Title
           <input
@@ -1537,7 +1496,6 @@
             placeholder="Example: Math Review"
           >
         </label>
-
 
         <div class="form-row">
 
@@ -1559,7 +1517,6 @@
           </label>
 
         </div>
-
 
         <label>
           Student
@@ -1583,9 +1540,7 @@
 
         </label>
 
-
         <div id="student-result"></div>
-
 
         <div style="margin-top:24px;">
           <div class="question-header">
@@ -1610,7 +1565,6 @@
 
         </div>
 
-
         <div style="margin-top:22px;">
           <button
             class="button full"
@@ -1621,7 +1575,6 @@
         </div>
       `);
 
-
       document
         .getElementById("close-modal")
         .addEventListener(
@@ -1629,14 +1582,12 @@
           closeModal
         );
 
-
       document
         .getElementById("find-student")
         .addEventListener(
           "click",
           findStudentForAssignment
         );
-
 
       document
         .getElementById("add-question")
@@ -1664,7 +1615,6 @@
           }
         );
 
-
       document
         .getElementById("send-assignment")
         .addEventListener(
@@ -1672,11 +1622,9 @@
           createAssignment
         );
 
-
       renderQuestionBuilders();
 
     }
-
 
     async function findStudentForAssignment() {
 
@@ -1690,7 +1638,6 @@
       const result =
         document.getElementById("student-result");
 
-
       if (!email) {
 
         result.innerHTML = `
@@ -1702,18 +1649,15 @@
         return;
       }
 
-
       result.innerHTML = `
         <p class="muted small">
           Searching...
         </p>
       `;
 
-
       try {
 
         let found = null;
-
 
         const exact =
           await getDocs(
@@ -1722,7 +1666,6 @@
               where("email", "==", email)
             )
           );
-
 
         if (!exact.empty) {
 
@@ -1760,7 +1703,6 @@
 
         }
 
-
         if (!found) {
 
           selectedStudent = null;
@@ -1773,7 +1715,6 @@
 
           return;
         }
-
 
         if (found.role !== "student") {
 
@@ -1788,9 +1729,7 @@
           return;
         }
 
-
         selectedStudent = found;
-
 
         result.innerHTML = `
           <div class="selected-student">
@@ -1824,7 +1763,6 @@
 
     }
 
-
     function renderQuestionBuilders() {
 
       const container =
@@ -1833,7 +1771,6 @@
         );
 
       if (!container) return;
-
 
       container.innerHTML =
         assignmentQuestions.map(
@@ -1866,7 +1803,6 @@
 
                 </div>
 
-
                 <label>
                   Question Type
 
@@ -1896,7 +1832,6 @@
                   </select>
                 </label>
 
-
                 <label>
                   Question
 
@@ -1908,7 +1843,6 @@
                   )}</textarea>
 
                 </label>
-
 
                 ${
                   question.type === "math"
@@ -1948,7 +1882,6 @@
 
                       </div>
 
-
                       <label>
                         Correct Choice
 
@@ -1983,7 +1916,6 @@
                     `
                     : ""
                 }
-
 
                 ${
                   question.type === "truefalse"
@@ -2020,7 +1952,6 @@
 
           }
         ).join("");
-
 
       container
         .querySelectorAll("[data-question-type]")
@@ -2069,7 +2000,6 @@
 
         });
 
-
       container
         .querySelectorAll("[data-question-text]")
         .forEach(input => {
@@ -2091,7 +2021,6 @@
           );
 
         });
-
 
       container
         .querySelectorAll("[data-choice]")
@@ -2127,7 +2056,6 @@
 
         });
 
-
       container
         .querySelectorAll("[data-correct-choice]")
         .forEach(select => {
@@ -2150,7 +2078,6 @@
 
         });
 
-
       container
         .querySelectorAll("[data-truefalse-correct]")
         .forEach(select => {
@@ -2172,7 +2099,6 @@
           );
 
         });
-
 
       container
         .querySelectorAll("[data-remove-question]")
@@ -2201,7 +2127,6 @@
 
     }
 
-
     async function createAssignment() {
 
       if (!canCreateAssignments()) {
@@ -2211,7 +2136,6 @@
 
         return;
       }
-
 
       const title =
         document
@@ -2229,7 +2153,6 @@
         document
           .getElementById("assignment-due")
           .value;
-
 
       if (!title) {
         showToast("Enter an assignment title.");
@@ -2251,7 +2174,6 @@
         return;
       }
 
-
       if (
         assignmentQuestions.length < 1 ||
         assignmentQuestions.length > 5
@@ -2264,7 +2186,6 @@
         return;
       }
 
-
       for (
         let i = 0;
         i < assignmentQuestions.length;
@@ -2274,7 +2195,6 @@
         const q =
           assignmentQuestions[i];
 
-
         if (!q.question.trim()) {
 
           showToast(
@@ -2283,7 +2203,6 @@
 
           return;
         }
-
 
         if (q.type === "math") {
 
@@ -2304,7 +2223,6 @@
 
       }
 
-
       try {
 
         const cleanQuestions =
@@ -2314,7 +2232,6 @@
               type: q.type,
               question: q.question.trim()
             };
-
 
             if (q.type === "math") {
 
@@ -2328,7 +2245,6 @@
 
             }
 
-
             if (q.type === "truefalse") {
 
               clean.correctChoice =
@@ -2336,11 +2252,9 @@
 
             }
 
-
             return clean;
 
           });
-
 
         const answerKey =
           cleanQuestions.map(q => ({
@@ -2348,7 +2262,6 @@
             correctChoice:
               q.correctChoice || null
           }));
-
 
         const assignmentRef =
           await addDoc(
@@ -2385,7 +2298,6 @@
             }
           );
 
-
         await setDoc(
           doc(
             db,
@@ -2407,7 +2319,6 @@
           }
         );
 
-
         closeModal();
 
         showToast(
@@ -2427,7 +2338,6 @@
       }
 
     }
-
 
     // ============================================================
     // STUDENT UNFINISHED ASSIGNMENTS
@@ -2451,12 +2361,10 @@
         </div>
       `;
 
-
       const container =
         document.getElementById(
           "unfinished-container"
         );
-
 
       try {
 
@@ -2472,7 +2380,6 @@
             )
           );
 
-
         const submissionSnap =
           await getDocs(
             query(
@@ -2485,14 +2392,12 @@
             )
           );
 
-
         const submittedIds =
           new Set(
             submissionSnap.docs.map(
               d => d.data().assignmentId
             )
           );
-
 
         const assignments =
           assignmentSnap.docs
@@ -2507,7 +2412,6 @@
                 )
             );
 
-
         assignments.sort(
           (a, b) =>
             String(a.dueDate || "")
@@ -2515,7 +2419,6 @@
                 String(b.dueDate || "")
               )
         );
-
 
         if (!assignments.length) {
 
@@ -2531,7 +2434,6 @@
 
           return;
         }
-
 
         container.innerHTML =
           assignments.map(
@@ -2590,7 +2492,6 @@
             `
           ).join("");
 
-
         container
           .querySelectorAll("[data-start-quiz]")
           .forEach(button => {
@@ -2620,7 +2521,6 @@
 
     }
 
-
     // ============================================================
     // STUDENT QUIZ
     // ============================================================
@@ -2638,16 +2538,13 @@
             )
           );
 
-
         if (!assignmentSnap.exists()) {
           showToast("Assignment not found.");
           return;
         }
 
-
         const assignment =
           assignmentSnap.data();
-
 
         if (
           !assignment.assignedTo ||
@@ -2663,7 +2560,6 @@
           return;
         }
 
-
         const existing =
           await getDocs(
             query(
@@ -2676,14 +2572,12 @@
             )
           );
 
-
         const alreadySubmitted =
           existing.docs.some(
             d =>
               d.data().assignmentId ===
               assignmentId
           );
-
 
         if (alreadySubmitted) {
 
@@ -2693,7 +2587,6 @@
 
           return;
         }
-
 
         openModal(`
           <div class="modal-header">
@@ -2732,7 +2625,6 @@
           </button>
         `);
 
-
         document
           .getElementById("close-quiz")
           .addEventListener(
@@ -2740,12 +2632,10 @@
             closeModal
           );
 
-
         const quizContainer =
           document.getElementById(
             "quiz-container"
           );
-
 
         quizContainer.innerHTML =
           (assignment.questions || [])
@@ -2794,7 +2684,6 @@
                       : ""
                   }
 
-
                   ${
                     q.type === "truefalse"
                       ? `
@@ -2819,7 +2708,6 @@
                       : ""
                   }
 
-
                   ${
                     q.type === "written"
                       ? `
@@ -2835,7 +2723,6 @@
               `;
 
             }).join("");
-
 
         document
           .getElementById("submit-quiz")
@@ -2860,14 +2747,12 @@
 
     }
 
-
     async function submitStudentQuiz(
       assignmentId,
       assignment
     ) {
 
       const answers = [];
-
 
       for (
         let i = 0;
@@ -2879,7 +2764,6 @@
           assignment.questions[i];
 
         let answer = "";
-
 
         if (q.type === "written") {
 
@@ -2905,11 +2789,9 @@
 
         }
 
-
         answers.push(answer);
 
       }
-
 
       try {
 
@@ -2949,7 +2831,6 @@
           }
         );
 
-
         closeModal();
 
         showToast(
@@ -2972,7 +2853,6 @@
 
     }
 
-
     // ============================================================
     // SENT / ALL ASSIGNMENTS
     // ============================================================
@@ -2983,7 +2863,6 @@
         currentRole === "owner"
           ? "All Assignments"
           : "Sent Assignments";
-
 
       pageContent.innerHTML = `
         <h2 class="page-title">
@@ -3001,17 +2880,14 @@
         </div>
       `;
 
-
       const container =
         document.getElementById(
           "sent-container"
         );
 
-
       try {
 
         let assignmentsQuery;
-
 
         if (
           currentRole === "owner" ||
@@ -3038,12 +2914,10 @@
 
         }
 
-
         const assignmentSnap =
           await getDocs(
             assignmentsQuery
           );
-
 
         const assignments =
           assignmentSnap.docs
@@ -3063,7 +2937,6 @@
 
             });
 
-
         if (!assignments.length) {
 
           container.innerHTML = `
@@ -3076,7 +2949,6 @@
           return;
         }
 
-
         const submissionSnap =
           await getDocs(
             collection(
@@ -3085,7 +2957,6 @@
             )
           );
 
-
         const submissions =
           submissionSnap.docs.map(
             d => ({
@@ -3093,7 +2964,6 @@
               ...d.data()
             })
           );
-
 
         container.innerHTML =
           assignments.map(
@@ -3105,7 +2975,6 @@
                     submission.assignmentId ===
                     assignment.id
                 );
-
 
               return `
                 <div class="card assignment-card">
@@ -3146,7 +3015,6 @@
 
                   </div>
 
-
                   <div class="assignment-actions">
 
                     <button
@@ -3163,7 +3031,6 @@
 
             }
           ).join("");
-
 
         container
           .querySelectorAll(
@@ -3197,7 +3064,6 @@
 
     }
 
-
     async function reviewAssignment(
       assignmentId
     ) {
@@ -3213,16 +3079,13 @@
             )
           );
 
-
         if (!assignmentSnap.exists()) {
           showToast("Assignment not found.");
           return;
         }
 
-
         const assignment =
           assignmentSnap.data();
-
 
         const submissionSnap =
           await getDocs(
@@ -3236,7 +3099,6 @@
             )
           );
 
-
         const submissions =
           submissionSnap.docs.map(
             d => ({
@@ -3244,7 +3106,6 @@
               ...d.data()
             })
           );
-
 
         openModal(`
           <div class="modal-header">
@@ -3332,7 +3193,6 @@
           }
         `);
 
-
         document
           .getElementById(
             "close-review-assignment"
@@ -3341,7 +3201,6 @@
             "click",
             closeModal
           );
-
 
         modalRoot
           .querySelectorAll(
@@ -3376,7 +3235,6 @@
 
     }
 
-
     // ============================================================
     // STAFF GRADE BOOK
     // ============================================================
@@ -3399,17 +3257,14 @@
         </div>
       `;
 
-
       const container =
         document.getElementById(
           "staff-gradebook-container"
         );
 
-
       try {
 
         let submissionsQuery;
-
 
         if (
           currentRole === "owner" ||
@@ -3436,12 +3291,10 @@
 
         }
 
-
         const submissionSnap =
           await getDocs(
             submissionsQuery
           );
-
 
         const submissions =
           submissionSnap.docs
@@ -3461,7 +3314,6 @@
 
             });
 
-
         if (!submissions.length) {
 
           container.innerHTML = `
@@ -3480,7 +3332,6 @@
           return;
         }
 
-
         const assignmentsSnap =
           await getDocs(
             collection(
@@ -3488,7 +3339,6 @@
               "assignments"
             )
           );
-
 
         const assignments = {};
 
@@ -3499,7 +3349,6 @@
           };
         });
 
-
         container.innerHTML =
           submissions.map(
             submission => {
@@ -3508,7 +3357,6 @@
                 assignments[
                   submission.assignmentId
                 ] || {};
-
 
               const gradeText =
                 submission.graded
@@ -3522,7 +3370,6 @@
                         : ""
                     }`
                   : "Needs grading";
-
 
               return `
                 <div class="card">
@@ -3559,7 +3406,6 @@
 
                   </p>
 
-
                   <span class="status ${
                     submission.graded
                       ? "graded"
@@ -3573,7 +3419,6 @@
                     }
 
                   </span>
-
 
                   <div class="assignment-actions">
 
@@ -3595,7 +3440,6 @@
 
             }
           ).join("");
-
 
         // ========================================================
         // THIS IS THE IMPORTANT FIX
@@ -3640,7 +3484,6 @@
 
     }
 
-
     // ============================================================
     // OPEN STAFF GRADING SCREEN
     // ============================================================
@@ -3650,7 +3493,6 @@
     ) {
 
       if (!isStaff()) return;
-
 
       try {
 
@@ -3663,7 +3505,6 @@
             )
           );
 
-
         if (!submissionSnap.exists()) {
 
           showToast(
@@ -3673,12 +3514,10 @@
           return;
         }
 
-
         const submission = {
           id: submissionSnap.id,
           ...submissionSnap.data()
         };
-
 
         if (
           currentRole === "teacher" &&
@@ -3693,7 +3532,6 @@
           return;
         }
 
-
         const assignmentSnap =
           await getDoc(
             doc(
@@ -3702,7 +3540,6 @@
               submission.assignmentId
             )
           );
-
 
         if (!assignmentSnap.exists()) {
 
@@ -3713,10 +3550,8 @@
           return;
         }
 
-
         const assignment =
           assignmentSnap.data();
-
 
         currentGradingSubmission =
           submission;
@@ -3724,10 +3559,8 @@
         currentGradingAssignment =
           assignment;
 
-
         const existingResults =
           submission.questionResults || [];
-
 
         openModal(`
           <div class="modal-header">
@@ -3759,7 +3592,6 @@
 
           </div>
 
-
           <div id="grading-questions">
 
             ${
@@ -3771,7 +3603,6 @@
 
                   const studentAnswer =
                     submission.answers?.[index] || "";
-
 
                   return `
                     <div
@@ -3786,11 +3617,9 @@
                         )}
                       </h4>
 
-
                       <p class="muted small">
                         Student answer:
                       </p>
-
 
                       <div class="student-answer">
                         ${
@@ -3801,7 +3630,6 @@
                             : "No answer"
                         }
                       </div>
-
 
                       ${
                         q.type === "math"
@@ -3830,7 +3658,6 @@
                           : ""
                       }
 
-
                       <div class="grade-controls">
 
                         <strong>
@@ -3852,7 +3679,6 @@
                             Correct
                           </button>
 
-
                           <button
                             type="button"
                             class="result-button ${
@@ -3865,7 +3691,6 @@
                           >
                             Incorrect
                           </button>
-
 
                           <button
                             type="button"
@@ -3882,7 +3707,6 @@
                           </button>
 
                         </div>
-
 
                         <label>
                           Teacher Note
@@ -3906,13 +3730,11 @@
 
           </div>
 
-
           <div class="grade-controls">
 
             <h3>
               Final Grade
             </h3>
-
 
             <label>
               Percentage
@@ -3931,7 +3753,6 @@
               >
             </label>
 
-
             <label>
               Letter Grade
 
@@ -3946,7 +3767,6 @@
               >
             </label>
 
-
             <label>
               Teacher Note
 
@@ -3957,7 +3777,6 @@
                 submission.teacherNote || ""
               )}</textarea>
             </label>
-
 
             <button
               class="button full"
@@ -3970,14 +3789,12 @@
           </div>
         `);
 
-
         document
           .getElementById("close-grading")
           .addEventListener(
             "click",
             closeModal
           );
-
 
         document
           .querySelectorAll(
@@ -4007,7 +3824,6 @@
                     );
 
                   });
-
 
                 if (
                   button.dataset.value ===
@@ -4040,7 +3856,6 @@
 
           });
 
-
         document
           .getElementById("save-grade")
           .addEventListener(
@@ -4060,7 +3875,6 @@
 
     }
 
-
     // ============================================================
     // SAVE STAFF GRADE
     // ============================================================
@@ -4079,7 +3893,6 @@
         return;
       }
 
-
       const percentageInput =
         document.getElementById(
           "percentage-input"
@@ -4095,10 +3908,8 @@
           "overall-teacher-note"
         );
 
-
       const percentageValue =
         percentageInput.value.trim();
-
 
       if (percentageValue === "") {
 
@@ -4109,10 +3920,8 @@
         return;
       }
 
-
       const numericPercentage =
         Number(percentageValue);
-
 
       if (
         Number.isNaN(numericPercentage) ||
@@ -4127,15 +3936,12 @@
         return;
       }
 
-
       const letterGrade =
         letterGradeInput.value
           .trim()
           .toUpperCase();
 
-
       const questionResults = [];
-
 
       for (
         let i = 0;
@@ -4154,16 +3960,13 @@
             `[data-result="${i}"].selected-wrong`
           );
 
-
         let correct = null;
-
 
         if (selected) {
           correct = true;
         } else if (selectedWrong) {
           correct = false;
         }
-
 
         const note =
           document
@@ -4173,14 +3976,12 @@
             ?.value
             .trim() || "";
 
-
         questionResults.push({
           correct,
           note
         });
 
       }
-
 
       try {
 
@@ -4212,13 +4013,11 @@
           }
         );
 
-
         closeModal();
 
         showToast(
           "Grade saved successfully."
         );
-
 
         renderPage();
 
@@ -4233,7 +4032,6 @@
       }
 
     }
-
 
     // ============================================================
     // STUDENT GRADE BOOK
@@ -4257,12 +4055,10 @@
         </div>
       `;
 
-
       const container =
         document.getElementById(
           "student-gradebook-container"
         );
-
 
       try {
 
@@ -4278,7 +4074,6 @@
             )
           );
 
-
         const submissions =
           submissionSnap.docs
             .map(d => ({
@@ -4289,7 +4084,6 @@
               submission =>
                 submission.graded === true
             );
-
 
         if (!submissions.length) {
 
@@ -4309,7 +4103,6 @@
           return;
         }
 
-
         const assignmentsSnap =
           await getDocs(
             collection(
@@ -4317,7 +4110,6 @@
               "assignments"
             )
           );
-
 
         const assignments = {};
 
@@ -4330,13 +4122,11 @@
 
         });
 
-
         const categories = {
           Math: [],
           "Written Responses": [],
           "True / False": []
         };
-
 
         for (const submission of submissions) {
 
@@ -4345,23 +4135,18 @@
               submission.assignmentId
             ];
 
-
           if (!assignment) continue;
-
 
           const questions =
             assignment.questions || [];
-
 
           const types =
             questions.map(
               q => q.type
             );
 
-
           let category =
             "Math";
-
 
           if (
             types.includes("written")
@@ -4379,14 +4164,12 @@
 
           }
 
-
           categories[category].push({
             submission,
             assignment
           });
 
         }
-
 
         Object.keys(categories).forEach(
           category => {
@@ -4410,9 +4193,7 @@
           }
         );
 
-
         let html = "";
-
 
         for (
           const [category, items]
@@ -4426,7 +4207,6 @@
                 ${category}
               </h3>
           `;
-
 
           if (!items.length) {
 
@@ -4454,7 +4234,6 @@
                   submission.letterGrade ||
                   "";
 
-
                 return `
                   <div class="card">
 
@@ -4480,7 +4259,6 @@
                       )}
                     </p>
 
-
                     <div class="grade-number">
 
                       ${escapeHTML(
@@ -4499,7 +4277,6 @@
                       }
 
                     </div>
-
 
                     <div class="assignment-actions">
 
@@ -4520,16 +4297,13 @@
 
           }
 
-
           html += `
             </div>
           `;
 
         }
 
-
         container.innerHTML = html;
-
 
         container
           .querySelectorAll(
@@ -4563,7 +4337,6 @@
 
     }
 
-
     // ============================================================
     // STUDENT GRADE REVIEW
     // ============================================================
@@ -4583,7 +4356,6 @@
             )
           );
 
-
         if (!submissionSnap.exists()) {
 
           showToast(
@@ -4593,10 +4365,8 @@
           return;
         }
 
-
         const submission =
           submissionSnap.data();
-
 
         // SECURITY CHECK IN THE UI TOO
         if (
@@ -4611,7 +4381,6 @@
           return;
         }
 
-
         const assignmentSnap =
           await getDoc(
             doc(
@@ -4620,7 +4389,6 @@
               submission.assignmentId
             )
           );
-
 
         if (!assignmentSnap.exists()) {
 
@@ -4631,14 +4399,11 @@
           return;
         }
 
-
         const assignment =
           assignmentSnap.data();
 
-
         const results =
           submission.questionResults || [];
-
 
         openModal(`
           <div class="modal-header">
@@ -4664,7 +4429,6 @@
 
           </div>
 
-
           <div class="grade-summary">
 
             <div class="grade-summary-main">
@@ -4682,7 +4446,6 @@
                 </div>
               </div>
 
-
               <div>
                 <div class="muted small">
                   Letter Grade
@@ -4697,7 +4460,6 @@
               </div>
 
             </div>
-
 
             ${
               submission.teacherNote
@@ -4719,11 +4481,9 @@
 
           </div>
 
-
           <h3>
             Answer Review
           </h3>
-
 
           <div>
 
@@ -4737,13 +4497,11 @@
                   const answer =
                     submission.answers?.[index] || "";
 
-
                   let resultClass =
                     "";
 
                   let resultText =
                     "Not graded";
-
 
                   if (
                     result.correct === true
@@ -4767,7 +4525,6 @@
 
                   }
 
-
                   return `
                     <div class="question-display">
 
@@ -4778,13 +4535,11 @@
                         )}
                       </h4>
 
-
                       <span
                         class="status ${resultClass}"
                       >
                         ${resultText}
                       </span>
-
 
                       <div
                         class="muted small"
@@ -4792,7 +4547,6 @@
                       >
                         Your Answer
                       </div>
-
 
                       <div class="student-answer">
                         ${
@@ -4803,7 +4557,6 @@
                             : "No answer"
                         }
                       </div>
-
 
                       ${
                         q.type === "math"
@@ -4837,7 +4590,6 @@
                           : ""
                       }
 
-
                       ${
                         result.note
                           ? `
@@ -4865,7 +4617,6 @@
           </div>
         `);
 
-
         document
           .getElementById(
             "close-student-review"
@@ -4886,7 +4637,6 @@
       }
 
     }
-
 
     // ============================================================
     // COURSES
@@ -4910,17 +4660,14 @@
         </div>
       `;
 
-
       const container =
         document.getElementById(
           "courses-container"
         );
 
-
       try {
 
         let assignmentsQuery;
-
 
         if (currentRole === "student") {
 
@@ -4958,15 +4705,12 @@
 
         }
 
-
         const snap =
           await getDocs(
             assignmentsQuery
           );
 
-
         const courses = {};
-
 
         snap.docs.forEach(d => {
 
@@ -4976,7 +4720,6 @@
             data.courseName ||
             "Other";
 
-
           if (!courses[name]) {
             courses[name] = 0;
           }
@@ -4985,11 +4728,9 @@
 
         });
 
-
         const names =
           Object.keys(courses)
             .sort();
-
 
         if (!names.length) {
 
@@ -5008,7 +4749,6 @@
 
           return;
         }
-
 
         container.innerHTML =
           names.map(
@@ -5050,7 +4790,6 @@
 
     }
 
-
     // ============================================================
     // ACCOUNT
     // ============================================================
@@ -5066,7 +4805,6 @@
         <p class="page-subtitle">
           Your Novex account.
         </p>
-
 
         <div class="card">
 
@@ -5086,7 +4824,6 @@
             )}
           </p>
 
-
           <div
             class="status graded"
             style="margin-top:15px;"
@@ -5095,7 +4832,6 @@
           </div>
 
         </div>
-
 
         <div class="card">
 
@@ -5106,7 +4842,6 @@
           <p class="muted">
             Sign out of your Novex account on this device.
           </p>
-
 
           <button
             class="button danger"
@@ -5119,7 +4854,6 @@
         </div>
 
       `;
-
 
       document
         .getElementById("logout-button")
